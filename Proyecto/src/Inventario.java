@@ -1309,7 +1309,7 @@ public final class Inventario
             error = error + "No se ha seleccionado cliente\n";
         }
         if (Total == 0.0D) {
-            error = error + "No se han a�adido productos\n";
+            error = error + "No se han añadido productos\n";
         }
         if (!error.isEmpty()) {
             JOptionPane.showMessageDialog(this, error, "Error", 0);
