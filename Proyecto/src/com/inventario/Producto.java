@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  *
  * @author hecto
  */
-public class Producto {
+public class Producto extends ClaseConexion{
 
     private int claveProd;
     private String descripcionProd;
@@ -67,7 +67,7 @@ public class Producto {
         this.precioUnitario = precioUnitario;
     }
 
-    public void ActualizarExistencias(ConexionBD conexion, int cantidad) {
+    public void ActualizarExistencias(int cantidad) {
         try {
             conexion.conectarBase();
             conexion.setSql("UPDATE PRODUCTOS SET EXISTENCIAS= " + (existencias - cantidad) + " WHERE CLAVEPROD=" + claveProd + "");
@@ -79,7 +79,7 @@ public class Producto {
 
     }
 
-    public void RecuperarProducto(String descripcion, ConexionBD conexion) {
+    public Producto  RecuperarProducto(String descripcion) {
         try {
             conexion.conectarBase();
             conexion.setRset(conexion.getStmn().executeQuery("SELECT * FROM PRODUCTOS WHERE DESCRIPCIONPROD='" + descripcion + "'"));
@@ -93,5 +93,6 @@ public class Producto {
         } catch (SQLException ex) {
             Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return this;
     }
 }

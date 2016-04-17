@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  *
  * @author hecto
  */
-public class DetalleVenta {
+public class DetalleVenta extends ClaseConexion{
 
     private int numVenta;
     private Producto producto;
@@ -24,7 +24,7 @@ public class DetalleVenta {
         this.detVentaSubtotal = detVentaPrecio * detVentaCantidad;
     }
 
-    public void InsertarDetalleVenta(ConexionBD conexion) {
+    public void InsertarDetalleVenta() {
         try {
             conexion.conectarBase();
             conexion.setSql("INSERT INTO DETALLEVENTAS (NUMVENTA,CLAVEPROD,DETVENTACANTIDAD,DETVENTAPRECIO,DETVENTASUBTOTAL) VALUES (?,?,?,?,?)");
@@ -35,7 +35,7 @@ public class DetalleVenta {
             conexion.getPstmn().setFloat(4, detVentaPrecio);
             conexion.getPstmn().setFloat(5, detVentaSubtotal);
             conexion.getPstmn().executeUpdate();
-            producto.ActualizarExistencias(conexion, detVentaPrecio);
+            producto.ActualizarExistencias(detVentaPrecio);
             conexion.getConn().close();
         } catch (SQLException ex) {
             Logger.getLogger(DetalleVenta.class.getName()).log(Level.SEVERE, null, ex);

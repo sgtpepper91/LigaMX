@@ -18,9 +18,9 @@ public class ConexionBD {
     private Statement stmn;
     private ResultSet rset;
     private PreparedStatement pstmn;
-    private final String path;
-    private final String usuario;
-    private final String password;
+    private static String path;
+    private static String usuario;
+    private static String password;
     private String sql;
 
     public Connection getConn() {
@@ -31,14 +31,26 @@ public class ConexionBD {
         conn = aConn;
     }
 
-    public ConexionBD(String path, String usuario, String password) {
-        this.path = path;
-        this.usuario = usuario;
-        this.password = password;
+    public void IniciaConexion(String path, String usuario, String password) {
+        ConexionBD.path = path;
+        ConexionBD.usuario = usuario;
+        ConexionBD.password = password;
     }
 
     public Statement getStmn() {
         return stmn;
+    }
+
+    public static String getPath() {
+        return path;
+    }
+
+    public static String getUsuario() {
+        return usuario;
+    }
+
+    public static String getPassword() {
+        return password;
     }
 
     public void setStmn(Statement aStmn) {

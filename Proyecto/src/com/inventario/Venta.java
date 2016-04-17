@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  *
  * @author hecto
  */
-public class Venta {
+public class Venta extends ClaseConexion{
 
     private int numVenta;
     private Date fechaVenta;
@@ -20,7 +20,7 @@ public class Venta {
     private final DateFormat formatoAñoMesDia = new SimpleDateFormat("yyyy-MM-dd");
 
     //private String str1Fecha = this.df1.format(fechaVenta);
-    public Venta(int numCliente, Date fechaVenta, int totalVenta) {
+    public Venta(Cliente cliente, Date fechaVenta, int totalVenta) {
         this.fechaVenta = fechaVenta;
         this.numCliente = numCliente;
         this.totalVenta = totalVenta;
@@ -58,7 +58,7 @@ public class Venta {
         this.totalVenta = totalVenta;
     }
 
-    public void insertarVenta(ConexionBD conexion) {
+    public void insertarVenta() {
         try {
             String fechaAMD = formatoAñoMesDia.format(fechaVenta);
             conexion.conectarBase();
