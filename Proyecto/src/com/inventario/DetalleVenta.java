@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  *
  * @author hecto
  */
-public class DetalleVenta extends ClaseConexion{
+public class DetalleVenta extends ConexionBD{
 
     private int numVenta;
     private Producto producto;
@@ -26,17 +26,17 @@ public class DetalleVenta extends ClaseConexion{
 
     public void InsertarDetalleVenta() {
         try {
-            conexion.conectarBase();
-            conexion.setSql("INSERT INTO DETALLEVENTAS (NUMVENTA,CLAVEPROD,DETVENTACANTIDAD,DETVENTAPRECIO,DETVENTASUBTOTAL) VALUES (?,?,?,?,?)");
-            conexion.setPstmn(conexion.getConn().prepareStatement(conexion.getSql()));
-            conexion.getPstmn().setInt(1, numVenta);
-            conexion.getPstmn().setInt(2, producto.getClaveProd());
-            conexion.getPstmn().setInt(3, detVentaCantidad);
-            conexion.getPstmn().setFloat(4, detVentaPrecio);
-            conexion.getPstmn().setFloat(5, detVentaSubtotal);
-            conexion.getPstmn().executeUpdate();
-            producto.ActualizarExistencias(detVentaPrecio);
-            conexion.getConn().close();
+            conectarBase();
+            setSql("INSERT INTO DETALLEVENTAS (NUMVENTA,CLAVEPROD,DETVENTACANTIDAD,DETVENTAPRECIO,DETVENTASUBTOTAL) VALUES (?,?,?,?,?)");
+            setPstmn(getConn().prepareStatement(getSql()));
+            getPstmn().setInt(1, numVenta);
+            getPstmn().setInt(2, producto.getClaveProd());
+            getPstmn().setInt(3, detVentaCantidad);
+            getPstmn().setFloat(4, detVentaPrecio);
+            getPstmn().setFloat(5, detVentaSubtotal);
+            getPstmn().executeUpdate();
+            producto.ActualizarExistencias(detVentaCantidad);
+            getConn().close();
         } catch (SQLException ex) {
             Logger.getLogger(DetalleVenta.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -82,4 +82,5 @@ public class DetalleVenta extends ClaseConexion{
     public void setDetVentaSubtotal(int detVentaSubtotal) {
         this.detVentaSubtotal = detVentaSubtotal;
     }
+    
 }

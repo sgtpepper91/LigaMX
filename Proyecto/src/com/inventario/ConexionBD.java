@@ -83,8 +83,8 @@ public class ConexionBD {
 
     public void conectarBase() throws SQLException {
         DriverManager.registerDriver(new OracleDriver());
-        //conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:XE", "inventario", "1234");
-        this.setConn(DriverManager.getConnection(path, usuario, password));
+        //this.setConn(DriverManager.getConnection(path, usuario, password));
+        this.setConn(DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:XE", "inventario", "1234"));
         this.setStmn(conn.createStatement());
     }
 }

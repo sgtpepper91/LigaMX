@@ -3,12 +3,13 @@ package com.inventario;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author hecto
  */
-public class Producto extends ClaseConexion{
+public class Producto extends ConexionBD{
 
     private int claveProd;
     private String descripcionProd;
@@ -26,6 +27,7 @@ public class Producto extends ClaseConexion{
     Producto() {
         
     }
+
 
     public int getClaveProd() {
         return claveProd;
@@ -69,10 +71,10 @@ public class Producto extends ClaseConexion{
 
     public void ActualizarExistencias(int cantidad) {
         try {
-            conexion.conectarBase();
-            conexion.setSql("UPDATE PRODUCTOS SET EXISTENCIAS= " + (existencias - cantidad) + " WHERE CLAVEPROD=" + claveProd + "");
-            conexion.getStmn().executeUpdate(conexion.getSql());
-            conexion.getConn().close();
+            conectarBase();
+            setSql("UPDATE PRODUCTOS SET EXISTENCIAS= " + (existencias - cantidad) + " WHERE CLAVEPROD=" + claveProd + "");
+            getStmn().executeUpdate(getSql());
+            getConn().close();
         } catch (SQLException ex) {
             Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -81,18 +83,35 @@ public class Producto extends ClaseConexion{
 
     public Producto  RecuperarProducto(String descripcion) {
         try {
-            conexion.conectarBase();
-            conexion.setRset(conexion.getStmn().executeQuery("SELECT * FROM PRODUCTOS WHERE DESCRIPCIONPROD='" + descripcion + "'"));
-            while (conexion.getRset().next()) {
-                claveProd = conexion.getRset().getInt(1);
-                existencias = conexion.getRset().getInt(3);
-                costoUnitario = conexion.getRset().getInt(4);
-                precioUnitario = conexion.getRset().getInt(4);
+            conectarBase();
+            setRset(getStmn().executeQuery("SELECT * FROM PRODUCTOS WHERE DESCRIPCIONPROD='" + descripcion + "'"));
+            while (getRset().next()) {
+                claveProd = getRset().getInt(1);
+                existencias = getRset().getInt(3);  
+                costoUnitario = getRset().getInt(4);
+                precioUnitario = getRset().getInt(5);
             }
-            conexion.getConn().close();
+            getConn().close();
         } catch (SQLException ex) {
             Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
         }
         return this;
+    }
+
+    void InsertarProducto() {
+        try {
+            conectarBase();
+            setSql("INSERT INTO PRODUCTOS (DESCRIPCIONPROD,EXISTENCIAS,COSTOUNITARIO,PRECIOUNITARIO) VALUES (?,?,?,?)");
+            setPstmn(getConn().prepareStatement(getSql()));
+            getPstmn().setString(1, descripcionProd);
+            getPstmn().setInt(2, existencias);
+            getPstmn().setFloat(3, costoUnitario);
+            getPstmn().setFloat(4, precioUnitario);
+            getPstmn().executeUpdate();
+            JOptionPane.showMessageDialog(null, "Producto insertado", null, 1);
+            getConn().close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

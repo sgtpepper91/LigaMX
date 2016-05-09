@@ -29,7 +29,6 @@ public class ServiceInventario extends ConexionBD {
 
     public void llenarClientes() {
         try {
-            System.out.println(ConexionBD.getPassword()+"\t"+ConexionBD.getPath()+"\t"+ConexionBD.getUsuario());
             conectarBase();
             DefaultTableModel dm = (DefaultTableModel) inventario.getTbClientes().getModel();
             int rowCount = dm.getRowCount();
@@ -142,6 +141,34 @@ public class ServiceInventario extends ConexionBD {
             col.setCellEditor(new DefaultCellEditor(jcProductos));
         } catch (Exception e) {
             JOptionPane.showMessageDialog(inventario, e + "\nError en tabla Productos");
+        }
+    }
+
+    void hacerDevolucion(Devolucion devolucion) {
+        int opcion=JOptionPane.showConfirmDialog(inventario, "¿Desea devolver el producto:" + devolucion.getProducto() +"?","Devolución",JOptionPane.YES_NO_OPTION);
+        if(opcion==JOptionPane.YES_OPTION)
+        {
+            if(devolucion.getCantidad()>1)
+            {
+                devolucion.devolverProducto();
+            }
+            else{
+                devolucion.borrarDetalle();
+            }
+            Venta venta = new Venta();
+            venta.obtenerVenta(devolucion.getNumVenta());
+            if(venta.getTotalVenta()>devolucion.getPrecioProd())
+            {
+                venta.actualizarVenta(devolucion.getPrecioProd());
+            }
+            else{
+                venta.eliminarVenta();
+            }
+            Producto producto = new Producto().RecuperarProducto(devolucion.getProducto());
+            producto.ActualizarExistencias(-1);
+            Cliente cliente = new Cliente();
+            cliente.RecuperarCliente(devolucion.getNombreCliente());
+            cliente.ActualizarAcumulado(-devolucion.getPrecioProd());
         }
     }
 }
