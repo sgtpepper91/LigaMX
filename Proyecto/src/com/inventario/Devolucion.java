@@ -64,29 +64,6 @@ public class Devolucion extends ConexionBD {
         this.numVenta = numVenta;
     }
 
-    void devolverProducto() {
-        total -= precioProd;
-        try {
-            conectarBase();
-            setSql("UPDATE DETALLEVENTAS SET DETVENTACANTIDAD= " + (cantidad-1) + ", DETVENTASUBTOTAL="+total+" WHERE NUMVENTA="+numVenta+" AND CLAVEPROD="+claveProd+"");
-            getStmn().executeUpdate(getSql());
-            getConn().close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    void borrarDetalle() {
-        try {
-            conectarBase();
-            setSql("DELETE DETALLEVENTAS WHERE NUMVENTA="+numVenta+" AND CLAVEPROD="+claveProd+"");
-            getStmn().executeUpdate(getSql());
-            getConn().close();
-        } catch (SQLException ex) {
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
     public int getTotal() {
         return total;
     }
@@ -103,4 +80,54 @@ public class Devolucion extends ConexionBD {
         this.nombreCliente = nombreCliente;
     }
 
+    /**
+     * Realiza la devolución de un producto
+     *
+     * @return true si fue exitoso, false en caso contrario
+     * @throws Exception
+     */
+    boolean devolverProducto() throws Exception {
+        total -= precioProd;
+        try {
+            conectarBase();
+            setSql("UPDATE DETALLEVENTAS SET DETVENTACANTIDAD= " + (cantidad - 1) + ", DETVENTASUBTOTAL=" + total + " WHERE NUMVENTA=" + numVenta + " AND CLAVEPROD=" + claveProd + "");
+            int res = getStmn().executeUpdate(getSql());
+            if (res > 0) {
+                getConn().close();
+                return Boolean.TRUE;
+            } else {
+                getConn().close();
+                return Boolean.FALSE;
+            }
+        } catch (SQLException ex) {
+            getConn().close();
+            Logger.getLogger(Devolucion.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al actualizar detalle de venta");
+        }
+    }
+
+    /**
+     * Borra el detalle de venta del producto vendido
+     *
+     * @return true si fue exitoso, false en caso contrario
+     * @throws Exception
+     */
+    boolean borrarDetalle() throws Exception {
+        try {
+            conectarBase();
+            setSql("DELETE DETALLEVENTAS WHERE NUMVENTA=" + numVenta + " AND CLAVEPROD=" + claveProd + "");
+            int res = getStmn().executeUpdate(getSql());
+            if (res > 0) {
+                getConn().close();
+                return Boolean.TRUE;
+            } else {
+                getConn().close();
+                return Boolean.FALSE;
+            }
+        } catch (SQLException ex) {
+            getConn().close();
+            Logger.getLogger(Devolucion.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al borrar detalla de venta");
+        }
+    }
 }

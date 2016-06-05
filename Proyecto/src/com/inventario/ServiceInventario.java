@@ -27,6 +27,9 @@ public class ServiceInventario extends ConexionBD {
         this.inventario = inventario;
     }
 
+    /**
+     * Llena la tabla de clientes
+     */
     public void llenarClientes() {
         try {
             conectarBase();
@@ -51,6 +54,9 @@ public class ServiceInventario extends ConexionBD {
         }
     }
 
+    /**
+     * Llena la tabla de historial de cliente
+     */
     public void llenarHistorial() {
         int NumCliente = 0;
         String Cliente = inventario.getTxtClienteVentas().getText();
@@ -89,6 +95,9 @@ public class ServiceInventario extends ConexionBD {
         }
     }
 
+    /**
+     * Llena la tabla Inventario
+     */
     void llenarInventario() {
         try {
             conectarBase();
@@ -125,6 +134,9 @@ public class ServiceInventario extends ConexionBD {
         }
     }
 
+    /**
+     * Llena el comboBox de productos
+     */
     public void llenarProductos() {
         String producto;
         try {
@@ -144,7 +156,11 @@ public class ServiceInventario extends ConexionBD {
         }
     }
 
-    void hacerDevolucion(Devolucion devolucion) {
+    /**
+     * Realiza la devolución del producto
+     * @param devolucion 
+     */
+    boolean  hacerDevolucion(Devolucion devolucion) throws Exception{
         int opcion=JOptionPane.showConfirmDialog(inventario, "¿Desea devolver el producto:" + devolucion.getProducto() +"?","Devolución",JOptionPane.YES_NO_OPTION);
         if(opcion==JOptionPane.YES_OPTION)
         {
@@ -169,6 +185,8 @@ public class ServiceInventario extends ConexionBD {
             Cliente cliente = new Cliente();
             cliente.RecuperarCliente(devolucion.getNombreCliente());
             cliente.ActualizarAcumulado(-devolucion.getPrecioProd());
+            return Boolean.TRUE;
         }
+        return Boolean.FALSE;
     }
 }

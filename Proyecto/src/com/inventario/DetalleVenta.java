@@ -8,7 +8,7 @@ import java.util.logging.Logger;
  *
  * @author hecto
  */
-public class DetalleVenta extends ConexionBD{
+public class DetalleVenta extends ConexionBD {
 
     private int numVenta;
     private Producto producto;
@@ -24,7 +24,12 @@ public class DetalleVenta extends ConexionBD{
         this.detVentaSubtotal = detVentaPrecio * detVentaCantidad;
     }
 
-    public void InsertarDetalleVenta() {
+    /**
+     * Inserta el detalle de venta en la tabla
+     * @return true si fue exitoso, false en caso contrario
+     * @throws Exception 
+     */
+    public boolean InsertarDetalleVenta() throws Exception {
         try {
             conectarBase();
             setSql("INSERT INTO DETALLEVENTAS (NUMVENTA,CLAVEPROD,DETVENTACANTIDAD,DETVENTAPRECIO,DETVENTASUBTOTAL) VALUES (?,?,?,?,?)");
@@ -34,11 +39,20 @@ public class DetalleVenta extends ConexionBD{
             getPstmn().setInt(3, detVentaCantidad);
             getPstmn().setFloat(4, detVentaPrecio);
             getPstmn().setFloat(5, detVentaSubtotal);
-            getPstmn().executeUpdate();
-            producto.ActualizarExistencias(detVentaCantidad);
-            getConn().close();
+            int res = getPstmn().executeUpdate();
+            if (res > 0) {
+                producto.ActualizarExistencias(detVentaCantidad);
+                getConn().close();
+                return Boolean.TRUE;
+            }
+            else {
+                getConn().close();
+                return Boolean.FALSE;
+            }
         } catch (SQLException ex) {
+            getConn().close();
             Logger.getLogger(DetalleVenta.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al insertar detalle de venta");
         }
 
     }
@@ -82,5 +96,5 @@ public class DetalleVenta extends ConexionBD{
     public void setDetVentaSubtotal(int detVentaSubtotal) {
         this.detVentaSubtotal = detVentaSubtotal;
     }
-    
+
 }

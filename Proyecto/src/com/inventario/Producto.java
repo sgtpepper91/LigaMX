@@ -3,13 +3,12 @@ package com.inventario;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 
 /**
  *
  * @author hecto
  */
-public class Producto extends ConexionBD{
+public class Producto extends ConexionBD {
 
     private int claveProd;
     private String descripcionProd;
@@ -25,9 +24,8 @@ public class Producto extends ConexionBD{
     }
 
     Producto() {
-        
-    }
 
+    }
 
     public int getClaveProd() {
         return claveProd;
@@ -69,25 +67,46 @@ public class Producto extends ConexionBD{
         this.precioUnitario = precioUnitario;
     }
 
-    public void ActualizarExistencias(int cantidad) {
+    /**
+     * Actualiza la tabla de Existencias
+     *
+     * @param cantidad
+     * @return true si fue exitoso, false en caso contrario
+     * @throws Exception
+     */
+    public boolean ActualizarExistencias(int cantidad) throws Exception {
         try {
             conectarBase();
             setSql("UPDATE PRODUCTOS SET EXISTENCIAS= " + (existencias - cantidad) + " WHERE CLAVEPROD=" + claveProd + "");
-            getStmn().executeUpdate(getSql());
-            getConn().close();
+            int res = getStmn().executeUpdate(getSql());
+            if (res > 0) {
+                getConn().close();
+                return Boolean.TRUE;
+            } else {
+                getConn().close();
+                return Boolean.FALSE;
+            }
         } catch (SQLException ex) {
+            getConn().close();
             Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al actualizar la tabla existencias");
         }
 
     }
 
-    public Producto  RecuperarProducto(String descripcion) {
+    /**
+     * Recupera los datos de un producto
+     *
+     * @param descripcion
+     * @return El producto
+     */
+    public Producto RecuperarProducto(String descripcion) {
         try {
             conectarBase();
             setRset(getStmn().executeQuery("SELECT * FROM PRODUCTOS WHERE DESCRIPCIONPROD='" + descripcion + "'"));
             while (getRset().next()) {
                 claveProd = getRset().getInt(1);
-                existencias = getRset().getInt(3);  
+                existencias = getRset().getInt(3);
                 costoUnitario = getRset().getInt(4);
                 precioUnitario = getRset().getInt(5);
             }
@@ -98,7 +117,13 @@ public class Producto extends ConexionBD{
         return this;
     }
 
-    void InsertarProducto() {
+    /**
+     * Inserta un nuevo producto en la tabla
+     *
+     * @return true si fue exitoso, false en caso contrario
+     * @throws Exception
+     */
+    boolean InsertarProducto() throws Exception {
         try {
             conectarBase();
             setSql("INSERT INTO PRODUCTOS (DESCRIPCIONPROD,EXISTENCIAS,COSTOUNITARIO,PRECIOUNITARIO) VALUES (?,?,?,?)");
@@ -107,11 +132,18 @@ public class Producto extends ConexionBD{
             getPstmn().setInt(2, existencias);
             getPstmn().setFloat(3, costoUnitario);
             getPstmn().setFloat(4, precioUnitario);
-            getPstmn().executeUpdate();
-            JOptionPane.showMessageDialog(null, "Producto insertado", null, 1);
-            getConn().close();
+            int res = getPstmn().executeUpdate();
+            if (res > 0) {
+                getConn().close();
+                return Boolean.TRUE;
+            } else {
+                getConn().close();
+                return Boolean.FALSE;
+            }
         } catch (SQLException ex) {
+            getConn().close();
             Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al insertar producto");
         }
     }
 }

@@ -11,6 +11,8 @@ import java.awt.Toolkit;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -152,15 +154,15 @@ public class Inventario extends javax.swing.JFrame {
         panProductos = new javax.swing.JPanel();
         scrollTablaInventario = new javax.swing.JScrollPane();
         tbInventario = new javax.swing.JTable();
-        panClientes = new javax.swing.JPanel();
-        scrollTablaClientes = new javax.swing.JScrollPane();
-        tbClientes = new javax.swing.JTable();
         panDevoluciones = new javax.swing.JPanel();
         lblClienteDevoluciones = new javax.swing.JLabel();
         txtClienteDevoluciones = new javax.swing.JTextField();
         btnBuscarDevoluciones = new javax.swing.JButton();
         scrollTablaHistorial1 = new javax.swing.JScrollPane();
         tbDevoluciones = new javax.swing.JTable();
+        panClientes = new javax.swing.JPanel();
+        scrollTablaClientes = new javax.swing.JScrollPane();
+        tbClientes = new javax.swing.JTable();
         lblTotalVentas = new javax.swing.JLabel();
         lblTotalDeudas = new javax.swing.JLabel();
         txtTotalDeudas = new javax.swing.JFormattedTextField();
@@ -178,6 +180,7 @@ public class Inventario extends javax.swing.JFrame {
         mNuevoProducto = new javax.swing.JMenuItem();
         mNuevoCliente = new javax.swing.JMenuItem();
         mEditarCliente = new javax.swing.JMenuItem();
+        mBorrarCliente = new javax.swing.JMenuItem();
         mSalir = new javax.swing.JMenuItem();
         menuAyuda = new javax.swing.JMenu();
         mAcerca = new javax.swing.JMenuItem();
@@ -640,57 +643,6 @@ public class Inventario extends javax.swing.JFrame {
 
         panPestañas.addTab("Productos", panProductos);
 
-        tbClientes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Nombre", "Saldo"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Float.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tbClientes.getTableHeader().setReorderingAllowed(false);
-        tbClientes.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tbClientesMouseClicked(evt);
-            }
-        });
-        scrollTablaClientes.setViewportView(tbClientes);
-        if (tbClientes.getColumnModel().getColumnCount() > 0) {
-            tbClientes.getColumnModel().getColumn(0).setResizable(false);
-            tbClientes.getColumnModel().getColumn(1).setResizable(false);
-            tbClientes.getColumnModel().getColumn(1).setPreferredWidth(10);
-        }
-
-        javax.swing.GroupLayout panClientesLayout = new javax.swing.GroupLayout(panClientes);
-        panClientes.setLayout(panClientesLayout);
-        panClientesLayout.setHorizontalGroup(
-            panClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollTablaClientes, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
-        );
-        panClientesLayout.setVerticalGroup(
-            panClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panClientesLayout.createSequentialGroup()
-                .addComponent(scrollTablaClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-
-        panPestañas.addTab("Clientes", panClientes);
-
         lblClienteDevoluciones.setText("Cliente");
 
         btnBuscarDevoluciones.setText("Buscar");
@@ -776,6 +728,57 @@ public class Inventario extends javax.swing.JFrame {
         );
 
         panPestañas.addTab("Devoluciones", panDevoluciones);
+
+        tbClientes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Saldo"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Float.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbClientes.getTableHeader().setReorderingAllowed(false);
+        tbClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbClientesMouseClicked(evt);
+            }
+        });
+        scrollTablaClientes.setViewportView(tbClientes);
+        if (tbClientes.getColumnModel().getColumnCount() > 0) {
+            tbClientes.getColumnModel().getColumn(0).setResizable(false);
+            tbClientes.getColumnModel().getColumn(1).setResizable(false);
+            tbClientes.getColumnModel().getColumn(1).setPreferredWidth(10);
+        }
+
+        javax.swing.GroupLayout panClientesLayout = new javax.swing.GroupLayout(panClientes);
+        panClientes.setLayout(panClientesLayout);
+        panClientesLayout.setHorizontalGroup(
+            panClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(scrollTablaClientes, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
+        );
+        panClientesLayout.setVerticalGroup(
+            panClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panClientesLayout.createSequentialGroup()
+                .addComponent(scrollTablaClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        panPestañas.addTab("Clientes", panClientes);
 
         lblTotalVentas.setText("Total Ventas");
 
@@ -893,7 +896,7 @@ public class Inventario extends javax.swing.JFrame {
         menuArchivo.add(mNuevoProducto);
 
         mNuevoCliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_MASK));
-        mNuevoCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/nuevoCliente.png"))); // NOI18N
+        mNuevoCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Add-Male-User-icon.png"))); // NOI18N
         mNuevoCliente.setText("Nuevo Cliente");
         mNuevoCliente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -910,6 +913,15 @@ public class Inventario extends javax.swing.JFrame {
             }
         });
         menuArchivo.add(mEditarCliente);
+
+        mBorrarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/delete-user-icon-33724.png"))); // NOI18N
+        mBorrarCliente.setText("Borrar Cliente");
+        mBorrarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarVentasActionPerformed(evt);
+            }
+        });
+        menuArchivo.add(mBorrarCliente);
 
         mSalir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, java.awt.event.InputEvent.ALT_MASK));
         mSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/salir.png"))); // NOI18N
@@ -987,18 +999,38 @@ public class Inventario extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Cierra la aplicación
+     *
+     * @param evt
+     */
     private void mSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSalirActionPerformed
         System.exit(0);
     }//GEN-LAST:event_mSalirActionPerformed
 
+    /**
+     * Evento cuando se hace un cambio en la tabla Venta
+     *
+     * @param evt
+     */
     private void tbVentaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tbVentaPropertyChange
         CalcularVenta();
     }//GEN-LAST:event_tbVentaPropertyChange
 
+    /**
+     * Evento al hacer click en el botón borrar venta
+     *
+     * @param evt
+     */
     private void btnBorrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarVentaActionPerformed
         BorrarVentas();
     }//GEN-LAST:event_btnBorrarVentaActionPerformed
 
+    /**
+     * Botón aceptar venta
+     *
+     * @param evt
+     */
     private void btnAceptarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarVentaActionPerformed
         CalcularVenta();
         float total = Float.parseFloat(txtTotal.getValue().toString());
@@ -1013,63 +1045,86 @@ public class Inventario extends javax.swing.JFrame {
             builder.append("No se han añadido productos\n");
         }
         if (builder.length() != 0) {
-            JOptionPane.showMessageDialog(this, builder, "Error", 0);
+            JOptionPane.showMessageDialog(this, builder, "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            int opcion = JOptionPane.showConfirmDialog(this, "Desea agregar a " + nombre + " la cantidad de $" + total + "", "Aceptar venta", 0, 2);
+            int opcion = JOptionPane.showConfirmDialog(this, "Desea agregar a " + nombre + " la cantidad de $" + total + "", "Aceptar venta",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (opcion == JOptionPane.YES_OPTION) {
-                Cliente cliente = new Cliente();
-                cliente.RecuperarCliente(nombre);
-                Venta venta = new Venta(cliente, fechaVenta, (int) total);
-                venta.insertarVenta();
-                for (int contador = 0; contador < tbVenta.getRowCount(); contador++) {
-                    if ((this.tbVenta.getValueAt(contador, 0) != null) && (this.tbVenta.getValueAt(contador, 1) != null)) {
-                        int cantidad = Integer.parseInt(this.tbVenta.getValueAt(contador, 0).toString());
-                        Producto producto = new Producto();
-                        producto.RecuperarProducto(this.tbVenta.getValueAt(contador, 1).toString());
-                        DetalleVenta detalle = new DetalleVenta(venta.getNumVenta(), producto, cantidad);
-                        detalle.InsertarDetalleVenta();
+                try {
+                    Cliente cliente = new Cliente();
+                    cliente.RecuperarCliente(nombre);
+                    Venta venta = new Venta(cliente, fechaVenta, (int) total);
+                    if (venta.insertarVenta()) {
+                        for (int contador = 0; contador < tbVenta.getRowCount(); contador++) {
+                            if ((this.tbVenta.getValueAt(contador, 0) != null) && (this.tbVenta.getValueAt(contador, 1) != null)) {
+                                int cantidad = Integer.parseInt(this.tbVenta.getValueAt(contador, 0).toString());
+                                Producto producto = new Producto();
+                                producto.RecuperarProducto(this.tbVenta.getValueAt(contador, 1).toString());
+                                DetalleVenta detalle = new DetalleVenta(venta.getNumVenta(), producto, cantidad);
+                                if (!detalle.InsertarDetalleVenta()) {
+                                    JOptionPane.showMessageDialog(this, "Error al insertar detalle de venta", null, JOptionPane.ERROR_MESSAGE);
+                                }
+                            }
+                        }
+                        if (ajuste > 0) {
+                            Producto productoAjuste = new Producto();
+                            productoAjuste.RecuperarProducto("ajuste");
+                            productoAjuste.setCostoUnitario(ajuste);
+                            productoAjuste.setPrecioUnitario(ajuste);
+                            DetalleVenta detalle = new DetalleVenta(venta.getNumVenta(), productoAjuste, 1);
+                            detalle.InsertarDetalleVenta();
+                        }
+                        if (cliente.ActualizarAcumulado((int) (total))) {
+                            JOptionPane.showMessageDialog(this, "Venta insertada", null, JOptionPane.INFORMATION_MESSAGE);
+                            BorrarVentas();
+                            txtClientePagos.setText(cliente.getNombreCliente());
+                            txtClienteHistorial.setText(cliente.getNombreCliente());
+                            llenarHistorial(cliente.getNombreCliente());
+                            service.llenarInventario();
+                            llenarClientes();
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Error al actualizar acumulado", null, JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error al insertar venta", null, JOptionPane.ERROR_MESSAGE);
                     }
+                } catch (Exception ex) {
+                    Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
                 }
-                if (ajuste > 0) {
-                    Producto productoAjuste = new Producto();
-                    productoAjuste.RecuperarProducto("ajuste");
-                    productoAjuste.setCostoUnitario(ajuste);
-                    productoAjuste.setPrecioUnitario(ajuste);
-                    DetalleVenta detalle = new DetalleVenta(venta.getNumVenta(), productoAjuste, 1);
-                    detalle.InsertarDetalleVenta();
-                }
-                cliente.ActualizarAcumulado((int) (total));
-                JOptionPane.showMessageDialog(this, "Venta insertada", null, 1);
-                BorrarVentas();
-                txtClientePagos.setText(cliente.getNombreCliente());
-                txtClienteHistorial.setText(cliente.getNombreCliente());
-                llenarHistorial(cliente.getNombreCliente());
-                service.llenarInventario();
-                llenarClientes();
             }
         }
     }//GEN-LAST:event_btnAceptarVentaActionPerformed
 
+    /**
+     * Evento al escribir en el campo Ajuste
+     *
+     * @param evt
+     */
     private void txtAjustePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtAjustePropertyChange
         CalcularVenta();
     }//GEN-LAST:event_txtAjustePropertyChange
 
+    /**
+     * Evento al hacer click en el botón Buscar
+     *
+     * @param evt
+     */
     private void btnBuscarVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarVentasActionPerformed
         if (evt.getSource() == btnBuscarVentas) {
             buscar = 0;
-        }
-        if (evt.getSource() == btnBuscarPagos) {
+        } else if (evt.getSource() == btnBuscarPagos) {
             buscar = 1;
-        }
-        if (evt.getSource() == this.btnBuscarHistorial) {
+        } else if (evt.getSource() == this.btnBuscarHistorial) {
             buscar = 2;
-        }
-        if (evt.getSource() == this.mEditarCliente) {
+        } else if (evt.getSource() == this.mEditarCliente) {
             this.buscar = 3;
-        }
-        if (evt.getSource() == this.btnBuscarDevoluciones) {
+        } else if (evt.getSource() == this.btnBuscarDevoluciones) {
             this.buscar = 4;
+        } else if (evt.getSource() == this.mBorrarCliente) {
+            this.buscar = 5;
         }
+
         Cliente cliente = new Cliente();
         DefaultListModel listModel = cliente.getListaClientes();
         listaClientes.setModel(listModel);
@@ -1077,6 +1132,11 @@ public class Inventario extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnBuscarVentasActionPerformed
 
+    /**
+     * Evento al hacer click en un cliente de la lista
+     *
+     * @param evt
+     */
     private void listaClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaClientesMouseClicked
         if (evt.getClickCount() == 2) {
             String cliente = listaClientes.getSelectedValue();
@@ -1094,8 +1154,13 @@ public class Inventario extends javax.swing.JFrame {
                 case 3:
                     String cnuevo = JOptionPane.showInputDialog(buscarCliente, "Inserte el nuevo nombre para: " + cliente, cliente);
                     if (!cnuevo.isEmpty()) {
-                        new Cliente().EditarCliente(cliente, cnuevo);
-                        llenarClientes();
+                        try {
+                            new Cliente().EditarCliente(cliente, cnuevo);
+                            llenarClientes();
+                        } catch (Exception ex) {
+                            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+                        }
                     } else {
                         JOptionPane.showMessageDialog(buscarCliente, "No se ha insertado nombre", "Error", 0);
                     }
@@ -1103,6 +1168,23 @@ public class Inventario extends javax.swing.JFrame {
                 case 4:
                     txtClienteDevoluciones.setText(cliente);
                     llenarDevolucion(cliente);
+                    break;
+                case 5:
+                    int opcion = JOptionPane.showConfirmDialog(this, "Desea eliminar a " + cliente + "", "Borrar cliente",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                    if (opcion == JOptionPane.YES_OPTION) {
+                        try {
+                            Cliente clienteBorrar = new Cliente();
+                            clienteBorrar.RecuperarCliente(cliente);
+                            if (clienteBorrar.BorrarCliente()) {
+                                JOptionPane.showMessageDialog(this, "Cliente borrado", null, JOptionPane.INFORMATION_MESSAGE);
+                                llenarClientes();
+                            }
+                        } catch (Exception ex) {
+                            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
             }
             buscarCliente.setVisible(false);
         }
@@ -1110,25 +1192,39 @@ public class Inventario extends javax.swing.JFrame {
 
     }//GEN-LAST:event_listaClientesMouseClicked
 
+    /**
+     * Evento al hacer click en un cliente de la tabla Clientes
+     *
+     * @param evt
+     */
     private void tbClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbClientesMouseClicked
         if (evt.getClickCount() == 2) {
             String cliente = tbClientes.getValueAt(tbClientes.getSelectedRow(), 0).toString();
+            txtClienteVentas.setText(cliente);
+            txtClientePagos.setText(cliente);
+            txtClienteDevoluciones.setText(cliente);
             txtClienteHistorial.setText(cliente);
             llenarHistorial(cliente);
         }
     }//GEN-LAST:event_tbClientesMouseClicked
 
+    /**
+     * Evento al hacer click en el menú de nuevo producto
+     *
+     * @param evt
+     */
     private void mNuevoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mNuevoProductoActionPerformed
-        /*NuevoProducto.pack();
-        NuevoProducto.setLocationRelativeTo(this);
-        NuevoProducto.setVisible(true);*/
-
         nuevoProducto.getContentPane().add(panNuevoProducto);
         nuevoProducto.pack();
         nuevoProducto.setLocationRelativeTo(this);
         nuevoProducto.setVisible(true);
     }//GEN-LAST:event_mNuevoProductoActionPerformed
 
+    /**
+     * Evento al hacer click en el menú de nuevo cliente
+     *
+     * @param evt
+     */
     private void mNuevoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mNuevoClienteActionPerformed
         nuevoCliente.add(panNuevoCliente);
         nuevoCliente.pack();
@@ -1136,6 +1232,11 @@ public class Inventario extends javax.swing.JFrame {
         nuevoCliente.setVisible(true);
     }//GEN-LAST:event_mNuevoClienteActionPerformed
 
+    /**
+     * Evento al hacer click en el botón aceptar nuevo cliente
+     *
+     * @param evt
+     */
     private void btnAceptarNuevoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarNuevoClienteActionPerformed
         String nombreCliente = this.txtNuevoCliente.getText();
         float saldoCliente = Float.parseFloat(this.txtSaldoNuevo.getValue().toString());
@@ -1144,15 +1245,29 @@ public class Inventario extends javax.swing.JFrame {
             error = "No se ha insertado nombre del cliente";
             JOptionPane.showMessageDialog(nuevoCliente, error, "Error", 0);
         } else {
-            Cliente cliente = new Cliente(nombreCliente, (int) saldoCliente);
-            cliente.InsertarCliente();
-            txtNuevoCliente.setText(null);
-            txtSaldoNuevo.setValue(0);
-            nuevoCliente.setVisible(false);
-            service.llenarClientes();
+            try {
+                Cliente cliente = new Cliente(nombreCliente, (int) saldoCliente);
+                if (cliente.InsertarCliente()) {
+                    txtNuevoCliente.setText(null);
+                    txtSaldoNuevo.setValue(0);
+                    nuevoCliente.setVisible(false);
+                    service.llenarClientes();
+                    JOptionPane.showMessageDialog(this, "Cliente insertado", null, JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al insertar cliente", null, JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnAceptarNuevoClienteActionPerformed
 
+    /**
+     * Evento al hacer click en el botón aceptar nuevo producto
+     *
+     * @param evt
+     */
     private void btnAceptarNuevoProdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarNuevoProdActionPerformed
         String descProd = txtDescripcionProd.getText();
         int existProd = Integer.parseInt(this.jcCantidadProd.getSelectedItem().toString());
@@ -1163,7 +1278,7 @@ public class Inventario extends javax.swing.JFrame {
             builder.append("No se ha insertado descripción\n");
         }
         if (existProd == 0) {
-            builder.append("No se han a�adido productos\n");
+            builder.append("No se han añadido productos\n");
         }
         if (costoProd == 0) {
             builder.append("No se ha insertado costo de producto\n");
@@ -1175,18 +1290,32 @@ public class Inventario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(nuevoProducto, builder, "Error", 0);
         } else {
             Producto producto = new Producto(descProd, existProd, (int) costoProd, (int) precioProd);
-            producto.InsertarProducto();
-            txtDescripcionProd.setText(null);
-            jcCantidadProd.setSelectedItem(-1);
-            txtCostoProd.setValue(0);
-            txtPrecioProd.setValue(0);
-            nuevoProducto.setVisible(false);
-            this.setEnabled(true);
-            service.llenarProductos();
-            service.llenarInventario();
+            try {
+                if (producto.InsertarProducto()) {
+                    txtDescripcionProd.setText(null);
+                    jcCantidadProd.setSelectedItem(-1);
+                    txtCostoProd.setValue(0);
+                    txtPrecioProd.setValue(0);
+                    nuevoProducto.setVisible(false);
+                    this.setEnabled(true);
+                    service.llenarProductos();
+                    service.llenarInventario();
+                    JOptionPane.showMessageDialog(this, "Producto insertado", null, JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al insertar producto", null, JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnAceptarNuevoProdActionPerformed
 
+    /**
+     * Evento al hacer click en el botón aceptar pagos
+     *
+     * @param evt
+     */
     private void btnAceptarPagosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAceptarPagosActionPerformed
         String nombreCliente = txtClientePagos.getText();
         float total = Float.parseFloat(txtAbono.getValue().toString());
@@ -1201,23 +1330,37 @@ public class Inventario extends javax.swing.JFrame {
         if (builder.length() != 0) {
             JOptionPane.showMessageDialog(this, builder, "Error", 0);
         } else {
-            int opcion = JOptionPane.showConfirmDialog(this, "Desea abonar al " + nombreCliente + " la cantidad de $" + total + "", "Aceptar pago", 0, 2);
-            if (opcion == 0) {
-                Cliente cliente = new Cliente();
-                cliente.RecuperarCliente(nombreCliente);
-                Pago pago = new Pago(cliente, (int) total, fechaPago);
-                pago.InsertarPago();
-                txtClientePagos.setText(null);
-                txtAbono.setValue(0);
-                fechaPagos.setDate(new Date());
-                txtClienteHistorial.setText(nombreCliente);
-                llenarHistorial(nombreCliente);
-                llenarClientes();
-                service.llenarInventario();
+            int opcion = JOptionPane.showConfirmDialog(this, "Desea abonar al " + nombreCliente + " la cantidad de $" + total + "", "Aceptar pago",
+                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (opcion == JOptionPane.YES_OPTION) {
+                try {
+                    Cliente cliente = new Cliente();
+                    cliente.RecuperarCliente(nombreCliente);
+                    Pago pago = new Pago(cliente, (int) total, fechaPago);
+                    if (pago.InsertarPago()) {
+                        //txtClientePagos.setText(null);
+                        txtAbono.setValue(0);
+                        fechaPagos.setDate(new Date());
+                        txtClienteHistorial.setText(nombreCliente);
+                        llenarHistorial(nombreCliente);
+                        llenarClientes();
+                        service.llenarInventario();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error al insertar pago", null, JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_btnAceptarPagosActionPerformed
 
+    /**
+     * Evento al hacer click en un producto de la tabla devoluciones
+     *
+     * @param evt
+     */
     private void tbDevolucionesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbDevolucionesMouseClicked
         if (evt.getClickCount() == 2) {
             String nombreCliente = txtClienteDevoluciones.getText();
@@ -1228,23 +1371,38 @@ public class Inventario extends javax.swing.JFrame {
             int numVenta = Integer.parseInt(tbDevoluciones.getModel().getValueAt(fila, 4).toString());
             int claveProd = Integer.parseInt(tbDevoluciones.getModel().getValueAt(fila, 5).toString());
             Devolucion devolucion = new Devolucion(nombreCliente, cantidad, producto, numVenta, claveProd, (int) total);
-            service.hacerDevolucion(devolucion);
-            llenarHistorial(nombreCliente);
-            llenarClientes();
-            llenarDevolucion(nombreCliente);
-            service.llenarInventario();
+            try {
+                if (service.hacerDevolucion(devolucion)) {
+                    llenarHistorial(nombreCliente);
+                    llenarClientes();
+                    llenarDevolucion(nombreCliente);
+                    service.llenarInventario();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Error al hacer devolución", null, JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_tbDevolucionesMouseClicked
 
+    /**
+     * Evento al hacer click en el botón Acerca de
+     *
+     * @param evt
+     */
     private void mAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAcercaActionPerformed
-        String msg = "Héctor López  V 2.0 (08-05-16)\n"
-                + "-Se agrega la pestaña devoluciones\n"
-                + "-Se quita el botón de aceptar de la lista de buscar cliente\n"
-                + "-Se reestructura la aplicación";
-
+        StringBuilder msg = new StringBuilder("Héctor López  V 2.1 (05-06-16)\n");
+        msg.append("-Se cambia el orden de las pestañas\n");
+        msg.append("-Se llena el campo nombre cliente en las pestañas al seleccionar un cliente de la tabla");
+        msg.append("-Se agrega la opción de borrar cliente");
         JOptionPane.showMessageDialog(this, msg, "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mAcercaActionPerformed
 
+    /**
+     * Limpia la tabla ventas
+     */
     public void BorrarVentas() {
         this.txtClienteVentas.setText(null);
         this.fechaVentas.setDate(new java.util.Date());
@@ -1257,6 +1415,9 @@ public class Inventario extends javax.swing.JFrame {
         txtAjuste.setValue(0);
     }
 
+    /**
+     * Calcula el total de la venta
+     */
     public void CalcularVenta() {
         float gtotal = 0.0F;
         int cantidad;
@@ -1277,6 +1438,9 @@ public class Inventario extends javax.swing.JFrame {
         this.txtTotal.setValue(gtotal + ajuste);
     }
 
+    /**
+     * Llena la tabla clientes
+     */
     private void llenarClientes() {
         DefaultTableModel dm = (DefaultTableModel) this.tbClientes.getModel();
         int rowCount = dm.getRowCount();
@@ -1286,27 +1450,47 @@ public class Inventario extends javax.swing.JFrame {
         new Cliente().RecuperarCliente(dm);
     }
 
+    /**
+     * Llena el historial del cliente
+     *
+     * @param nombreCliente
+     */
     public void llenarHistorial(String nombreCliente) {
-        Cliente cliente = new Cliente();
-        cliente.RecuperarCliente(nombreCliente);
-        DefaultTableModel dm = (DefaultTableModel) this.tbHistorial.getModel();
-        int rowCount = dm.getRowCount();
-        for (int i = rowCount - 1; i >= 0; i--) {
-            dm.removeRow(i);
+        try {
+            Cliente cliente = new Cliente();
+            cliente.RecuperarCliente(nombreCliente);
+            DefaultTableModel dm = (DefaultTableModel) this.tbHistorial.getModel();
+            int rowCount = dm.getRowCount();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                dm.removeRow(i);
+            }
+            cliente.ObtenerHistorial(dm);
+            txtTotalCliente.setValue(cliente.getAcumuladoCliente());
+        } catch (Exception ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
         }
-        cliente.ObtenerHistorial(dm);
-        txtTotalCliente.setValue(cliente.getAcumuladoCliente());
     }
 
+    /**
+     * Llena la tabla devolución
+     *
+     * @param nombreCliente
+     */
     public void llenarDevolucion(String nombreCliente) {
-        Cliente cliente = new Cliente();
-        cliente.RecuperarCliente(nombreCliente);
-        DefaultTableModel dm = (DefaultTableModel) this.tbDevoluciones.getModel();
-        int rowCount = dm.getRowCount();
-        for (int i = rowCount - 1; i >= 0; i--) {
-            dm.removeRow(i);
+        try {
+            Cliente cliente = new Cliente();
+            cliente.RecuperarCliente(nombreCliente);
+            DefaultTableModel dm = (DefaultTableModel) this.tbDevoluciones.getModel();
+            int rowCount = dm.getRowCount();
+            for (int i = rowCount - 1; i >= 0; i--) {
+                dm.removeRow(i);
+            }
+            cliente.ObtenerHistorialDevolucion(dm);
+        } catch (Exception ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
         }
-        cliente.ObtenerHistorialDevolucion(dm);
     }
 
     /**
@@ -1377,6 +1561,7 @@ public class Inventario extends javax.swing.JFrame {
     private javax.swing.JLabel lblTotalVentas;
     private javax.swing.JList<String> listaClientes;
     private javax.swing.JMenuItem mAcerca;
+    private javax.swing.JMenuItem mBorrarCliente;
     private javax.swing.JMenuItem mEditarCliente;
     private javax.swing.JMenuItem mNuevoCliente;
     private javax.swing.JMenuItem mNuevoProducto;

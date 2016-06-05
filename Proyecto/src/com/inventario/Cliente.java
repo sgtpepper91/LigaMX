@@ -7,7 +7,6 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -54,19 +53,39 @@ public class Cliente extends ConexionBD {
         this.acumuladoCliente = acumuladoCliente;
     }
 
-    public void ActualizarAcumulado(int total) {
+    /**
+     * Actualiza el acumulado del cliente
+     * @param total
+     * @return true si fue exitoso, false en caso contrario
+     * @throws Exception 
+     */
+    public boolean ActualizarAcumulado(int total) throws Exception {
         try {
             conectarBase();
             setSql("UPDATE CLIENTES SET ACUMULADOCLIENTE= " + (acumuladoCliente + total) + " WHERE NUMCLIENTE=" + numCliente + "");
-            getStmn().executeUpdate(getSql());
-            getConn().close();
+            int res = getStmn().executeUpdate(getSql());
+            if (res > 0) {
+                getConn().close();
+                return Boolean.TRUE;
+            } else {
+                getConn().close();
+                return Boolean.FALSE;
+            }
         } catch (SQLException ex) {
+            getConn().close();
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al actualizar acumulado");
+
         }
 
     }
 
-    public void RecuperarCliente(String nombre) {
+    /**
+     * Recupera los datos del cliente
+     * @param nombre
+     * @throws Exception 
+     */
+    public void RecuperarCliente(String nombre) throws Exception {
         try {
             conectarBase();
             setRset(getStmn().executeQuery("SELECT NUMCLIENTE,ACUMULADOCLIENTE FROM CLIENTES WHERE NOMBRECLIENTE='" + nombre + "'"));
@@ -81,6 +100,10 @@ public class Cliente extends ConexionBD {
         }
     }
 
+    /**
+     * Llena la tabla de Clientes
+     * @param dm 
+     */
     public void RecuperarCliente(DefaultTableModel dm) {
         try {
             conectarBase();
@@ -99,6 +122,10 @@ public class Cliente extends ConexionBD {
         }
     }
 
+    /**
+     * Obtiene la lista de clientes
+     * @return el modelo para la lista
+     */
     public DefaultListModel getListaClientes() {
         DefaultListModel listModel = new DefaultListModel();
         try {
@@ -114,17 +141,36 @@ public class Cliente extends ConexionBD {
         return listModel;
     }
 
-    public void EditarCliente(String cliente, String cnuevo) {
+    /**
+     * Edita el nombre del cliente en la tabla
+     * @param cliente
+     * @param cnuevo
+     * @return true si fue exitoso, false en caso contrario
+     * @throws Exception 
+     */
+    public boolean EditarCliente(String cliente, String cnuevo) throws Exception {
         try {
             conectarBase();
             setSql("UPDATE CLIENTES SET NOMBRECLIENTE= '" + cnuevo + "' WHERE NOMBRECLIENTE='" + cliente + "'");
-            getStmn().executeUpdate(getSql());
-            getConn().close();
+            int res = getStmn().executeUpdate(getSql());
+            if (res > 0) {
+                getConn().close();
+                return Boolean.TRUE;
+            } else {
+                getConn().close();
+                return Boolean.FALSE;
+            }
         } catch (SQLException ex) {
+            getConn().close();
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al actualizar cliente");
         }
     }
 
+    /**
+     * Llena la tabla del historial del cliente
+     * @param dm 
+     */
     public void ObtenerHistorial(DefaultTableModel dm) {
         try {
             conectarBase();
@@ -156,6 +202,10 @@ public class Cliente extends ConexionBD {
         }
     }
 
+    /**
+     * Llena la tabla de devoluciones
+     * @param dm 
+     */
     public void ObtenerHistorialDevolucion(DefaultTableModel dm) {
         try {
             conectarBase();
@@ -186,18 +236,58 @@ public class Cliente extends ConexionBD {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-        void InsertarCliente() {
+
+    /**
+     * Inserta un nuevo cliente en la tabla Clientes
+     * @return true si fue exitoso, false en caso contrario
+     * @throws Exception 
+     */
+    boolean InsertarCliente() throws Exception {
         try {
-                conectarBase();
-                setSql("INSERT INTO CLIENTES (NOMBRECLIENTE, ACUMULADOCLIENTE) VALUES (?,?)");
-                setPstmn(getConn().prepareStatement(getSql()));
-                getPstmn().setString(1, nombreCliente);
-                getPstmn().setFloat(2, acumuladoCliente);
-                getPstmn().executeUpdate();
-                JOptionPane.showMessageDialog(null, "Cliente insertado", null, 1);
+            conectarBase();
+            setSql("INSERT INTO CLIENTES (NOMBRECLIENTE, ACUMULADOCLIENTE) VALUES (?,?)");
+            setPstmn(getConn().prepareStatement(getSql()));
+            getPstmn().setString(1, nombreCliente);
+            getPstmn().setFloat(2, acumuladoCliente);
+            int res = getPstmn().executeUpdate();
+            if (res > 0) {
                 getConn().close();
-            } catch (SQLException ex) {
-                Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+                return Boolean.TRUE;
+            } else {
+                getConn().close();
+                return Boolean.FALSE;
             }
+        } catch (SQLException ex) {
+            getConn().close();
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al insertar cliente");
         }
     }
+
+    /**
+     * Borra un cliente de la tabla
+     * @return true si fue exitoso, false en caso contrario
+     * @throws Exception 
+     */
+    boolean BorrarCliente() throws Exception {
+        try {
+            conectarBase();
+            setSql("DELETE CLIENTES WHERE NUMCLIENTE = ?");
+            setPstmn(getConn().prepareStatement(getSql()));
+            getPstmn().setInt(1, numCliente);
+            int res = getPstmn().executeUpdate();
+            if (res > 0) {
+                getConn().close();
+                return Boolean.TRUE;
+            } else {
+                getConn().close();
+                return Boolean.FALSE;
+            }
+        } catch (SQLException ex) {
+            getConn().close();
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al borrar cliente");
+        }
+    }
+
+}

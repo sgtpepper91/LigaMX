@@ -81,6 +81,10 @@ public class ConexionBD {
         this.sql = sql;
     }
 
+    /**
+     * Establece la conexión a la base de datos
+     * @throws SQLException 
+     */
     public void conectarBase() throws SQLException {
         DriverManager.registerDriver(new OracleDriver());
         //this.setConn(DriverManager.getConnection(path, usuario, password));

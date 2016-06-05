@@ -12,7 +12,8 @@ import javax.swing.JOptionPane;
  *
  * @author hecto
  */
-public class Pago extends ConexionBD{
+public class Pago extends ConexionBD {
+
     private Cliente cliente;
     private int pago;
     private Date fecha;
@@ -48,7 +49,12 @@ public class Pago extends ConexionBD{
         this.fecha = fecha;
     }
 
-    void InsertarPago() {
+    /**
+     * Inserta pago en la tabla Pagos
+     * @return true si fue exitoso, false en caso contrario
+     * @throws Exception 
+     */
+    boolean InsertarPago() throws Exception {
         try {
             String fechaAMD = formatoAñoMesDia.format(fecha);
             conectarBase();
@@ -57,12 +63,19 @@ public class Pago extends ConexionBD{
             getPstmn().setInt(1, cliente.getNumCliente());
             getPstmn().setFloat(2, pago);
             getPstmn().setDate(3, java.sql.Date.valueOf(fechaAMD));
-            getPstmn().executeUpdate();
-            cliente.ActualizarAcumulado(-pago);
-            getConn().close();
-            JOptionPane.showMessageDialog(null, "Pago insertado", null, 1);
+            int res = getPstmn().executeUpdate();
+            if (res > 0) {
+                cliente.ActualizarAcumulado(-pago);
+                getConn().close();
+                return Boolean.TRUE;
+            } else {
+                getConn().close();
+                return Boolean.FALSE;
+            }
         } catch (SQLException ex) {
+            getConn().close();
             Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al insertar pago");
         }
     }
 }
