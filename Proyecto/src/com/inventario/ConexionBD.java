@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import oracle.jdbc.driver.OracleDriver;
 
 /**
@@ -82,13 +85,18 @@ public class ConexionBD {
     }
 
     /**
-     * Establece la conexión a la base de datos
-     * @throws SQLException 
+     * Establece la conexión a la base de datos 
      */
-    public void conectarBase() throws SQLException {
-        DriverManager.registerDriver(new OracleDriver());
-        //this.setConn(DriverManager.getConnection(path, usuario, password));
-        this.setConn(DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:XE", "inventario", "1234"));
-        this.setStmn(conn.createStatement());
+    public void conectarBase() {
+        try {
+            DriverManager.registerDriver(new OracleDriver());
+            //this.setConn(DriverManager.getConnection(path, usuario, password));
+            this.setConn(DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:XE", "inventario", "1234"));
+            this.setStmn(conn.createStatement());
+        } catch (SQLException ex) {
+            Logger.getLogger(ConexionBD.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Error en conexión a base de datos", null, JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
     }
 }

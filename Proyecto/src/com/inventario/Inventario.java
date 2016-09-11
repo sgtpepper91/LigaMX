@@ -46,6 +46,7 @@ public class Inventario extends javax.swing.JFrame {
     final JDialog buscarCliente = new JDialog(this, "Buscar cliente", true);
     final JDialog nuevoCliente = new JDialog(this, "Nuevo cliente", true);
     final JDialog nuevoProducto = new JDialog(this, "Nuevo", true);
+    boolean editProducto = false;
 
     /**
      * Creates new form NewJFrame
@@ -617,6 +618,11 @@ public class Inventario extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        tbInventario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbInventarioMouseClicked(evt);
+            }
+        });
         scrollTablaInventario.setViewportView(tbInventario);
         tbInventario.getTableHeader().setReorderingAllowed(false);
         if (tbInventario.getColumnModel().getColumnCount() > 0) {
@@ -1000,7 +1006,7 @@ public class Inventario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     /**
-     * Cierra la aplicación
+     * Cierra la aplicaciÃ³n
      *
      * @param evt
      */
@@ -1018,7 +1024,7 @@ public class Inventario extends javax.swing.JFrame {
     }//GEN-LAST:event_tbVentaPropertyChange
 
     /**
-     * Evento al hacer click en el botón borrar venta
+     * Evento al hacer click en el botÃ³n borrar venta
      *
      * @param evt
      */
@@ -1027,7 +1033,7 @@ public class Inventario extends javax.swing.JFrame {
     }//GEN-LAST:event_btnBorrarVentaActionPerformed
 
     /**
-     * Botón aceptar venta
+     * BotÃ³n aceptar venta
      *
      * @param evt
      */
@@ -1042,7 +1048,7 @@ public class Inventario extends javax.swing.JFrame {
             builder.append("No se ha seleccionado cliente\n");
         }
         if (total == 0) {
-            builder.append("No se han añadido productos\n");
+            builder.append("No se han aÃ±adido productos\n");
         }
         if (builder.length() != 0) {
             JOptionPane.showMessageDialog(this, builder, "Error", JOptionPane.ERROR_MESSAGE);
@@ -1106,7 +1112,7 @@ public class Inventario extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAjustePropertyChange
 
     /**
-     * Evento al hacer click en el botón Buscar
+     * Evento al hacer click en el botÃ³n Buscar
      *
      * @param evt
      */
@@ -1209,7 +1215,7 @@ public class Inventario extends javax.swing.JFrame {
     }//GEN-LAST:event_tbClientesMouseClicked
 
     /**
-     * Evento al hacer click en el menú de nuevo producto
+     * Evento al hacer click en el menÃº de nuevo producto
      *
      * @param evt
      */
@@ -1217,11 +1223,12 @@ public class Inventario extends javax.swing.JFrame {
         nuevoProducto.getContentPane().add(panNuevoProducto);
         nuevoProducto.pack();
         nuevoProducto.setLocationRelativeTo(this);
+        editProducto = false;
         nuevoProducto.setVisible(true);
     }//GEN-LAST:event_mNuevoProductoActionPerformed
 
     /**
-     * Evento al hacer click en el menú de nuevo cliente
+     * Evento al hacer click en el menÃº de nuevo cliente
      *
      * @param evt
      */
@@ -1233,7 +1240,7 @@ public class Inventario extends javax.swing.JFrame {
     }//GEN-LAST:event_mNuevoClienteActionPerformed
 
     /**
-     * Evento al hacer click en el botón aceptar nuevo cliente
+     * Evento al hacer click en el botÃ³n aceptar nuevo cliente
      *
      * @param evt
      */
@@ -1264,7 +1271,7 @@ public class Inventario extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAceptarNuevoClienteActionPerformed
 
     /**
-     * Evento al hacer click en el botón aceptar nuevo producto
+     * Evento al hacer click en el botÃ³n aceptar nuevo producto
      *
      * @param evt
      */
@@ -1289,20 +1296,31 @@ public class Inventario extends javax.swing.JFrame {
         if (builder.length() != 0) {
             JOptionPane.showMessageDialog(nuevoProducto, builder, "Error", 0);
         } else {
-            Producto producto = new Producto(descProd, existProd, (int) costoProd, (int) precioProd);
             try {
-                if (producto.InsertarProducto()) {
-                    txtDescripcionProd.setText(null);
-                    jcCantidadProd.setSelectedItem(-1);
-                    txtCostoProd.setValue(0);
-                    txtPrecioProd.setValue(0);
-                    nuevoProducto.setVisible(false);
-                    this.setEnabled(true);
-                    service.llenarProductos();
-                    service.llenarInventario();
-                    JOptionPane.showMessageDialog(this, "Producto insertado", null, JOptionPane.ERROR_MESSAGE);
+                Producto producto = new Producto();
+                if (editProducto) {
+                    producto = producto.RecuperarProducto(descProd);
+
+                    if (producto.actualizar()) {
+                        JOptionPane.showMessageDialog(this, "Producto actualizado", null, JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error al actualizar producto", null, JOptionPane.ERROR_MESSAGE);
+                    }
                 } else {
-                    JOptionPane.showMessageDialog(this, "Error al insertar producto", null, JOptionPane.ERROR_MESSAGE);
+                    producto = new Producto(descProd, existProd, (int) costoProd, (int) precioProd);
+                    if (producto.InsertarProducto()) {
+                        txtDescripcionProd.setText(null);
+                        jcCantidadProd.setSelectedItem(-1);
+                        txtCostoProd.setValue(0);
+                        txtPrecioProd.setValue(0);
+                        nuevoProducto.setVisible(false);
+                        this.setEnabled(true);
+                        service.llenarProductos();
+                        service.llenarInventario();
+                        JOptionPane.showMessageDialog(this, "Producto insertado", null, JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error al insertar producto", null, JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             } catch (Exception ex) {
                 Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
@@ -1312,7 +1330,7 @@ public class Inventario extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAceptarNuevoProdActionPerformed
 
     /**
-     * Evento al hacer click en el botón aceptar pagos
+     * Evento al hacer click en el botÃ³n aceptar pagos
      *
      * @param evt
      */
@@ -1393,12 +1411,25 @@ public class Inventario extends javax.swing.JFrame {
      * @param evt
      */
     private void mAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAcercaActionPerformed
-        StringBuilder msg = new StringBuilder("Héctor López  V 2.1 (05-06-16)\n");
-        msg.append("-Se cambia el orden de las pestañas\n");
-        msg.append("-Se llena el campo nombre cliente en las pestañas al seleccionar un cliente de la tabla");
-        msg.append("-Se agrega la opción de borrar cliente");
+        StringBuilder msg = new StringBuilder("Héctor López  V 2.2 (11-09-16)\n");
+        msg.append("-Se agrega opción para editar productos\n");
+        msg.append("-Se cierra la aplicación si no se conecta a la base de datos");
         JOptionPane.showMessageDialog(this, msg, "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mAcercaActionPerformed
+
+    private void tbInventarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbInventarioMouseClicked
+        if (evt.getClickCount() == 2) {
+            nuevoProducto.getContentPane().add(panNuevoProducto);
+            nuevoProducto.pack();
+            nuevoProducto.setLocationRelativeTo(this);
+            txtDescripcionProd.setText(tbInventario.getValueAt(tbInventario.getSelectedRow(), 0).toString());
+            jcCantidadProd.setSelectedIndex(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) - 1);
+            txtCostoProd.setValue(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 2).toString()));
+            txtPrecioProd.setValue(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 3).toString()));
+            editProducto = true;
+            nuevoProducto.setVisible(true);
+        }
+    }//GEN-LAST:event_tbInventarioMouseClicked
 
     /**
      * Limpia la tabla ventas
@@ -1473,7 +1504,7 @@ public class Inventario extends javax.swing.JFrame {
     }
 
     /**
-     * Llena la tabla devolución
+     * Llena la tabla devoluciÃ³n
      *
      * @param nombreCliente
      */
@@ -1500,7 +1531,7 @@ public class Inventario extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

@@ -146,4 +146,35 @@ public class Producto extends ConexionBD {
             throw new Exception("Error al insertar producto");
         }
     }
+
+    /**
+     * Actualiza un nuevo producto en la tabla
+     *
+     * @return true si fue exitoso, false en caso contrario
+     * @throws Exception
+     */
+    boolean actualizar()  throws Exception{
+        try {
+            conectarBase();
+            setSql("UPDATE PRODUCTOS SET DESCRIPCIONPROD = ?, EXISTENCIAS = ?, COSTOUNITARIO = ? ,PRECIOUNITARIO = ? WHERE CLAVEPROD = ?");
+            setPstmn(getConn().prepareStatement(getSql()));
+            getPstmn().setString(1, descripcionProd);
+            getPstmn().setInt(2, existencias);
+            getPstmn().setInt(3, costoUnitario);
+            getPstmn().setInt(4, precioUnitario);
+            getPstmn().setInt(5, claveProd);
+            int res = getPstmn().executeUpdate();
+            if (res > 0) {
+                getConn().close();
+                return Boolean.TRUE;
+            } else {
+                getConn().close();
+                return Boolean.FALSE;
+            }
+        } catch (SQLException ex) {
+            getConn().close();
+            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+            throw new Exception("Error al actualizar producto");
+        }
+    }
 }
