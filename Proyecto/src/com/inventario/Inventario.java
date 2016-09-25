@@ -780,7 +780,7 @@ public class Inventario extends javax.swing.JFrame {
         panClientesLayout.setVerticalGroup(
             panClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panClientesLayout.createSequentialGroup()
-                .addComponent(scrollTablaClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollTablaClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -1224,6 +1224,11 @@ public class Inventario extends javax.swing.JFrame {
         nuevoProducto.pack();
         nuevoProducto.setLocationRelativeTo(this);
         editProducto = false;
+        txtDescripcionProd.setEditable(true);
+        txtDescripcionProd.setText("");
+        jcCantidadProd.setSelectedIndex(-1);
+        txtCostoProd.setValue(0);
+        txtPrecioProd.setValue(0);
         nuevoProducto.setVisible(true);
     }//GEN-LAST:event_mNuevoProductoActionPerformed
 
@@ -1300,12 +1305,19 @@ public class Inventario extends javax.swing.JFrame {
                 Producto producto = new Producto();
                 if (editProducto) {
                     producto = producto.RecuperarProducto(descProd);
-
+                    producto.setCostoUnitario((int)costoProd);
+                    producto.setExistencias(existProd);
+                    producto.setPrecioUnitario((int)precioProd);
                     if (producto.actualizar()) {
-                        JOptionPane.showMessageDialog(this, "Producto actualizado", null, JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Producto actualizado", null, JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(this, "Error al actualizar producto", null, JOptionPane.ERROR_MESSAGE);
                     }
+                    nuevoProducto.setVisible(false);
+                    this.setEnabled(true);
+                    service.llenarProductos();
+                    service.llenarInventario();
+                    
                 } else {
                     producto = new Producto(descProd, existProd, (int) costoProd, (int) precioProd);
                     if (producto.InsertarProducto()) {
@@ -1411,9 +1423,10 @@ public class Inventario extends javax.swing.JFrame {
      * @param evt
      */
     private void mAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAcercaActionPerformed
-        StringBuilder msg = new StringBuilder("Héctor López  V 2.2 (11-09-16)\n");
+        StringBuilder msg = new StringBuilder("Héctor López  V 2.2.1 (24-09-16)\n");
         msg.append("-Se agrega opción para editar productos\n");
-        msg.append("-Se cierra la aplicación si no se conecta a la base de datos");
+        msg.append("-Se cierra la aplicación si no se conecta a la base de datos\n");
+        msg.append("-El total de ventas se cuenta desde 19-09-2016");
         JOptionPane.showMessageDialog(this, msg, "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mAcercaActionPerformed
 
@@ -1423,9 +1436,14 @@ public class Inventario extends javax.swing.JFrame {
             nuevoProducto.pack();
             nuevoProducto.setLocationRelativeTo(this);
             txtDescripcionProd.setText(tbInventario.getValueAt(tbInventario.getSelectedRow(), 0).toString());
-            jcCantidadProd.setSelectedIndex(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) - 1);
-            txtCostoProd.setValue(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 2).toString()));
-            txtPrecioProd.setValue(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 3).toString()));
+            txtDescripcionProd.setEditable(false);
+            if(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) > 0) {
+                jcCantidadProd.setSelectedIndex(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) - 1);
+            } else {
+                jcCantidadProd.setSelectedIndex(-1);
+            }
+            txtCostoProd.setValue(Float.parseFloat(tbInventario.getValueAt(tbInventario.getSelectedRow(), 2).toString()));
+            txtPrecioProd.setValue(Float.parseFloat(tbInventario.getValueAt(tbInventario.getSelectedRow(), 3).toString()));
             editProducto = true;
             nuevoProducto.setVisible(true);
         }

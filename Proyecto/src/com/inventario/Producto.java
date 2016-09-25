@@ -109,6 +109,7 @@ public class Producto extends ConexionBD {
                 existencias = getRset().getInt(3);
                 costoUnitario = getRset().getInt(4);
                 precioUnitario = getRset().getInt(5);
+                descripcionProd = descripcion;
             }
             getConn().close();
         } catch (SQLException ex) {

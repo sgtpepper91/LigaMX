@@ -105,7 +105,7 @@ public class ServiceInventario extends ConexionBD {
             while (getRset().next()) {
                 inventario.getTxtTotalDeudas().setValue(getRset().getFloat(1));
             }
-            setRset(getStmn().executeQuery("SELECT SUM(TOTALVENTA) FROM VENTAS"));
+            setRset(getStmn().executeQuery("SELECT SUM(TOTALVENTA) FROM VENTAS WHERE FECHAVENTA BETWEEN '19-09-2016' AND SYSDATE"));
             while (getRset().next()) {
                 inventario.getTxtTotalVentas().setValue(getRset().getFloat(1));
             }
