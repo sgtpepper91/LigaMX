@@ -76,35 +76,33 @@ public class Venta extends ConexionBD {
      * Insertar venta en tabla VENTAS
      *
      * @return true si fue exitoso, false en caso contrario
-     * @throws Exception
+     * @throws com.inventario.Excepcion
      */
-    public boolean insertarVenta() throws Exception {
+    public boolean insertarVenta() throws Excepcion {
         try {
             String fechaAMD = formatoAñoMesDia.format(fechaVenta);
-            conectarBase();
             setSql("INSERT INTO VENTAS (FECHAVENTA,NUMCLIENTE,TOTALVENTA) VALUES (?,?,?)");
-            setPstmn(getConn().prepareStatement(getSql()));
+            crearPreparedStatement();
             getPstmn().setDate(1, java.sql.Date.valueOf(fechaAMD));
             getPstmn().setInt(2, numCliente);
             getPstmn().setFloat(3, totalVenta);
             int res = getPstmn().executeUpdate();
-            if (res > 0) {
-                setRset(getStmn().executeQuery("SELECT NUMVENTA FROM VENTAS WHERE FECHAVENTA='" + formatoDiaMesAño.format(fechaVenta)
-                        + "' and NUMCLIENTE=" + numCliente + " ORDER BY NUMVENTA DESC"));
+            if (ejecutarUpdate()) {
+                setSql("SELECT NUMVENTA FROM VENTAS WHERE FECHAVENTA = ? AND NUMCLIENTE = ? ORDER BY NUMVENTA DESC");
+                crearPreparedStatement();
+                getPstmn().setString(1, formatoDiaMesAño.format(fechaVenta));
+                getPstmn().setInt(2, numCliente);
+                ejecutarQuery();
                 if (getRset().next()) {
                     numVenta = getRset().getInt(1);
                 }
-                getConn().close();
+                cerrarConexion();
                 return Boolean.TRUE;
             } else {
-                getConn().close();
                 return Boolean.FALSE;
             }
-
         } catch (SQLException ex) {
-            getConn().close();
-            Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
-            throw new Exception("Error al insertar venta");
+            throw lanzarExcepcion(ex);
         }
     }
 
@@ -112,19 +110,22 @@ public class Venta extends ConexionBD {
      * Obtiene el total de la venta
      *
      * @param numVenta
+     * @throws com.inventario.Excepcion
      */
-    public void obtenerVenta(int numVenta) {
+    public void obtenerVenta(int numVenta) throws Excepcion {
         try {
-            conectarBase();
-            setRset(getStmn().executeQuery("SELECT TOTALVENTA FROM VENTAS WHERE NUMVENTA = " + numVenta + ""));
+            setSql("SELECT TOTALVENTA FROM VENTAS WHERE NUMVENTA = ?");
+            crearPreparedStatement();
+            getPstmn().setInt(1, numVenta);
+            ejecutarQuery();
             while (getRset().next()) {
                 this.numVenta = numVenta;
                 this.totalVenta = getRset().getInt(1);
             }
-            getConn().close();
+            cerrarConexion();
 
         } catch (SQLException ex) {
-            Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
+            throw lanzarExcepcion(ex);
         }
     }
 
@@ -133,25 +134,18 @@ public class Venta extends ConexionBD {
      *
      * @param total
      * @return true si fue exitoso, false en caso contrario
-     * @throws Exception
+     * @throws com.inventario.Excepcion
      */
-    public boolean actualizarVenta(int total) throws Exception {
+    public boolean actualizarVenta(int total) throws Excepcion {
         totalVenta -= total;
         try {
-            conectarBase();
-            setSql("UPDATE VENTAS SET TOTALVENTA=" + totalVenta + " WHERE NUMVENTA=" + numVenta + "");
-            int res = getStmn().executeUpdate(getSql());
-            if (res > 0) {
-                getConn().close();
-                return Boolean.TRUE;
-            } else {
-                getConn().close();
-                return Boolean.FALSE;
-            }
+            setSql("UPDATE VENTAS SET TOTALVENTA = ? WHERE NUMVENTA = ?");
+            crearPreparedStatement();
+            getPstmn().setInt(1, total);
+            getPstmn().setInt(2, numVenta);
+            return ejecutarUpdate();
         } catch (SQLException ex) {
-            getConn().close();
-            Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
-            throw new Exception("Error al actualizar venta");
+            throw lanzarExcepcion(ex);
         }
     }
 
@@ -159,24 +153,16 @@ public class Venta extends ConexionBD {
      * Elimina la venta
      *
      * @return true si fue exitoso, false en caso contrario
-     * @throws Exception
+     * @throws com.inventario.Excepcion
      */
-    public boolean eliminarVenta() throws Exception {
+    public boolean eliminarVenta() throws Excepcion {
         try {
-            conectarBase();
-            setSql("DELETE VENTAS WHERE NUMVENTA=" + numVenta + "");
-            int res = getStmn().executeUpdate(getSql());
-            if (res > 0) {
-                getConn().close();
-                return Boolean.TRUE;
-            } else {
-                getConn().close();
-                return Boolean.FALSE;
-            }
+            setSql("DELETE VENTAS WHERE NUMVENTA = ?");
+            crearPreparedStatement();
+            getPstmn().setInt(1, numVenta);
+            return ejecutarUpdate();
         } catch (SQLException ex) {
-            getConn().close();
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
-            throw new Exception("Error al borrar venta");
+            throw lanzarExcepcion(ex);
         }
     }
 }

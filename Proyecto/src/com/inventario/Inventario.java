@@ -6,6 +6,7 @@
  */
 package com.inventario;
 
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.text.NumberFormat;
@@ -32,10 +33,6 @@ import javax.swing.text.NumberFormatter;
  * @author hecto
  */
 public class Inventario extends javax.swing.JFrame {
-
-    ConexionBD conexionBD = new ConexionBD();
-    //ClaseConexion conexion = new ClaseConexion();
-
     NumberFormat dispFormat = NumberFormat.getCurrencyInstance(new Locale("es", "MX"));
     NumberFormat editFormat = NumberFormat.getNumberInstance(new Locale("es", "MX"));
     NumberFormatter dnFormat = new NumberFormatter(this.dispFormat);
@@ -52,13 +49,18 @@ public class Inventario extends javax.swing.JFrame {
      * Creates new form NewJFrame
      */
     public Inventario() {
-        //conexionBD.IniciaConexion("jdbc:oracle:thin:@127.0.0.1:1521:XE", "inventario", "1234");
-        initComponents();
-        service.llenarInventario();
-        service.llenarClientes();
-        buscarCliente.add(panBuscarCliente);
-        buscarCliente.pack();
-        buscarCliente.setLocationRelativeTo(this);
+        try {
+            initComponents();
+            service.llenarInventario();
+            service.llenarClientes();
+            buscarCliente.add(panBuscarCliente);
+            buscarCliente.pack();
+            buscarCliente.setLocationRelativeTo(Inventario.this);
+        } catch (Excepcion ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(Inventario.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            
+        }
     }
 
     @Override
@@ -405,7 +407,12 @@ public class Inventario extends javax.swing.JFrame {
         TableColumn col0 = this.tbVenta.getColumnModel().getColumn(0);
         JComboBox jcCantidad = new JComboBox(cant);
         col0.setCellEditor(new DefaultCellEditor(jcCantidad));
-        service.llenarProductos();
+        try{
+            service.llenarProductos();
+        } catch (Excepcion ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+        }
         if (tbVenta.getColumnModel().getColumnCount() > 0) {
             tbVenta.getColumnModel().getColumn(0).setResizable(false);
             tbVenta.getColumnModel().getColumn(0).setPreferredWidth(30);
@@ -780,7 +787,7 @@ public class Inventario extends javax.swing.JFrame {
         panClientesLayout.setVerticalGroup(
             panClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panClientesLayout.createSequentialGroup()
-                .addComponent(scrollTablaClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollTablaClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -1094,7 +1101,7 @@ public class Inventario extends javax.swing.JFrame {
                     } else {
                         JOptionPane.showMessageDialog(this, "Error al insertar venta", null, JOptionPane.ERROR_MESSAGE);
                     }
-                } catch (Exception ex) {
+                } catch (Excepcion ex) {
                     Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
                 }
@@ -1117,24 +1124,29 @@ public class Inventario extends javax.swing.JFrame {
      * @param evt
      */
     private void btnBuscarVentasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarVentasActionPerformed
-        if (evt.getSource() == btnBuscarVentas) {
-            buscar = 0;
-        } else if (evt.getSource() == btnBuscarPagos) {
-            buscar = 1;
-        } else if (evt.getSource() == this.btnBuscarHistorial) {
-            buscar = 2;
-        } else if (evt.getSource() == this.mEditarCliente) {
-            this.buscar = 3;
-        } else if (evt.getSource() == this.btnBuscarDevoluciones) {
-            this.buscar = 4;
-        } else if (evt.getSource() == this.mBorrarCliente) {
-            this.buscar = 5;
+        try {
+            if (evt.getSource() == btnBuscarVentas) {
+                buscar = 0;
+            } else if (evt.getSource() == btnBuscarPagos) {
+                buscar = 1;
+            } else if (evt.getSource() == this.btnBuscarHistorial) {
+                buscar = 2;
+            } else if (evt.getSource() == this.mEditarCliente) {
+                this.buscar = 3;
+            } else if (evt.getSource() == this.btnBuscarDevoluciones) {
+                this.buscar = 4;
+            } else if (evt.getSource() == this.mBorrarCliente) {
+                this.buscar = 5;
+            }
+            
+            Cliente cliente = new Cliente();
+            DefaultListModel listModel = cliente.getListaClientes();
+            listaClientes.setModel(listModel);
+            buscarCliente.setVisible(true);
+        } catch (Excepcion ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(Inventario.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        Cliente cliente = new Cliente();
-        DefaultListModel listModel = cliente.getListaClientes();
-        listaClientes.setModel(listModel);
-        buscarCliente.setVisible(true);
 
     }//GEN-LAST:event_btnBuscarVentasActionPerformed
 
@@ -1186,7 +1198,7 @@ public class Inventario extends javax.swing.JFrame {
                                 JOptionPane.showMessageDialog(this, "Cliente borrado", null, JOptionPane.INFORMATION_MESSAGE);
                                 llenarClientes();
                             }
-                        } catch (Exception ex) {
+                        } catch (Excepcion | HeadlessException ex) {
                             Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
                             JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
                         }
@@ -1224,6 +1236,11 @@ public class Inventario extends javax.swing.JFrame {
         nuevoProducto.pack();
         nuevoProducto.setLocationRelativeTo(this);
         editProducto = false;
+        txtDescripcionProd.setEditable(true);
+        txtDescripcionProd.setText("");
+        jcCantidadProd.setSelectedIndex(-1);
+        txtCostoProd.setValue(0);
+        txtPrecioProd.setValue(0);
         nuevoProducto.setVisible(true);
     }//GEN-LAST:event_mNuevoProductoActionPerformed
 
@@ -1263,7 +1280,7 @@ public class Inventario extends javax.swing.JFrame {
                 } else {
                     JOptionPane.showMessageDialog(this, "Error al insertar cliente", null, JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (Exception ex) {
+            } catch (Excepcion | HeadlessException ex) {
                 Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
             }
@@ -1300,12 +1317,19 @@ public class Inventario extends javax.swing.JFrame {
                 Producto producto = new Producto();
                 if (editProducto) {
                     producto = producto.RecuperarProducto(descProd);
-
+                    producto.setCostoUnitario((int)costoProd);
+                    producto.setExistencias(existProd);
+                    producto.setPrecioUnitario((int)precioProd);
                     if (producto.actualizar()) {
-                        JOptionPane.showMessageDialog(this, "Producto actualizado", null, JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Producto actualizado", null, JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(this, "Error al actualizar producto", null, JOptionPane.ERROR_MESSAGE);
                     }
+                    nuevoProducto.setVisible(false);
+                    this.setEnabled(true);
+                    service.llenarProductos();
+                    service.llenarInventario();
+                    
                 } else {
                     producto = new Producto(descProd, existProd, (int) costoProd, (int) precioProd);
                     if (producto.InsertarProducto()) {
@@ -1322,7 +1346,7 @@ public class Inventario extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Error al insertar producto", null, JOptionPane.ERROR_MESSAGE);
                     }
                 }
-            } catch (Exception ex) {
+            } catch (Excepcion | HeadlessException ex) {
                 Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
             }
@@ -1366,7 +1390,7 @@ public class Inventario extends javax.swing.JFrame {
                     } else {
                         JOptionPane.showMessageDialog(this, "Error al insertar pago", null, JOptionPane.ERROR_MESSAGE);
                     }
-                } catch (Exception ex) {
+                } catch (Excepcion | HeadlessException ex) {
                     Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
                     JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
                 }
@@ -1398,7 +1422,7 @@ public class Inventario extends javax.swing.JFrame {
                 } else {
                     JOptionPane.showMessageDialog(this, "Error al hacer devolución", null, JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (Exception ex) {
+            } catch (Excepcion | HeadlessException ex) {
                 Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
                 JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
             }
@@ -1411,9 +1435,10 @@ public class Inventario extends javax.swing.JFrame {
      * @param evt
      */
     private void mAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAcercaActionPerformed
-        StringBuilder msg = new StringBuilder("Héctor López  V 2.2 (11-09-16)\n");
+        StringBuilder msg = new StringBuilder("Héctor López  V 2.2.1 (24-09-16)\n");
         msg.append("-Se agrega opción para editar productos\n");
-        msg.append("-Se cierra la aplicación si no se conecta a la base de datos");
+        msg.append("-Se cierra la aplicación si no se conecta a la base de datos\n");
+        msg.append("-El total de ventas se cuenta desde 19-09-2016");
         JOptionPane.showMessageDialog(this, msg, "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mAcercaActionPerformed
 
@@ -1423,9 +1448,14 @@ public class Inventario extends javax.swing.JFrame {
             nuevoProducto.pack();
             nuevoProducto.setLocationRelativeTo(this);
             txtDescripcionProd.setText(tbInventario.getValueAt(tbInventario.getSelectedRow(), 0).toString());
-            jcCantidadProd.setSelectedIndex(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) - 1);
-            txtCostoProd.setValue(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 2).toString()));
-            txtPrecioProd.setValue(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 3).toString()));
+            txtDescripcionProd.setEditable(false);
+            if(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) > 0) {
+                jcCantidadProd.setSelectedIndex(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) - 1);
+            } else {
+                jcCantidadProd.setSelectedIndex(-1);
+            }
+            txtCostoProd.setValue(Float.parseFloat(tbInventario.getValueAt(tbInventario.getSelectedRow(), 2).toString()));
+            txtPrecioProd.setValue(Float.parseFloat(tbInventario.getValueAt(tbInventario.getSelectedRow(), 3).toString()));
             editProducto = true;
             nuevoProducto.setVisible(true);
         }
@@ -1456,14 +1486,19 @@ public class Inventario extends javax.swing.JFrame {
         float ajuste = Float.parseFloat(txtAjuste.getValue().toString());
         for (int i = 0; i < tbVenta.getRowCount(); i++) {
             if ((this.tbVenta.getValueAt(i, 0) != null) && (tbVenta.getValueAt(i, 1) != null)) {
-                cantidad = Integer.parseInt(tbVenta.getValueAt(i, 0).toString());
-                String prod = tbVenta.getValueAt(i, 1).toString();
-                Producto producto = new Producto();
-                producto.RecuperarProducto(prod);
-                tbVenta.setValueAt(producto.getPrecioUnitario(), i, 2);
-                total = cantidad * producto.getPrecioUnitario();
-                gtotal += total;
-                this.tbVenta.setValueAt(total, i, 3);
+                try {
+                    cantidad = Integer.parseInt(tbVenta.getValueAt(i, 0).toString());
+                    String prod = tbVenta.getValueAt(i, 1).toString();
+                    Producto producto = new Producto();
+                    producto.RecuperarProducto(prod);
+                    tbVenta.setValueAt(producto.getPrecioUnitario(), i, 2);
+                    total = cantidad * producto.getPrecioUnitario();
+                    gtotal += total;
+                    this.tbVenta.setValueAt(total, i, 3);
+                } catch (Excepcion ex) {
+                    Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
         this.txtTotal.setValue(gtotal + ajuste);
@@ -1478,7 +1513,12 @@ public class Inventario extends javax.swing.JFrame {
         for (int i = rowCount - 1; i >= 0; i--) {
             dm.removeRow(i);
         }
-        new Cliente().RecuperarCliente(dm);
+        try {
+            new Cliente().RecuperarCliente(dm);
+        } catch (Excepcion ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**

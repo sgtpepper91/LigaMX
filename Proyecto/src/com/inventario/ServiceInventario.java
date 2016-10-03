@@ -1,8 +1,10 @@
 package com.inventario;
 
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
@@ -18,7 +20,7 @@ import javax.swing.table.TableColumn;
  */
 public class ServiceInventario extends ConexionBD {
 
-    private Inventario inventario;
+    private final Inventario inventario;
     DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
     DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
     JComboBox jcProductos = new JComboBox();
@@ -29,43 +31,49 @@ public class ServiceInventario extends ConexionBD {
 
     /**
      * Llena la tabla de clientes
+     *
+     * @throws com.inventario.Excepcion
      */
-    public void llenarClientes() {
+    public void llenarClientes() throws Excepcion {
         try {
-            conectarBase();
             DefaultTableModel dm = (DefaultTableModel) inventario.getTbClientes().getModel();
             int rowCount = dm.getRowCount();
             for (int i = rowCount - 1; i >= 0; i--) {
                 dm.removeRow(i);
             }
-            setRset(getStmn().executeQuery("SELECT NOMBRECLIENTE, ACUMULADOCLIENTE FROM CLIENTES ORDER BY NOMBRECLIENTE"));
+            setSql("SELECT NOMBRECLIENTE, ACUMULADOCLIENTE FROM CLIENTES ORDER BY NOMBRECLIENTE");
+            crearPreparedStatement();
+            ejecutarQuery();
             while (getRset().next()) {
                 String nombre = getRset().getString(1);
                 float acumulado = getRset().getFloat(2);
-                Vector row = new Vector();
+                List row = new ArrayList();
                 row.add(nombre);
                 row.add(acumulado);
-                dm.addRow(row);
+                dm.addRow(row.toArray());
             }
-            getConn().close();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(inventario, e + "\nError en tablas");
-            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, e);
+            cerrarConexion();
+        } catch (SQLException ex) {
+            throw lanzarExcepcion(ex);
         }
     }
 
     /**
      * Llena la tabla de historial de cliente
+     *
+     * @throws com.inventario.Excepcion
      */
-    public void llenarHistorial() {
-        int NumCliente = 0;
-        String Cliente = inventario.getTxtClienteVentas().getText();
+    public void llenarHistorial() throws Excepcion {
+        int numCliente = 0;
+        String nomCliente = inventario.getTxtClienteVentas().getText();
         float Acumulado = 0.0F;
         try {
-            conectarBase();
-            setRset(getStmn().executeQuery("SELECT NUMCLIENTE,ACUMULADOCLIENTE FROM CLIENTES WHERE NOMBRECLIENTE='" + Cliente + "'"));
+            setSql("SELECT NUMCLIENTE,ACUMULADOCLIENTE FROM CLIENTES WHERE NOMBRECLIENTE = ?");
+            crearPreparedStatement();
+            getPstmn().setString(1, nomCliente);
+            ejecutarQuery();
             while (getRset().next()) {
-                NumCliente = getRset().getInt(1);
+                numCliente = getRset().getInt(1);
                 Acumulado = getRset().getFloat(2);
             }
             DefaultTableModel dm = (DefaultTableModel) inventario.getTbHistorial().getModel();
@@ -73,39 +81,52 @@ public class ServiceInventario extends ConexionBD {
             for (int i = rowCount - 1; i >= 0; i--) {
                 dm.removeRow(i);
             }
-            setRset(getStmn().executeQuery("SELECT D.DETVENTACANTIDAD AS CANTIDAD , P.DESCRIPCIONPROD AS PRODUCTO, D.DETVENTASUBTOTAL AS TOTAL, V.FECHAVENTA AS FECHA FROM CLIENTES C INNER JOIN VENTAS V ON C.NUMCLIENTE=V.NUMCLIENTE INNER JOIN DETALLEVENTAS D ON V.NUMVENTA=D.NUMVENTA INNER JOIN PRODUCTOS P ON D.CLAVEPROD=P.CLAVEPROD WHERE C.NUMCLIENTE=" + NumCliente + " " + "UNION ALL " + "SELECT NULL AS CANTIDAD, 'Pago' AS TOTAL, A.PAGO AS TOTAL, A.FECHA " + "FROM PAGOS A INNER JOIN CLIENTES C " + "ON C.NUMCLIENTE=A.NUMCLIENTE " + "WHERE C.NUMCLIENTE=" + NumCliente + " " + "ORDER BY FECHA DESC"));
+            setSql("SELECT D.DETVENTACANTIDAD AS CANTIDAD , P.DESCRIPCIONPROD AS PRODUCTO, D.DETVENTASUBTOTAL AS TOTAL, V.FECHAVENTA AS FECHA "
+                    + "FROM CLIENTES C INNER JOIN VENTAS V ON C.NUMCLIENTE=V.NUMCLIENTE "
+                    + "INNER JOIN DETALLEVENTAS D ON V.NUMVENTA=D.NUMVENTA "
+                    + "INNER JOIN PRODUCTOS P ON D.CLAVEPROD=P.CLAVEPROD "
+                    + "WHERE C.NUMCLIENTE = ? "
+                    + "UNION ALL SELECT NULL AS CANTIDAD, 'Pago' AS TOTAL, A.PAGO AS TOTAL, A.FECHA "
+                    + "FROM PAGOS A INNER JOIN CLIENTES C ON C.NUMCLIENTE=A.NUMCLIENTE "
+                    + "WHERE C.NUMCLIENTE = ? ORDER BY FECHA DESC");
+            crearPreparedStatement();
+            getPstmn().setInt(1, numCliente);
+            getPstmn().setInt(2, numCliente);
+            ejecutarQuery();
             while (getRset().next()) {
                 int cantidad = getRset().getInt(1);
                 String descripcion = getRset().getString(2);
                 float total = getRset().getFloat(3);
                 java.util.Date fecha = getRset().getDate(4);
 
-                Vector row = new Vector();
+                List row = new ArrayList();
                 row.add(cantidad);
                 row.add(descripcion);
                 row.add(total);
                 row.add(this.df.format(fecha));
-                dm.addRow(row);
+                dm.addRow(row.toArray());
             }
             inventario.getTxtTotalCliente().setValue(Acumulado);
-            getConn().close();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(inventario, e + "\nError en tablas");
-            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, e);
+            cerrarConexion();
+        } catch (SQLException e) {
+            throw lanzarExcepcion(e);
         }
     }
 
     /**
      * Llena la tabla Inventario
      */
-    void llenarInventario() {
+    void llenarInventario() throws Excepcion {
         try {
-            conectarBase();
-            setRset(getStmn().executeQuery("SELECT SUM(ACUMULADOCLIENTE) FROM CLIENTES"));
+            setSql("SELECT SUM(ACUMULADOCLIENTE) FROM CLIENTES");
+            crearPreparedStatement();
+            ejecutarQuery();
             while (getRset().next()) {
                 inventario.getTxtTotalDeudas().setValue(getRset().getFloat(1));
             }
-            setRset(getStmn().executeQuery("SELECT SUM(TOTALVENTA) FROM VENTAS"));
+            setSql("SELECT SUM(TOTALVENTA) FROM VENTAS WHERE FECHAVENTA BETWEEN '19-09-2016' AND SYSDATE");
+            crearPreparedStatement();
+            ejecutarQuery();
             while (getRset().next()) {
                 inventario.getTxtTotalVentas().setValue(getRset().getFloat(1));
             }
@@ -114,35 +135,39 @@ public class ServiceInventario extends ConexionBD {
             for (int i = rowCount - 1; i >= 0; i--) {
                 dm.removeRow(i);
             }
-            setRset(getStmn().executeQuery("SELECT DESCRIPCIONPROD, EXISTENCIAS, COSTOUNITARIO, PRECIOUNITARIO FROM PRODUCTOS WHERE DESCRIPCIONPROD != 'Ajuste' ORDER BY DESCRIPCIONPROD"));
+            setSql("SELECT DESCRIPCIONPROD, EXISTENCIAS, COSTOUNITARIO, PRECIOUNITARIO FROM PRODUCTOS WHERE DESCRIPCIONPROD != 'Ajuste' ORDER BY DESCRIPCIONPROD");
+            crearPreparedStatement();
+            ejecutarQuery();
             while (getRset().next()) {
                 String Descripcion = getRset().getString(1);
                 int Existencias = getRset().getInt(2);
                 float Costo = getRset().getFloat(3);
                 float Precio = getRset().getFloat(4);
-                Vector row = new Vector();
+                List row = new ArrayList();
                 row.add(Descripcion);
                 row.add(Existencias);
                 row.add(Costo);
                 row.add(Precio);
-                dm.addRow(row);
+                dm.addRow(row.toArray());
             }
-            getConn().close();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(inventario, e + "\nError en tablas");
-            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, e);
+            cerrarConexion();
+        } catch (SQLException e) {
+            throw lanzarExcepcion(e);
         }
     }
 
     /**
      * Llena el comboBox de productos
+     *
+     * @throws com.inventario.Excepcion
      */
-    public void llenarProductos() {
+    public void llenarProductos() throws Excepcion {
         String producto;
         try {
-            conectarBase();    
             TableColumn col = inventario.getTbVenta().getColumnModel().getColumn(1);
-            setRset(getStmn().executeQuery("SELECT DESCRIPCIONPROD FROM PRODUCTOS WHERE DESCRIPCIONPROD != 'Ajuste' ORDER BY DESCRIPCIONPROD "));
+            setSql("SELECT DESCRIPCIONPROD FROM PRODUCTOS WHERE DESCRIPCIONPROD != 'Ajuste' ORDER BY DESCRIPCIONPROD ");
+            crearPreparedStatement();
+            ejecutarQuery();
             comboModel.removeAllElements();
             while (getRset().next()) {
                 producto = getRset().getString("DESCRIPCIONPROD");
@@ -151,42 +176,47 @@ public class ServiceInventario extends ConexionBD {
             jcProductos.setModel(comboModel);
             getConn().close();
             col.setCellEditor(new DefaultCellEditor(jcProductos));
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(inventario, e + "\nError en tabla Productos");
+        } catch (SQLException e) {
+            throw lanzarExcepcion(e);
         }
     }
 
     /**
      * Realiza la devolución del producto
-     * @param devolucion 
+     *
+     * @param devolucion
      */
-    boolean  hacerDevolucion(Devolucion devolucion) throws Exception{
-        int opcion=JOptionPane.showConfirmDialog(inventario, "¿Desea devolver el producto:" + devolucion.getProducto() +"?","Devolución",JOptionPane.YES_NO_OPTION);
-        if(opcion==JOptionPane.YES_OPTION)
-        {
-            if(devolucion.getCantidad()>1)
-            {
-                devolucion.devolverProducto();
+    boolean hacerDevolucion(Devolucion devolucion) throws Excepcion {
+        int opcion = JOptionPane.showConfirmDialog(inventario, "¿Desea devolver el producto:" + devolucion.getProducto() + "?", "Devolución", JOptionPane.YES_NO_OPTION);
+        boolean actualizarVenta = false;
+        boolean eliminarVenta = false;
+        boolean devolverProducto = false;
+        boolean borrarDetalle = false;
+        boolean actualizarAcumulado = false;
+        if (opcion == JOptionPane.YES_OPTION) {
+            if (devolucion.getCantidad() > 1) {
+                devolverProducto = devolucion.devolverProducto();
+            } else {
+                borrarDetalle = devolucion.borrarDetalle();
             }
-            else{
-                devolucion.borrarDetalle();
+            if (devolverProducto || borrarDetalle) {
+                Venta venta = new Venta();
+                venta.obtenerVenta(devolucion.getNumVenta());
+                if (venta.getTotalVenta() > devolucion.getPrecioProd()) {
+                    actualizarVenta = venta.actualizarVenta(devolucion.getPrecioProd());
+                } else {
+                    eliminarVenta = venta.eliminarVenta();
+                }
+                if (actualizarVenta || eliminarVenta) {
+                    Producto producto = new Producto().RecuperarProducto(devolucion.getProducto());
+                    if (producto.ActualizarExistencias(-1)) {
+                        Cliente cliente = new Cliente();
+                        cliente.RecuperarCliente(devolucion.getNombreCliente());
+                        actualizarAcumulado = cliente.ActualizarAcumulado(-devolucion.getPrecioProd());
+                    }
+                }
             }
-            Venta venta = new Venta();
-            venta.obtenerVenta(devolucion.getNumVenta());
-            if(venta.getTotalVenta()>devolucion.getPrecioProd())
-            {
-                venta.actualizarVenta(devolucion.getPrecioProd());
-            }
-            else{
-                venta.eliminarVenta();
-            }
-            Producto producto = new Producto().RecuperarProducto(devolucion.getProducto());
-            producto.ActualizarExistencias(-1);
-            Cliente cliente = new Cliente();
-            cliente.RecuperarCliente(devolucion.getNombreCliente());
-            cliente.ActualizarAcumulado(-devolucion.getPrecioProd());
-            return Boolean.TRUE;
         }
-        return Boolean.FALSE;
+        return actualizarAcumulado;
     }
 }

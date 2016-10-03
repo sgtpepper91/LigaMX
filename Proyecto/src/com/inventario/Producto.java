@@ -72,24 +72,17 @@ public class Producto extends ConexionBD {
      *
      * @param cantidad
      * @return true si fue exitoso, false en caso contrario
-     * @throws Exception
+     * @throws com.inventario.Excepcion
      */
-    public boolean ActualizarExistencias(int cantidad) throws Exception {
+    public boolean ActualizarExistencias(int cantidad) throws Excepcion {
         try {
-            conectarBase();
-            setSql("UPDATE PRODUCTOS SET EXISTENCIAS= " + (existencias - cantidad) + " WHERE CLAVEPROD=" + claveProd + "");
-            int res = getStmn().executeUpdate(getSql());
-            if (res > 0) {
-                getConn().close();
-                return Boolean.TRUE;
-            } else {
-                getConn().close();
-                return Boolean.FALSE;
-            }
+            setSql("UPDATE PRODUCTOS SET EXISTENCIAS = ? WHERE CLAVEPROD = ?");
+            crearPreparedStatement();
+            getPstmn().setInt(1, existencias - cantidad);
+            getPstmn().setInt(2, claveProd);
+            return ejecutarUpdate();
         } catch (SQLException ex) {
-            getConn().close();
-            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
-            throw new Exception("Error al actualizar la tabla existencias");
+            throw lanzarExcepcion(ex);
         }
 
     }
@@ -99,51 +92,45 @@ public class Producto extends ConexionBD {
      *
      * @param descripcion
      * @return El producto
+     * @throws com.inventario.Excepcion
      */
-    public Producto RecuperarProducto(String descripcion) {
+    public Producto RecuperarProducto(String descripcion) throws Excepcion {
         try {
-            conectarBase();
-            setRset(getStmn().executeQuery("SELECT * FROM PRODUCTOS WHERE DESCRIPCIONPROD='" + descripcion + "'"));
+            setSql("SELECT * FROM PRODUCTOS WHERE DESCRIPCIONPROD = ?");
+            crearPreparedStatement();
+            getPstmn().setString(1, descripcion);
+            ejecutarQuery();
             while (getRset().next()) {
                 claveProd = getRset().getInt(1);
                 existencias = getRset().getInt(3);
                 costoUnitario = getRset().getInt(4);
                 precioUnitario = getRset().getInt(5);
+                descripcionProd = descripcion;
             }
-            getConn().close();
+            cerrarConexion();
+            return this;
         } catch (SQLException ex) {
-            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
+            throw lanzarExcepcion(ex);
         }
-        return this;
     }
 
     /**
      * Inserta un nuevo producto en la tabla
      *
      * @return true si fue exitoso, false en caso contrario
-     * @throws Exception
+     * @throws Excepcion
      */
-    boolean InsertarProducto() throws Exception {
+    boolean InsertarProducto() throws Excepcion {
         try {
-            conectarBase();
             setSql("INSERT INTO PRODUCTOS (DESCRIPCIONPROD,EXISTENCIAS,COSTOUNITARIO,PRECIOUNITARIO) VALUES (?,?,?,?)");
             setPstmn(getConn().prepareStatement(getSql()));
             getPstmn().setString(1, descripcionProd);
             getPstmn().setInt(2, existencias);
             getPstmn().setFloat(3, costoUnitario);
             getPstmn().setFloat(4, precioUnitario);
-            int res = getPstmn().executeUpdate();
-            if (res > 0) {
-                getConn().close();
-                return Boolean.TRUE;
-            } else {
-                getConn().close();
-                return Boolean.FALSE;
-            }
+            return ejecutarUpdate();
         } catch (SQLException ex) {
-            getConn().close();
-            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
-            throw new Exception("Error al insertar producto");
+            throw lanzarExcepcion(ex);
         }
     }
 
@@ -151,30 +138,20 @@ public class Producto extends ConexionBD {
      * Actualiza un nuevo producto en la tabla
      *
      * @return true si fue exitoso, false en caso contrario
-     * @throws Exception
+     * @throws Excepcion
      */
-    boolean actualizar()  throws Exception{
+    boolean actualizar()  throws Excepcion{
         try {
-            conectarBase();
             setSql("UPDATE PRODUCTOS SET DESCRIPCIONPROD = ?, EXISTENCIAS = ?, COSTOUNITARIO = ? ,PRECIOUNITARIO = ? WHERE CLAVEPROD = ?");
-            setPstmn(getConn().prepareStatement(getSql()));
+            crearPreparedStatement();
             getPstmn().setString(1, descripcionProd);
             getPstmn().setInt(2, existencias);
             getPstmn().setInt(3, costoUnitario);
             getPstmn().setInt(4, precioUnitario);
             getPstmn().setInt(5, claveProd);
-            int res = getPstmn().executeUpdate();
-            if (res > 0) {
-                getConn().close();
-                return Boolean.TRUE;
-            } else {
-                getConn().close();
-                return Boolean.FALSE;
-            }
+            return ejecutarUpdate();
         } catch (SQLException ex) {
-            getConn().close();
-            Logger.getLogger(Producto.class.getName()).log(Level.SEVERE, null, ex);
-            throw new Exception("Error al actualizar producto");
+            throw lanzarExcepcion(ex);
         }
     }
 }

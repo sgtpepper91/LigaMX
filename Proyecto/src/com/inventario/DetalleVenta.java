@@ -24,39 +24,6 @@ public class DetalleVenta extends ConexionBD {
         this.detVentaSubtotal = detVentaPrecio * detVentaCantidad;
     }
 
-    /**
-     * Inserta el detalle de venta en la tabla
-     * @return true si fue exitoso, false en caso contrario
-     * @throws Exception 
-     */
-    public boolean InsertarDetalleVenta() throws Exception {
-        try {
-            conectarBase();
-            setSql("INSERT INTO DETALLEVENTAS (NUMVENTA,CLAVEPROD,DETVENTACANTIDAD,DETVENTAPRECIO,DETVENTASUBTOTAL) VALUES (?,?,?,?,?)");
-            setPstmn(getConn().prepareStatement(getSql()));
-            getPstmn().setInt(1, numVenta);
-            getPstmn().setInt(2, producto.getClaveProd());
-            getPstmn().setInt(3, detVentaCantidad);
-            getPstmn().setFloat(4, detVentaPrecio);
-            getPstmn().setFloat(5, detVentaSubtotal);
-            int res = getPstmn().executeUpdate();
-            if (res > 0) {
-                producto.ActualizarExistencias(detVentaCantidad);
-                getConn().close();
-                return Boolean.TRUE;
-            }
-            else {
-                getConn().close();
-                return Boolean.FALSE;
-            }
-        } catch (SQLException ex) {
-            getConn().close();
-            Logger.getLogger(DetalleVenta.class.getName()).log(Level.SEVERE, null, ex);
-            throw new Exception("Error al insertar detalle de venta");
-        }
-
-    }
-
     public int getNumVenta() {
         return numVenta;
     }
@@ -97,4 +64,25 @@ public class DetalleVenta extends ConexionBD {
         this.detVentaSubtotal = detVentaSubtotal;
     }
 
+    /**
+     * Inserta el detalle de venta en la tabla
+     *
+     * @return true si fue exitoso, false en caso contrario
+     * @throws com.inventario.Excepcion
+     */
+    public boolean InsertarDetalleVenta() throws Excepcion {
+        try {
+            setSql("INSERT INTO DETALLEVENTAS (NUMVENTA,CLAVEPROD,DETVENTACANTIDAD,DETVENTAPRECIO,DETVENTASUBTOTAL) VALUES (?,?,?,?,?)");
+            crearPreparedStatement();
+            getPstmn().setInt(1, numVenta);
+            getPstmn().setInt(2, producto.getClaveProd());
+            getPstmn().setInt(3, detVentaCantidad);
+            getPstmn().setFloat(4, detVentaPrecio);
+            getPstmn().setFloat(5, detVentaSubtotal);
+            return ejecutarUpdate();
+        } catch (SQLException ex) {
+            throw lanzarExcepcion(ex);
+        }
+
+    }
 }

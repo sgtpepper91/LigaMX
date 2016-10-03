@@ -14,14 +14,6 @@ public class Devolucion extends ConexionBD {
     private int total;
     private int precioProd;
 
-    public int getPrecioProd() {
-        return precioProd;
-    }
-
-    public void setPrecioProd(int precioProd) {
-        this.precioProd = precioProd;
-    }
-
     public Devolucion(String nombreCliente, int cantidad, String producto, int numVenta, int claveProd, int total) {
         this.nombreCliente = nombreCliente;
         this.cantidad = cantidad;
@@ -30,6 +22,14 @@ public class Devolucion extends ConexionBD {
         this.claveProd = claveProd;
         this.total = total;
         precioProd = total / cantidad;
+    }
+
+    public int getPrecioProd() {
+        return precioProd;
+    }
+
+    public void setPrecioProd(int precioProd) {
+        this.precioProd = precioProd;
     }
 
     public int getClaveProd() {
@@ -80,54 +80,40 @@ public class Devolucion extends ConexionBD {
         this.nombreCliente = nombreCliente;
     }
 
-    /**
-     * Realiza la devolución de un producto
-     *
-     * @return true si fue exitoso, false en caso contrario
-     * @throws Exception
-     */
-    boolean devolverProducto() throws Exception {
+/**
+ * Realiza la devolución de un producto
+ * @return true si fue exitoso, false en caso contrario
+ * @throws Excepcion 
+ */
+    boolean devolverProducto() throws Excepcion {
         total -= precioProd;
         try {
-            conectarBase();
-            setSql("UPDATE DETALLEVENTAS SET DETVENTACANTIDAD= " + (cantidad - 1) + ", DETVENTASUBTOTAL=" + total + " WHERE NUMVENTA=" + numVenta + " AND CLAVEPROD=" + claveProd + "");
-            int res = getStmn().executeUpdate(getSql());
-            if (res > 0) {
-                getConn().close();
-                return Boolean.TRUE;
-            } else {
-                getConn().close();
-                return Boolean.FALSE;
-            }
+            setSql("UPDATE DETALLEVENTAS SET DETVENTACANTIDAD = ?, DETVENTASUBTOTAL = ? WHERE NUMVENTA = ? AND CLAVEPROD = ?");
+            crearPreparedStatement();
+            getPstmn().setInt(1, cantidad - 1);
+            getPstmn().setInt(2, total);
+            getPstmn().setInt(3, numVenta);
+            getPstmn().setInt(4, claveProd);
+            return ejecutarUpdate();
         } catch (SQLException ex) {
-            getConn().close();
-            Logger.getLogger(Devolucion.class.getName()).log(Level.SEVERE, null, ex);
-            throw new Exception("Error al actualizar detalle de venta");
+            throw lanzarExcepcion(ex);
         }
     }
 
     /**
      * Borra el detalle de venta del producto vendido
-     *
      * @return true si fue exitoso, false en caso contrario
-     * @throws Exception
+     * @throws Excepcion 
      */
-    boolean borrarDetalle() throws Exception {
+    boolean borrarDetalle() throws Excepcion {
         try {
-            conectarBase();
-            setSql("DELETE DETALLEVENTAS WHERE NUMVENTA=" + numVenta + " AND CLAVEPROD=" + claveProd + "");
-            int res = getStmn().executeUpdate(getSql());
-            if (res > 0) {
-                getConn().close();
-                return Boolean.TRUE;
-            } else {
-                getConn().close();
-                return Boolean.FALSE;
-            }
+            setSql("DELETE DETALLEVENTAS WHERE NUMVENTA = ? AND CLAVEPROD = ?");
+            crearPreparedStatement();
+            getPstmn().setInt(1, numVenta);
+            getPstmn().setInt(2, claveProd);
+            return ejecutarUpdate();
         } catch (SQLException ex) {
-            getConn().close();
-            Logger.getLogger(Devolucion.class.getName()).log(Level.SEVERE, null, ex);
-            throw new Exception("Error al borrar detalla de venta");
+            throw lanzarExcepcion(ex);
         }
     }
 }
