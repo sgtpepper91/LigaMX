@@ -1463,7 +1463,7 @@ public class Inventario extends javax.swing.JFrame {
      * @param evt
      */
     private void mAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAcercaActionPerformed
-        StringBuilder msg = new StringBuilder("Héctor López  V 2.2.1 (24-09-16)\n");
+        StringBuilder msg = new StringBuilder("Héctor López  V 2.2.2 (11-12-16)\n");
         msg.append("-Se agrega Log\n");
         JOptionPane.showMessageDialog(this, msg, "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mAcercaActionPerformed
