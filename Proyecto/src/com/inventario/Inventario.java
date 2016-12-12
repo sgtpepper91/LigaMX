@@ -12,8 +12,6 @@ import java.awt.Toolkit;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -27,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
@@ -44,12 +43,14 @@ public class Inventario extends javax.swing.JFrame {
     final JDialog nuevoCliente = new JDialog(this, "Nuevo cliente", true);
     final JDialog nuevoProducto = new JDialog(this, "Nuevo", true);
     boolean editProducto = false;
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
 
     /**
      * Creates new form NewJFrame
      */
     public Inventario() {
         try {
+            LOGGER.info(Constantes.ABRIENDO_APLICACION);
             initComponents();
             service.llenarInventario();
             service.llenarClientes();
@@ -57,7 +58,7 @@ public class Inventario extends javax.swing.JFrame {
             buscarCliente.pack();
             buscarCliente.setLocationRelativeTo(Inventario.this);
         } catch (Excepcion ex) {
-            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(Inventario.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             
         }
@@ -100,6 +101,10 @@ public class Inventario extends javax.swing.JFrame {
 
     public JFormattedTextField getTxtTotalCliente() {
         return txtTotalCliente;
+    }
+
+    public JFormattedTextField getTxtTotalInventario() {
+        return txtTotalInventario;
     }
 
     /**
@@ -157,6 +162,7 @@ public class Inventario extends javax.swing.JFrame {
         panProductos = new javax.swing.JPanel();
         scrollTablaInventario = new javax.swing.JScrollPane();
         tbInventario = new javax.swing.JTable();
+        txtTotalInventario = new javax.swing.JFormattedTextField();
         panDevoluciones = new javax.swing.JPanel();
         lblClienteDevoluciones = new javax.swing.JLabel();
         txtClienteDevoluciones = new javax.swing.JTextField();
@@ -325,6 +331,11 @@ public class Inventario extends javax.swing.JFrame {
         setTitle("Inventario");
         setIconImage(getIconImage());
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         panPestañas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -410,7 +421,7 @@ public class Inventario extends javax.swing.JFrame {
         try{
             service.llenarProductos();
         } catch (Excepcion ex) {
-            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
         }
         if (tbVenta.getColumnModel().getColumnCount() > 0) {
@@ -643,16 +654,29 @@ public class Inventario extends javax.swing.JFrame {
             tbInventario.getColumnModel().getColumn(3).setPreferredWidth(10);
         }
 
+        txtTotalInventario.setEditable(false);
+
         javax.swing.GroupLayout panProductosLayout = new javax.swing.GroupLayout(panProductos);
         panProductos.setLayout(panProductosLayout);
         panProductosLayout.setHorizontalGroup(
             panProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(scrollTablaInventario, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
+            .addGroup(panProductosLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(txtTotalInventario, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panProductosLayout.setVerticalGroup(
             panProductosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollTablaInventario)
+            .addGroup(panProductosLayout.createSequentialGroup()
+                .addComponent(scrollTablaInventario, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTotalInventario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
+
+        txtTotalInventario.setHorizontalAlignment(0);
+        txtTotalInventario.setFocusCycleRoot(true);
+        txtTotalInventario.setValue(0);
+        txtTotalInventario.setFormatterFactory(this.currFactory);
 
         panPestañas.addTab("Productos", panProductos);
 
@@ -737,7 +761,7 @@ public class Inventario extends javax.swing.JFrame {
                     .addComponent(txtClienteDevoluciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBuscarDevoluciones))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(scrollTablaHistorial1, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE))
+                .addComponent(scrollTablaHistorial1, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))
         );
 
         panPestañas.addTab("Devoluciones", panDevoluciones);
@@ -996,7 +1020,7 @@ public class Inventario extends javax.swing.JFrame {
                     .addComponent(txtTotalDeudas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTotalVentas)
                     .addComponent(txtTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 9, Short.MAX_VALUE))
         );
 
         txtTotalDeudas.setHorizontalAlignment(0);
@@ -1018,6 +1042,7 @@ public class Inventario extends javax.swing.JFrame {
      * @param evt
      */
     private void mSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mSalirActionPerformed
+        LOGGER.info(Constantes.CERRANDO_APLICACION);
         System.exit(0);
     }//GEN-LAST:event_mSalirActionPerformed
 
@@ -1061,7 +1086,7 @@ public class Inventario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, builder, "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             int opcion = JOptionPane.showConfirmDialog(this, "Desea agregar a " + nombre + " la cantidad de $" + total + "", "Aceptar venta",
-                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (opcion == JOptionPane.YES_OPTION) {
                 try {
                     Cliente cliente = new Cliente();
@@ -1102,7 +1127,7 @@ public class Inventario extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Error al insertar venta", null, JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Excepcion ex) {
-                    Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error(ex.getMessage());
                     JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -1144,7 +1169,7 @@ public class Inventario extends javax.swing.JFrame {
             listaClientes.setModel(listModel);
             buscarCliente.setVisible(true);
         } catch (Excepcion ex) {
-            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(Inventario.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
@@ -1173,14 +1198,16 @@ public class Inventario extends javax.swing.JFrame {
                     String cnuevo = JOptionPane.showInputDialog(buscarCliente, "Inserte el nuevo nombre para: " + cliente, cliente);
                     if (!cnuevo.isEmpty()) {
                         try {
-                            new Cliente().EditarCliente(cliente, cnuevo);
+                            Cliente clienteMod = new Cliente();
+                            clienteMod.RecuperarCliente(cliente);
+                            clienteMod.EditarCliente(cnuevo);
                             llenarClientes();
                         } catch (Exception ex) {
-                            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.error(ex.getMessage());
                             JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(buscarCliente, "No se ha insertado nombre", "Error", 0);
+                        JOptionPane.showMessageDialog(buscarCliente, "No se ha insertado nombre", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
                 case 4:
@@ -1188,8 +1215,8 @@ public class Inventario extends javax.swing.JFrame {
                     llenarDevolucion(cliente);
                     break;
                 case 5:
-                    int opcion = JOptionPane.showConfirmDialog(this, "Desea eliminar a " + cliente + "", "Borrar cliente",
-                            JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                    int opcion = JOptionPane.showConfirmDialog(this, "¿Desea eliminar a " + cliente + "?", "Borrar cliente",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (opcion == JOptionPane.YES_OPTION) {
                         try {
                             Cliente clienteBorrar = new Cliente();
@@ -1199,7 +1226,7 @@ public class Inventario extends javax.swing.JFrame {
                                 llenarClientes();
                             }
                         } catch (Excepcion | HeadlessException ex) {
-                            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                            LOGGER.error(ex.getMessage());
                             JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -1281,7 +1308,7 @@ public class Inventario extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Error al insertar cliente", null, JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Excepcion | HeadlessException ex) {
-                Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error(ex.getMessage());
                 JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -1316,7 +1343,8 @@ public class Inventario extends javax.swing.JFrame {
             try {
                 Producto producto = new Producto();
                 if (editProducto) {
-                    producto = producto.RecuperarProducto(descProd);
+                    producto = producto.RecuperarProducto(descripcionProdOld);
+                    producto.setDescripcionProd(descProd);
                     producto.setCostoUnitario((int)costoProd);
                     producto.setExistencias(existProd);
                     producto.setPrecioUnitario((int)precioProd);
@@ -1341,13 +1369,13 @@ public class Inventario extends javax.swing.JFrame {
                         this.setEnabled(true);
                         service.llenarProductos();
                         service.llenarInventario();
-                        JOptionPane.showMessageDialog(this, "Producto insertado", null, JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Producto insertado", null, JOptionPane.INFORMATION_MESSAGE);
                     } else {
                         JOptionPane.showMessageDialog(this, "Error al insertar producto", null, JOptionPane.ERROR_MESSAGE);
                     }
                 }
             } catch (Excepcion | HeadlessException ex) {
-                Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error(ex.getMessage());
                 JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -1391,7 +1419,7 @@ public class Inventario extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Error al insertar pago", null, JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Excepcion | HeadlessException ex) {
-                    Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error(ex.getMessage());
                     JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -1423,7 +1451,7 @@ public class Inventario extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Error al hacer devolución", null, JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Excepcion | HeadlessException ex) {
-                Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                LOGGER.error(ex.getMessage());
                 JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -1436,19 +1464,18 @@ public class Inventario extends javax.swing.JFrame {
      */
     private void mAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAcercaActionPerformed
         StringBuilder msg = new StringBuilder("Héctor López  V 2.2.1 (24-09-16)\n");
-        msg.append("-Se agrega opción para editar productos\n");
-        msg.append("-Se cierra la aplicación si no se conecta a la base de datos\n");
-        msg.append("-El total de ventas se cuenta desde 19-09-2016");
+        msg.append("-Se agrega Log\n");
         JOptionPane.showMessageDialog(this, msg, "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mAcercaActionPerformed
-
+String descripcionProdOld = "";
     private void tbInventarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbInventarioMouseClicked
         if (evt.getClickCount() == 2) {
             nuevoProducto.getContentPane().add(panNuevoProducto);
             nuevoProducto.pack();
             nuevoProducto.setLocationRelativeTo(this);
-            txtDescripcionProd.setText(tbInventario.getValueAt(tbInventario.getSelectedRow(), 0).toString());
-            txtDescripcionProd.setEditable(false);
+            descripcionProdOld = tbInventario.getValueAt(tbInventario.getSelectedRow(), 0).toString();
+            txtDescripcionProd.setText(descripcionProdOld);
+//            txtDescripcionProd.setEditable(false);
             if(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) > 0) {
                 jcCantidadProd.setSelectedIndex(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) - 1);
             } else {
@@ -1460,6 +1487,10 @@ public class Inventario extends javax.swing.JFrame {
             nuevoProducto.setVisible(true);
         }
     }//GEN-LAST:event_tbInventarioMouseClicked
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        LOGGER.info(Constantes.CERRANDO_APLICACION);
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * Limpia la tabla ventas
@@ -1496,7 +1527,7 @@ public class Inventario extends javax.swing.JFrame {
                     gtotal += total;
                     this.tbVenta.setValueAt(total, i, 3);
                 } catch (Excepcion ex) {
-                    Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+                    LOGGER.error(ex.getMessage());
                     JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
                 }
             }
@@ -1516,7 +1547,7 @@ public class Inventario extends javax.swing.JFrame {
         try {
             new Cliente().RecuperarCliente(dm);
         } catch (Excepcion ex) {
-            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -1538,7 +1569,7 @@ public class Inventario extends javax.swing.JFrame {
             cliente.ObtenerHistorial(dm);
             txtTotalCliente.setValue(cliente.getAcumuladoCliente());
         } catch (Exception ex) {
-            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -1559,7 +1590,7 @@ public class Inventario extends javax.swing.JFrame {
             }
             cliente.ObtenerHistorialDevolucion(dm);
         } catch (Exception ex) {
-            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -1673,6 +1704,7 @@ public class Inventario extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField txtTotal;
     private javax.swing.JFormattedTextField txtTotalCliente;
     private javax.swing.JFormattedTextField txtTotalDeudas;
+    private javax.swing.JFormattedTextField txtTotalInventario;
     private javax.swing.JFormattedTextField txtTotalVentas;
     // End of variables declaration//GEN-END:variables
 

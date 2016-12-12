@@ -4,8 +4,8 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -54,16 +54,12 @@ public class Pago extends ConexionBD {
      * @throws Excepcion 
      */
     boolean InsertarPago() throws Excepcion {
-        try {
-            String fechaAMD = formatoAñoMesDia.format(fecha);
-            setSql("INSERT INTO PAGOS (NUMCLIENTE, PAGO, FECHA) VALUES (?,?,?)");
-            crearPreparedStatement();
-            getPstmn().setInt(1, cliente.getNumCliente());
-            getPstmn().setFloat(2, pago);
-            getPstmn().setDate(3, java.sql.Date.valueOf(fechaAMD));
-            return ejecutarUpdate();
-        } catch (SQLException ex) {
-            throw lanzarExcepcion(ex);
-        }
+        String fechaAMD = formatoAñoMesDia.format(fecha);
+        Map params = new HashMap();
+        setSql("INSERT INTO PAGOS (NUMCLIENTE, PAGO, FECHA) VALUES (?,?,?)");
+        params.put(1, cliente.getNumCliente());
+        params.put(2, pago);
+        params.put(3, java.sql.Date.valueOf(fechaAMD));
+        return ejecutarUpdate(params);
     }
 }

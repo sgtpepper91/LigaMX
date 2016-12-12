@@ -1,8 +1,8 @@
 package com.inventario;
 
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -75,15 +75,11 @@ public class Producto extends ConexionBD {
      * @throws com.inventario.Excepcion
      */
     public boolean ActualizarExistencias(int cantidad) throws Excepcion {
-        try {
-            setSql("UPDATE PRODUCTOS SET EXISTENCIAS = ? WHERE CLAVEPROD = ?");
-            crearPreparedStatement();
-            getPstmn().setInt(1, existencias - cantidad);
-            getPstmn().setInt(2, claveProd);
-            return ejecutarUpdate();
-        } catch (SQLException ex) {
-            throw lanzarExcepcion(ex);
-        }
+        Map params = new HashMap();
+        setSql("UPDATE PRODUCTOS SET EXISTENCIAS = ? WHERE CLAVEPROD = ?");
+        params.put(1, existencias - cantidad);
+        params.put(2, claveProd);
+        return ejecutarUpdate(params);
 
     }
 
@@ -96,10 +92,10 @@ public class Producto extends ConexionBD {
      */
     public Producto RecuperarProducto(String descripcion) throws Excepcion {
         try {
+            Map params = new HashMap();
             setSql("SELECT * FROM PRODUCTOS WHERE DESCRIPCIONPROD = ?");
-            crearPreparedStatement();
-            getPstmn().setString(1, descripcion);
-            ejecutarQuery();
+            params.put(1, descripcion);
+            ejecutarQuery(params);
             while (getRset().next()) {
                 claveProd = getRset().getInt(1);
                 existencias = getRset().getInt(3);
@@ -121,17 +117,13 @@ public class Producto extends ConexionBD {
      * @throws Excepcion
      */
     boolean InsertarProducto() throws Excepcion {
-        try {
-            setSql("INSERT INTO PRODUCTOS (DESCRIPCIONPROD,EXISTENCIAS,COSTOUNITARIO,PRECIOUNITARIO) VALUES (?,?,?,?)");
-            setPstmn(getConn().prepareStatement(getSql()));
-            getPstmn().setString(1, descripcionProd);
-            getPstmn().setInt(2, existencias);
-            getPstmn().setFloat(3, costoUnitario);
-            getPstmn().setFloat(4, precioUnitario);
-            return ejecutarUpdate();
-        } catch (SQLException ex) {
-            throw lanzarExcepcion(ex);
-        }
+        Map params = new HashMap();
+        setSql("INSERT INTO PRODUCTOS (DESCRIPCIONPROD,EXISTENCIAS,COSTOUNITARIO,PRECIOUNITARIO) VALUES (?,?,?,?)");
+        params.put(1, descripcionProd);
+        params.put(2, existencias);
+        params.put(3, costoUnitario);
+        params.put(4, precioUnitario);
+        return ejecutarUpdate(params);
     }
 
     /**
@@ -141,17 +133,13 @@ public class Producto extends ConexionBD {
      * @throws Excepcion
      */
     boolean actualizar()  throws Excepcion{
-        try {
-            setSql("UPDATE PRODUCTOS SET DESCRIPCIONPROD = ?, EXISTENCIAS = ?, COSTOUNITARIO = ? ,PRECIOUNITARIO = ? WHERE CLAVEPROD = ?");
-            crearPreparedStatement();
-            getPstmn().setString(1, descripcionProd);
-            getPstmn().setInt(2, existencias);
-            getPstmn().setInt(3, costoUnitario);
-            getPstmn().setInt(4, precioUnitario);
-            getPstmn().setInt(5, claveProd);
-            return ejecutarUpdate();
-        } catch (SQLException ex) {
-            throw lanzarExcepcion(ex);
-        }
+        Map params = new HashMap();
+        setSql("UPDATE PRODUCTOS SET DESCRIPCIONPROD = ?, EXISTENCIAS = ?, COSTOUNITARIO = ? ,PRECIOUNITARIO = ? WHERE CLAVEPROD = ?");
+        params.put(1, descripcionProd);
+        params.put(2, existencias);
+        params.put(3, costoUnitario);
+        params.put(4, precioUnitario);
+        params.put(5, claveProd);
+        return ejecutarUpdate(params);
     }
 }

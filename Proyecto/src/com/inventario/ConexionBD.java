@@ -1,11 +1,13 @@
 package com.inventario;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 import oracle.jdbc.driver.OracleDriver;
@@ -26,8 +28,7 @@ public class ConexionBD {
     private static String usuario;
     private static String password;
     private String sql;
-    private static Logger LOGGER = LogManager.getLogger();
-
+    private static final Logger LOGGER = LogManager.getLogger();
 
     public Connection getConn() {
         return conn;
@@ -89,13 +90,28 @@ public class ConexionBD {
 
     /**
      * Crea Prepared Statement con el sql
+     *
+     * @param params
      * @throws Excepcion
      */
-    public void crearPreparedStatement() throws Excepcion {
+    private void crearPreparedStatement(Map params) throws Excepcion {
         try {
-            LOGGER.trace("Creando Prepared Statement");
+            LOGGER.info("Creando Prepared Statement: " + sql);
             conectarBase();
             setPstmn(getConn().prepareStatement(sql));
+            if (!params.isEmpty()) {
+                for (int i = 1; i <= params.size(); i++) {
+                    if (params.get(i) instanceof String) {
+                        getPstmn().setString(i, (String) params.get(i));
+                    } else if (params.get(i) instanceof Integer) {
+                        getPstmn().setInt(i, (int) params.get(i));
+                    } else if (params.get(i) instanceof Float) {
+                        getPstmn().setFloat(i, (float) params.get(i));
+                    } else if (params.get(i) instanceof Date) {
+                        getPstmn().setDate(i, (Date) params.get(i));
+                    }
+                }
+            }
         } catch (SQLException ex) {
             LOGGER.error(Constantes.ERROR_PREPARED_STMN + ex);
             throw new Excepcion(Constantes.ERROR_PREPARED_STMN);
@@ -104,13 +120,16 @@ public class ConexionBD {
 
     /**
      * Ejecuta INSERT, UPDATE o DELETE
+     *
+     * @param params
      * @return true si fue exitoso, false en caso contrario
      * @throws Excepcion
      */
-    public boolean ejecutarUpdate() throws Excepcion {
+    public boolean ejecutarUpdate(Map params) throws Excepcion {
         try {
             boolean result;
-            LOGGER.trace(Constantes.EJECUTANDO_QUERY.concat(getPstmn().toString()));
+            crearPreparedStatement(params);
+            LOGGER.info(Constantes.EJECUTANDO_QUERY.concat(params.toString()));
             int rows = getPstmn().executeUpdate();
             if (rows > 0) {
                 result = Boolean.TRUE;
@@ -127,11 +146,14 @@ public class ConexionBD {
 
     /**
      * Ejecuta QUERY
-     * @throws Excepcion 
+     *
+     * @param params
+     * @throws Excepcion
      */
-    public void ejecutarQuery() throws Excepcion {
+    public void ejecutarQuery(Map params) throws Excepcion {
         try {
-            crearPreparedStatement();
+            crearPreparedStatement(params);
+            LOGGER.info(Constantes.EJECUTANDO_QUERY.concat(params.toString()));
             setRset(getPstmn().executeQuery());
         } catch (SQLException ex) {
             LOGGER.error(Constantes.CONEXION_ERROR_QUERY.concat(ex.getMessage()));
@@ -144,38 +166,37 @@ public class ConexionBD {
      */
     private void conectarBase() {
         try {
+            LOGGER.debug("Creando conexión");
             DriverManager.registerDriver(new OracleDriver());
             //this.setConn(DriverManager.getConnection(path, usuario, password));
             this.setConn(DriverManager.getConnection(Constantes.URL_BD, Constantes.USER_BD, Constantes.PASS_BD));
             this.setStmn(conn.createStatement());
         } catch (SQLException ex) {
             LOGGER.error(Constantes.ERROR_CONEXION_BD.concat(ex.getMessage()));
-            LOGGER.debug(Constantes.CONEXION_ERROR_QUERY.concat(ex.getMessage()));
-            LOGGER.info(Constantes.CONEXION_ERROR_QUERY.concat(ex.getMessage()));
-            LOGGER.warn(Constantes.CONEXION_ERROR_QUERY.concat(ex.getMessage()));
-            LOGGER.fatal(Constantes.CONEXION_ERROR_QUERY.concat(ex.getMessage()));
             JOptionPane.showMessageDialog(null, Constantes.ERROR_CONEXION_BD, null, JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
     }
-    
+
     /**
      * Cierra la conexión de la base de datos
-     * @throws Excepcion 
+     *
+     * @throws Excepcion
      */
     public void cerrarConexion() throws Excepcion {
         try {
+            LOGGER.debug("Cerrando conexión");
             getConn().close();
         } catch (SQLException ex) {
             LOGGER.error(Constantes.ERROR_CERRAR_CONN.concat(ex.getMessage()));
             throw new Excepcion(Constantes.ERROR_CERRAR_CONN.concat(ex.getMessage()));
         }
     }
-    
+
     public Excepcion lanzarExcepcion(Exception ex) throws Excepcion {
         cerrarConexion();
         LOGGER.error(Constantes.CONEXION_ERROR_QUERY.concat(ex.getMessage()));
-        Excepcion excepcion =  new Excepcion(Constantes.CONEXION_ERROR_QUERY.concat(ex.getMessage()));
+        Excepcion excepcion = new Excepcion(Constantes.CONEXION_ERROR_QUERY.concat(ex.getMessage()));
         return excepcion;
     }
 }

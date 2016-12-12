@@ -1,8 +1,8 @@
 package com.inventario;
 
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Devolucion extends ConexionBD {
 
@@ -87,17 +87,13 @@ public class Devolucion extends ConexionBD {
  */
     boolean devolverProducto() throws Excepcion {
         total -= precioProd;
-        try {
-            setSql("UPDATE DETALLEVENTAS SET DETVENTACANTIDAD = ?, DETVENTASUBTOTAL = ? WHERE NUMVENTA = ? AND CLAVEPROD = ?");
-            crearPreparedStatement();
-            getPstmn().setInt(1, cantidad - 1);
-            getPstmn().setInt(2, total);
-            getPstmn().setInt(3, numVenta);
-            getPstmn().setInt(4, claveProd);
-            return ejecutarUpdate();
-        } catch (SQLException ex) {
-            throw lanzarExcepcion(ex);
-        }
+        Map params = new HashMap();
+        setSql("UPDATE DETALLEVENTAS SET DETVENTACANTIDAD = ?, DETVENTASUBTOTAL = ? WHERE NUMVENTA = ? AND CLAVEPROD = ?");
+        params.put(1, cantidad - 1);
+        params.put(2, total);
+        params.put(3, numVenta);
+        params.put(4, claveProd);
+        return ejecutarUpdate(params);
     }
 
     /**
@@ -106,14 +102,10 @@ public class Devolucion extends ConexionBD {
      * @throws Excepcion 
      */
     boolean borrarDetalle() throws Excepcion {
-        try {
-            setSql("DELETE DETALLEVENTAS WHERE NUMVENTA = ? AND CLAVEPROD = ?");
-            crearPreparedStatement();
-            getPstmn().setInt(1, numVenta);
-            getPstmn().setInt(2, claveProd);
-            return ejecutarUpdate();
-        } catch (SQLException ex) {
-            throw lanzarExcepcion(ex);
-        }
+        Map params = new HashMap();
+        setSql("DELETE DETALLEVENTAS WHERE NUMVENTA = ? AND CLAVEPROD = ?");
+        params.put(1, numVenta);
+        params.put(2, claveProd);
+        return ejecutarUpdate(params);
     }
 }

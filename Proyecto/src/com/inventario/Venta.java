@@ -4,8 +4,8 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -81,18 +81,17 @@ public class Venta extends ConexionBD {
     public boolean insertarVenta() throws Excepcion {
         try {
             String fechaAMD = formatoAñoMesDia.format(fechaVenta);
+            Map params = new HashMap();
+            Map params2 = new HashMap();
             setSql("INSERT INTO VENTAS (FECHAVENTA,NUMCLIENTE,TOTALVENTA) VALUES (?,?,?)");
-            crearPreparedStatement();
-            getPstmn().setDate(1, java.sql.Date.valueOf(fechaAMD));
-            getPstmn().setInt(2, numCliente);
-            getPstmn().setFloat(3, totalVenta);
-            int res = getPstmn().executeUpdate();
-            if (ejecutarUpdate()) {
+            params.put(1, java.sql.Date.valueOf(fechaAMD));
+            params.put(2, numCliente);
+            params.put(3, totalVenta);
+            if (ejecutarUpdate(params)) {
                 setSql("SELECT NUMVENTA FROM VENTAS WHERE FECHAVENTA = ? AND NUMCLIENTE = ? ORDER BY NUMVENTA DESC");
-                crearPreparedStatement();
-                getPstmn().setString(1, formatoDiaMesAño.format(fechaVenta));
-                getPstmn().setInt(2, numCliente);
-                ejecutarQuery();
+                params2.put(1, formatoDiaMesAño.format(fechaVenta));
+                params2.put(2, numCliente);
+                ejecutarQuery(params2);
                 if (getRset().next()) {
                     numVenta = getRset().getInt(1);
                 }
@@ -114,10 +113,10 @@ public class Venta extends ConexionBD {
      */
     public void obtenerVenta(int numVenta) throws Excepcion {
         try {
+            Map params = new HashMap();
             setSql("SELECT TOTALVENTA FROM VENTAS WHERE NUMVENTA = ?");
-            crearPreparedStatement();
-            getPstmn().setInt(1, numVenta);
-            ejecutarQuery();
+            params.put(1, numVenta);
+            ejecutarQuery(params);
             while (getRset().next()) {
                 this.numVenta = numVenta;
                 this.totalVenta = getRset().getInt(1);
@@ -138,15 +137,11 @@ public class Venta extends ConexionBD {
      */
     public boolean actualizarVenta(int total) throws Excepcion {
         totalVenta -= total;
-        try {
-            setSql("UPDATE VENTAS SET TOTALVENTA = ? WHERE NUMVENTA = ?");
-            crearPreparedStatement();
-            getPstmn().setInt(1, total);
-            getPstmn().setInt(2, numVenta);
-            return ejecutarUpdate();
-        } catch (SQLException ex) {
-            throw lanzarExcepcion(ex);
-        }
+        Map params = new HashMap();
+        setSql("UPDATE VENTAS SET TOTALVENTA = ? WHERE NUMVENTA = ?");
+        params.put(1, total);
+        params.put(2, numVenta);
+        return ejecutarUpdate(params);
     }
 
     /**
@@ -156,13 +151,9 @@ public class Venta extends ConexionBD {
      * @throws com.inventario.Excepcion
      */
     public boolean eliminarVenta() throws Excepcion {
-        try {
-            setSql("DELETE VENTAS WHERE NUMVENTA = ?");
-            crearPreparedStatement();
-            getPstmn().setInt(1, numVenta);
-            return ejecutarUpdate();
-        } catch (SQLException ex) {
-            throw lanzarExcepcion(ex);
-        }
+        Map params = new HashMap();
+        setSql("DELETE VENTAS WHERE NUMVENTA = ?");
+        params.put(1, numVenta);
+        return ejecutarUpdate(params);
     }
 }

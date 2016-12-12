@@ -1,8 +1,8 @@
 package com.inventario;
 
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -71,18 +71,16 @@ public class DetalleVenta extends ConexionBD {
      * @throws com.inventario.Excepcion
      */
     public boolean InsertarDetalleVenta() throws Excepcion {
-        try {
-            setSql("INSERT INTO DETALLEVENTAS (NUMVENTA,CLAVEPROD,DETVENTACANTIDAD,DETVENTAPRECIO,DETVENTASUBTOTAL) VALUES (?,?,?,?,?)");
-            crearPreparedStatement();
-            getPstmn().setInt(1, numVenta);
-            getPstmn().setInt(2, producto.getClaveProd());
-            getPstmn().setInt(3, detVentaCantidad);
-            getPstmn().setFloat(4, detVentaPrecio);
-            getPstmn().setFloat(5, detVentaSubtotal);
-            return ejecutarUpdate();
-        } catch (SQLException ex) {
-            throw lanzarExcepcion(ex);
+        Map params = new HashMap();
+        setSql("INSERT INTO DETALLEVENTAS (NUMVENTA,CLAVEPROD,DETVENTACANTIDAD,DETVENTAPRECIO,DETVENTASUBTOTAL) VALUES (?,?,?,?,?)");
+        params.put(1, numVenta);
+        params.put(2, producto.getClaveProd());
+        params.put(3, detVentaCantidad);
+        params.put(4, detVentaPrecio);
+        params.put(5, detVentaSubtotal);
+        if (ejecutarUpdate(params)){
+            return producto.ActualizarExistencias(detVentaCantidad);
         }
-
+        return false;
     }
 }

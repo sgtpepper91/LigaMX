@@ -4,9 +4,9 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -38,12 +38,12 @@ public class ServiceInventario extends ConexionBD {
         try {
             DefaultTableModel dm = (DefaultTableModel) inventario.getTbClientes().getModel();
             int rowCount = dm.getRowCount();
+            Map params = new HashMap();
             for (int i = rowCount - 1; i >= 0; i--) {
                 dm.removeRow(i);
             }
             setSql("SELECT NOMBRECLIENTE, ACUMULADOCLIENTE FROM CLIENTES ORDER BY NOMBRECLIENTE");
-            crearPreparedStatement();
-            ejecutarQuery();
+            ejecutarQuery(params);
             while (getRset().next()) {
                 String nombre = getRset().getString(1);
                 float acumulado = getRset().getFloat(2);
@@ -68,14 +68,16 @@ public class ServiceInventario extends ConexionBD {
         String nomCliente = inventario.getTxtClienteVentas().getText();
         float Acumulado = 0.0F;
         try {
+            Map params = new HashMap();
+            Map params2 = new HashMap();
             setSql("SELECT NUMCLIENTE,ACUMULADOCLIENTE FROM CLIENTES WHERE NOMBRECLIENTE = ?");
-            crearPreparedStatement();
-            getPstmn().setString(1, nomCliente);
-            ejecutarQuery();
+            params.put(1, nomCliente);
+            ejecutarQuery(params);
             while (getRset().next()) {
                 numCliente = getRset().getInt(1);
                 Acumulado = getRset().getFloat(2);
             }
+            cerrarConexion();
             DefaultTableModel dm = (DefaultTableModel) inventario.getTbHistorial().getModel();
             int rowCount = dm.getRowCount();
             for (int i = rowCount - 1; i >= 0; i--) {
@@ -89,10 +91,9 @@ public class ServiceInventario extends ConexionBD {
                     + "UNION ALL SELECT NULL AS CANTIDAD, 'Pago' AS TOTAL, A.PAGO AS TOTAL, A.FECHA "
                     + "FROM PAGOS A INNER JOIN CLIENTES C ON C.NUMCLIENTE=A.NUMCLIENTE "
                     + "WHERE C.NUMCLIENTE = ? ORDER BY FECHA DESC");
-            crearPreparedStatement();
-            getPstmn().setInt(1, numCliente);
-            getPstmn().setInt(2, numCliente);
-            ejecutarQuery();
+            params2.put(1, numCliente);
+            params2.put(2, numCliente);
+            ejecutarQuery(params2);
             while (getRset().next()) {
                 int cantidad = getRset().getInt(1);
                 String descripcion = getRset().getString(2);
@@ -118,26 +119,27 @@ public class ServiceInventario extends ConexionBD {
      */
     void llenarInventario() throws Excepcion {
         try {
+            Map params = new HashMap();
             setSql("SELECT SUM(ACUMULADOCLIENTE) FROM CLIENTES");
-            crearPreparedStatement();
-            ejecutarQuery();
+            ejecutarQuery(params);
             while (getRset().next()) {
                 inventario.getTxtTotalDeudas().setValue(getRset().getFloat(1));
             }
+            cerrarConexion();
             setSql("SELECT SUM(TOTALVENTA) FROM VENTAS WHERE FECHAVENTA BETWEEN '19-09-2016' AND SYSDATE");
-            crearPreparedStatement();
-            ejecutarQuery();
+            ejecutarQuery(params);
             while (getRset().next()) {
                 inventario.getTxtTotalVentas().setValue(getRset().getFloat(1));
             }
+            cerrarConexion();
             DefaultTableModel dm = (DefaultTableModel) inventario.getTbInventario().getModel();
             int rowCount = dm.getRowCount();
             for (int i = rowCount - 1; i >= 0; i--) {
                 dm.removeRow(i);
             }
+            float totalInventario = 0;
             setSql("SELECT DESCRIPCIONPROD, EXISTENCIAS, COSTOUNITARIO, PRECIOUNITARIO FROM PRODUCTOS WHERE DESCRIPCIONPROD != 'Ajuste' ORDER BY DESCRIPCIONPROD");
-            crearPreparedStatement();
-            ejecutarQuery();
+            ejecutarQuery(params);
             while (getRset().next()) {
                 String Descripcion = getRset().getString(1);
                 int Existencias = getRset().getInt(2);
@@ -149,7 +151,9 @@ public class ServiceInventario extends ConexionBD {
                 row.add(Costo);
                 row.add(Precio);
                 dm.addRow(row.toArray());
+                totalInventario += Existencias * Precio;
             }
+            inventario.getTxtTotalInventario().setValue(totalInventario);
             cerrarConexion();
         } catch (SQLException e) {
             throw lanzarExcepcion(e);
@@ -164,17 +168,17 @@ public class ServiceInventario extends ConexionBD {
     public void llenarProductos() throws Excepcion {
         String producto;
         try {
+            Map params = new HashMap();
             TableColumn col = inventario.getTbVenta().getColumnModel().getColumn(1);
             setSql("SELECT DESCRIPCIONPROD FROM PRODUCTOS WHERE DESCRIPCIONPROD != 'Ajuste' ORDER BY DESCRIPCIONPROD ");
-            crearPreparedStatement();
-            ejecutarQuery();
+            ejecutarQuery(params);
             comboModel.removeAllElements();
             while (getRset().next()) {
                 producto = getRset().getString("DESCRIPCIONPROD");
                 comboModel.addElement(producto);
             }
             jcProductos.setModel(comboModel);
-            getConn().close();
+            cerrarConexion();
             col.setCellEditor(new DefaultCellEditor(jcProductos));
         } catch (SQLException e) {
             throw lanzarExcepcion(e);
