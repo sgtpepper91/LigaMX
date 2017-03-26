@@ -28,7 +28,7 @@ public class ConexionBD {
     private static String usuario;
     private static String password;
     private String sql;
-    private static final Logger LOGGER = LogManager.getLogger();
+    protected static final Logger LOGGER = LogManager.getLogger();
 
     public Connection getConn() {
         return conn;

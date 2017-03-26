@@ -12,6 +12,8 @@ import java.awt.Toolkit;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -32,6 +34,7 @@ import org.apache.logging.log4j.LogManager;
  * @author hecto
  */
 public class Inventario extends javax.swing.JFrame {
+
     NumberFormat dispFormat = NumberFormat.getCurrencyInstance(new Locale("es", "MX"));
     NumberFormat editFormat = NumberFormat.getNumberInstance(new Locale("es", "MX"));
     NumberFormatter dnFormat = new NumberFormatter(this.dispFormat);
@@ -60,7 +63,7 @@ public class Inventario extends javax.swing.JFrame {
         } catch (Excepcion ex) {
             LOGGER.error(ex.getMessage());
             JOptionPane.showMessageDialog(Inventario.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            
+
         }
     }
 
@@ -184,6 +187,7 @@ public class Inventario extends javax.swing.JFrame {
         lblClienteHistorial = new javax.swing.JLabel();
         lblSaldoCliente = new javax.swing.JLabel();
         txtTotalCliente = new javax.swing.JFormattedTextField();
+        lblFechaCorte = new javax.swing.JLabel();
         barraMenu = new javax.swing.JMenuBar();
         menuArchivo = new javax.swing.JMenu();
         mNuevoProducto = new javax.swing.JMenuItem();
@@ -191,6 +195,8 @@ public class Inventario extends javax.swing.JFrame {
         mEditarCliente = new javax.swing.JMenuItem();
         mBorrarCliente = new javax.swing.JMenuItem();
         mSalir = new javax.swing.JMenuItem();
+        menuAjustes = new javax.swing.JMenu();
+        mFechaCorte = new javax.swing.JMenuItem();
         menuAyuda = new javax.swing.JMenu();
         mAcerca = new javax.swing.JMenuItem();
 
@@ -338,6 +344,7 @@ public class Inventario extends javax.swing.JFrame {
         });
 
         panPestañas.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        panPestañas.setToolTipText("");
 
         lblClienteVentas.setText("Cliente");
 
@@ -920,6 +927,8 @@ public class Inventario extends javax.swing.JFrame {
         txtTotalCliente.setValue(0);
         txtTotalCliente.setFormatterFactory(this.currFactory);
 
+        lblFechaCorte.setText("desde: " + service.getFechaCorte());
+
         menuArchivo.setText("Archivo");
 
         mNuevoProducto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.ALT_MASK));
@@ -972,6 +981,20 @@ public class Inventario extends javax.swing.JFrame {
 
         barraMenu.add(menuArchivo);
 
+        menuAjustes.setText("Ajustes");
+        menuAjustes.setToolTipText("");
+
+        mFechaCorte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/calendar.png"))); // NOI18N
+        mFechaCorte.setText("Fecha corte");
+        mFechaCorte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mFechaCorteActionPerformed(evt);
+            }
+        });
+        menuAjustes.add(mFechaCorte);
+
+        barraMenu.add(menuAjustes);
+
         menuAyuda.setText("Ayuda");
 
         mAcerca.setIcon(new javax.swing.ImageIcon(getClass().getResource("/about.png"))); // NOI18N
@@ -996,6 +1019,8 @@ public class Inventario extends javax.swing.JFrame {
                 .addComponent(lblTotalVentas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(lblFechaCorte, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblTotalDeudas)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1019,8 +1044,9 @@ public class Inventario extends javax.swing.JFrame {
                     .addComponent(lblTotalDeudas)
                     .addComponent(txtTotalDeudas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTotalVentas)
-                    .addComponent(txtTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 9, Short.MAX_VALUE))
+                    .addComponent(txtTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFechaCorte, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 11, Short.MAX_VALUE))
         );
 
         txtTotalDeudas.setHorizontalAlignment(0);
@@ -1080,7 +1106,7 @@ public class Inventario extends javax.swing.JFrame {
             builder.append("No se ha seleccionado cliente\n");
         }
         if (total == 0) {
-            builder.append("No se han aÃ±adido productos\n");
+            builder.append("No se han añadido productos\n");
         }
         if (builder.length() != 0) {
             JOptionPane.showMessageDialog(this, builder, "Error", JOptionPane.ERROR_MESSAGE);
@@ -1163,7 +1189,7 @@ public class Inventario extends javax.swing.JFrame {
             } else if (evt.getSource() == this.mBorrarCliente) {
                 this.buscar = 5;
             }
-            
+
             Cliente cliente = new Cliente();
             DefaultListModel listModel = cliente.getListaClientes();
             listaClientes.setModel(listModel);
@@ -1345,9 +1371,9 @@ public class Inventario extends javax.swing.JFrame {
                 if (editProducto) {
                     producto = producto.RecuperarProducto(descripcionProdOld);
                     producto.setDescripcionProd(descProd);
-                    producto.setCostoUnitario((int)costoProd);
+                    producto.setCostoUnitario((int) costoProd);
                     producto.setExistencias(existProd);
-                    producto.setPrecioUnitario((int)precioProd);
+                    producto.setPrecioUnitario((int) precioProd);
                     if (producto.actualizar()) {
                         JOptionPane.showMessageDialog(this, "Producto actualizado", null, JOptionPane.INFORMATION_MESSAGE);
                     } else {
@@ -1357,7 +1383,7 @@ public class Inventario extends javax.swing.JFrame {
                     this.setEnabled(true);
                     service.llenarProductos();
                     service.llenarInventario();
-                    
+
                 } else {
                     producto = new Producto(descProd, existProd, (int) costoProd, (int) precioProd);
                     if (producto.InsertarProducto()) {
@@ -1463,11 +1489,11 @@ public class Inventario extends javax.swing.JFrame {
      * @param evt
      */
     private void mAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAcercaActionPerformed
-        StringBuilder msg = new StringBuilder("Héctor López  V 2.2.2 (11-12-16)\n");
-        msg.append("-Se agrega Log\n");
+        StringBuilder msg = new StringBuilder("Héctor López  V 2.3 (25-03-17)\n");
+        msg.append("-Se agrega fecha de corte\n");
         JOptionPane.showMessageDialog(this, msg, "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mAcercaActionPerformed
-String descripcionProdOld = "";
+    String descripcionProdOld = "";
     private void tbInventarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbInventarioMouseClicked
         if (evt.getClickCount() == 2) {
             nuevoProducto.getContentPane().add(panNuevoProducto);
@@ -1476,7 +1502,7 @@ String descripcionProdOld = "";
             descripcionProdOld = tbInventario.getValueAt(tbInventario.getSelectedRow(), 0).toString();
             txtDescripcionProd.setText(descripcionProdOld);
 //            txtDescripcionProd.setEditable(false);
-            if(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) > 0) {
+            if (Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) > 0) {
                 jcCantidadProd.setSelectedIndex(Integer.parseInt(tbInventario.getValueAt(tbInventario.getSelectedRow(), 1).toString()) - 1);
             } else {
                 jcCantidadProd.setSelectedIndex(-1);
@@ -1491,6 +1517,17 @@ String descripcionProdOld = "";
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         LOGGER.info(Constantes.CERRANDO_APLICACION);
     }//GEN-LAST:event_formWindowClosing
+
+    private void mFechaCorteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mFechaCorteActionPerformed
+        try {
+            service.seleccionarFechaContable();
+            lblFechaCorte.setText("desde: " + service.getFechaCorte());
+            service.llenarInventario();
+        } catch (Excepcion ex) {
+            LOGGER.error(ex.getMessage());
+            JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_mFechaCorteActionPerformed
 
     /**
      * Limpia la tabla ventas
@@ -1652,6 +1689,7 @@ String descripcionProdOld = "";
     private javax.swing.JLabel lblClienteVentas;
     private javax.swing.JLabel lblCostoProd;
     private javax.swing.JLabel lblDescripcionProd;
+    private javax.swing.JLabel lblFechaCorte;
     private javax.swing.JLabel lblFechaPagos;
     private javax.swing.JLabel lblFechaVentas;
     private javax.swing.JLabel lblNombreCliente;
@@ -1665,9 +1703,11 @@ String descripcionProdOld = "";
     private javax.swing.JMenuItem mAcerca;
     private javax.swing.JMenuItem mBorrarCliente;
     private javax.swing.JMenuItem mEditarCliente;
+    private javax.swing.JMenuItem mFechaCorte;
     private javax.swing.JMenuItem mNuevoCliente;
     private javax.swing.JMenuItem mNuevoProducto;
     private javax.swing.JMenuItem mSalir;
+    private javax.swing.JMenu menuAjustes;
     private javax.swing.JMenu menuArchivo;
     private javax.swing.JMenu menuAyuda;
     private javax.swing.JPanel panBuscarCliente;

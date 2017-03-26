@@ -1,12 +1,21 @@
 package com.inventario;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -22,11 +31,18 @@ public class ServiceInventario extends ConexionBD {
 
     private final Inventario inventario;
     DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+    DateFormat df2 = new SimpleDateFormat("dd/MM/yyyy");
     DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
     JComboBox jcProductos = new JComboBox();
+    private Date fechaCorte;
+
+    public String getFechaCorte() {
+        return df2.format(fechaCorte);
+    }
 
     public ServiceInventario(Inventario inventario) {
         this.inventario = inventario;
+        obtenerFechaCorte();
     }
 
     /**
@@ -126,7 +142,8 @@ public class ServiceInventario extends ConexionBD {
                 inventario.getTxtTotalDeudas().setValue(getRset().getFloat(1));
             }
             cerrarConexion();
-            setSql("SELECT SUM(TOTALVENTA) FROM VENTAS WHERE FECHAVENTA BETWEEN '19-09-2016' AND SYSDATE");
+            setSql("SELECT SUM(TOTALVENTA) FROM VENTAS WHERE FECHAVENTA BETWEEN ? AND SYSDATE");
+            params.put(1, df.format(fechaCorte));
             ejecutarQuery(params);
             while (getRset().next()) {
                 inventario.getTxtTotalVentas().setValue(getRset().getFloat(1));
@@ -139,6 +156,7 @@ public class ServiceInventario extends ConexionBD {
             }
             float totalInventario = 0;
             setSql("SELECT DESCRIPCIONPROD, EXISTENCIAS, COSTOUNITARIO, PRECIOUNITARIO FROM PRODUCTOS WHERE DESCRIPCIONPROD != 'Ajuste' ORDER BY DESCRIPCIONPROD");
+            params.clear();
             ejecutarQuery(params);
             while (getRset().next()) {
                 String Descripcion = getRset().getString(1);
@@ -222,5 +240,50 @@ public class ServiceInventario extends ConexionBD {
             }
         }
         return actualizarAcumulado;
+    }
+
+    private void obtenerFechaCorte() {
+        LOGGER.info("Obteniendo fecha de corte: ");
+        File file = new File("corte");
+        byte[] buffer;
+        try {
+            String sContent;
+            try (FileInputStream fis = new FileInputStream(file)) {
+                int length = (int) file.length();
+                buffer = new byte[length];
+                fis.read(buffer);
+            }
+            sContent = new String(buffer);
+            this.fechaCorte = df.parse(sContent);
+            LOGGER.info("fecha de corte: " + fechaCorte);
+        } catch (IOException | ParseException ex) {
+            seleccionarFechaContable();
+        }
+    }
+
+    void seleccionarFechaContable() {
+        PanFechaCorte panFechaCorte = new PanFechaCorte();
+        int opcion = JOptionPane.showConfirmDialog(null, panFechaCorte, "Seleccione fecha de corte", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (JOptionPane.OK_OPTION == opcion) {
+            fechaCorte = panFechaCorte.getDcFechaCorte().getDate();
+            OutputStream out = null;
+            try {
+                File file = new File("corte");
+                file.createNewFile();
+                out = new FileOutputStream(file);
+                byte[] buffer = df.format(fechaCorte).getBytes();
+                out.write(buffer);
+            } catch (IOException ex) {
+                Logger.getLogger(ServiceInventario.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException ex1) {
+                        Logger.getLogger(ServiceInventario.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                }
+            }
+        }
     }
 }
