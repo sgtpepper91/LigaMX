@@ -9,7 +9,7 @@ package com.inventario;
  *
  * @author hecto
  */
-class Excepcion extends Exception {
+public class Excepcion extends Exception {
 
     public Excepcion() {
     }

@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultCellEditor;
@@ -285,5 +286,48 @@ public class ServiceInventario extends ConexionBD {
                 }
             }
         }
+    }
+
+    public void respaldarTabla(String tabla) throws IOException, Excepcion, SQLException {
+        File file = new File("respaldo\\" + tabla + ".bac");
+        file.getParentFile().mkdirs();
+        file.createNewFile();
+        try (OutputStream out = new FileOutputStream(file)) {
+            Map params = new HashMap();
+            setSql("SELECT * FROM " + tabla);
+            ejecutarQuery(params);
+            List<Row> table = new ArrayList<>();
+            Row.formTable(getRset(), table);
+            StringBuilder datosTabla = new StringBuilder();
+            for (int i = 1; i < getRset().getMetaData().getColumnCount(); i++) {
+                datosTabla.append(getRset().getMetaData().getColumnName(i)).append("\t");
+            }
+            datosTabla.append(getRset().getMetaData().getColumnName(getRset().getMetaData().getColumnCount())).append("\n");
+            cerrarConexion();
+            Row row;
+            Entry<Object, Class> col;
+            for (int j = 0; j < table.size() - 1; j++) {
+                row = table.get(j);
+                for (int i = 0; i < row.row.size() - 1; i++) {
+                    col = row.row.get(i);
+                    datosTabla.append(obtenerValor(col)).append("\t");
+                }
+                col = row.row.get(row.row.size() - 1);
+                datosTabla.append(obtenerValor(col)).append("\n");
+            }
+            row = table.get(table.size() - 1);
+            for (int i = 0; i < row.row.size() - 1; i++) {
+                col = row.row.get(i);
+                datosTabla.append(obtenerValor(col)).append("\t");
+            }
+            col = row.row.get(row.row.size() - 1);
+            datosTabla.append(obtenerValor(col));
+            out.write(datosTabla.toString().getBytes());
+        }
+
+    }
+
+    private Object obtenerValor(Entry<Object, Class> col) {
+        return null == col.getValue() ? null : (col.getValue()).cast(col.getKey());
     }
 }

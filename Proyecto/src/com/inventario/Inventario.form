@@ -322,6 +322,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mFechaCorteActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mRespaldo">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Respaldo"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mRespaldoActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="menuAyuda">
@@ -411,9 +419,9 @@
                   <Component id="txtTotalDeudas" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="lblTotalVentas" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtTotalVentas" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblFechaCorte" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
+                  <Component id="lblFechaCorte" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="0" pref="11" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

@@ -9,6 +9,8 @@ package com.inventario;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -197,6 +199,7 @@ public class Inventario extends javax.swing.JFrame {
         mSalir = new javax.swing.JMenuItem();
         menuAjustes = new javax.swing.JMenu();
         mFechaCorte = new javax.swing.JMenuItem();
+        mRespaldo = new javax.swing.JMenuItem();
         menuAyuda = new javax.swing.JMenu();
         mAcerca = new javax.swing.JMenuItem();
 
@@ -993,6 +996,14 @@ public class Inventario extends javax.swing.JFrame {
         });
         menuAjustes.add(mFechaCorte);
 
+        mRespaldo.setText("Respaldo");
+        mRespaldo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mRespaldoActionPerformed(evt);
+            }
+        });
+        menuAjustes.add(mRespaldo);
+
         barraMenu.add(menuAjustes);
 
         menuAyuda.setText("Ayuda");
@@ -1045,8 +1056,8 @@ public class Inventario extends javax.swing.JFrame {
                     .addComponent(txtTotalDeudas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTotalVentas)
                     .addComponent(txtTotalVentas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFechaCorte, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 11, Short.MAX_VALUE))
+                    .addComponent(lblFechaCorte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(11, 11, 11))
         );
 
         txtTotalDeudas.setHorizontalAlignment(0);
@@ -1434,6 +1445,7 @@ public class Inventario extends javax.swing.JFrame {
                     cliente.RecuperarCliente(nombreCliente);
                     Pago pago = new Pago(cliente, (int) total, fechaPago);
                     if (pago.InsertarPago()) {
+                        cliente.ActualizarAcumulado((int) -total);
                         //txtClientePagos.setText(null);
                         txtAbono.setValue(0);
                         fechaPagos.setDate(new Date());
@@ -1528,6 +1540,17 @@ public class Inventario extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, ex.getMessage(), null, JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_mFechaCorteActionPerformed
+
+    private void mRespaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mRespaldoActionPerformed
+        String[] tablas = new String[] {"CLIENTES", "DETALLEVENTAS", "PAGOS", "PRODUCTOS", "VENTAS"};
+        try {
+            for(String tabla: tablas){
+                service.respaldarTabla(tabla);
+            }
+        } catch (IOException | Excepcion | SQLException ex) {
+            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_mRespaldoActionPerformed
 
     /**
      * Limpia la tabla ventas
@@ -1706,6 +1729,7 @@ public class Inventario extends javax.swing.JFrame {
     private javax.swing.JMenuItem mFechaCorte;
     private javax.swing.JMenuItem mNuevoCliente;
     private javax.swing.JMenuItem mNuevoProducto;
+    private javax.swing.JMenuItem mRespaldo;
     private javax.swing.JMenuItem mSalir;
     private javax.swing.JMenu menuAjustes;
     private javax.swing.JMenu menuArchivo;
