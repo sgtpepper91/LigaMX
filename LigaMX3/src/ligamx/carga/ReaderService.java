@@ -1,7 +1,8 @@
-package ligamx.util;
+package ligamx.carga;
 
 import java.io.File;
 import java.util.List;
+import ligamx.util.ExcepcionAplicacion;
 
 /**
  *
@@ -14,10 +15,9 @@ public interface ReaderService <T extends BaseLecturaDTO, U extends BaseCargaDTO
     /**
      *
      * @param file
-     * @return
      * @throws ExcepcionAplicacion
      */
-    List<T>  leerArchivo(File file) throws ExcepcionAplicacion;
+    void leerArchivo(File file) throws ExcepcionAplicacion;
 
     /**
      *
@@ -27,5 +27,17 @@ public interface ReaderService <T extends BaseLecturaDTO, U extends BaseCargaDTO
      */
     List<U> converter(List<T> source) throws ExcepcionAplicacion;
     
-    List<U> validate(List<U> source) throws ExcepcionAplicacion;
+    /**
+     * 
+     * @param source
+     * @throws ExcepcionAplicacion 
+     */
+    void validate(U source) throws ExcepcionAplicacion;
+    
+        /**
+     * 
+     * @param source
+     * @throws ExcepcionAplicacion 
+     */
+    void write(List<U> source) throws ExcepcionAplicacion;
 }

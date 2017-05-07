@@ -20,7 +20,7 @@ public class GolDAOImpl extends ConexionBD implements GolDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a insertar Gol");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO GOLC17(IDPARTIDO, IDEQUIPO, IDJUGADOR, MINUTO, AUTOGOL) ");
         sql.append("VALUES (?, ?, ?, ?, ?)");
@@ -38,7 +38,7 @@ public class GolDAOImpl extends ConexionBD implements GolDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a actualizar Gol");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("UPDATE GOLC17 SET IDEQUIPO = ?, IDJUGADOR = ?, MINUTO = ?, AUTOGOL = ? ");
         sql.append("WHERE IDGOL = ?");
@@ -57,7 +57,7 @@ public class GolDAOImpl extends ConexionBD implements GolDAO {
             LOGGER.debug("Entró a buscar Goles por partido");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDGOL, IDEQUIPO, IDJUGADOR, MINUTO, AUTOGOL ");
             sql.append("FROM GOLC17 WHERE IDPARTIDO = ?");
@@ -87,7 +87,7 @@ public class GolDAOImpl extends ConexionBD implements GolDAO {
             LOGGER.debug("Entró a buscar Goles por jugador");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT COUNT(*) FROM GOLC17 ");
             sql.append("WHERE IDJUGADOR = ? AND AUTOGOL = 'N'");

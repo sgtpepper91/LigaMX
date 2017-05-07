@@ -151,7 +151,7 @@ public class LigaMXController extends BaseController {
         cAutogol = new javax.swing.JCheckBox();
         jLabel11 = new javax.swing.JLabel();
         jScrollPane12 = new javax.swing.JScrollPane();
-        lJugadores = new javax.swing.JList();
+        lJugadores = new javax.swing.JList<>();
         sMinuto = new javax.swing.JSlider();
         jLabel12 = new javax.swing.JLabel();
         jtMinuto = new javax.swing.JTextField();
@@ -531,7 +531,7 @@ public class LigaMXController extends BaseController {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, Short.MAX_VALUE)
         );
 
         panPrincipal.addTab("Tabla General", jPanel1);
@@ -1590,7 +1590,7 @@ public class LigaMXController extends BaseController {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 1666, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2339,8 +2339,8 @@ public class LigaMXController extends BaseController {
             golequipo = equipo2;
         }
         EquipoDTO equipoDTO = equipoService.buscarEquipoporNombre(golequipo);
-        DefaultListModel listModel;
-        listModel = new DefaultListModel();
+        DefaultListModel<String> listModel;
+        listModel = new DefaultListModel<>();
         List<JugadorDTO> jugadoresList = jugadorService.buscarJugadores(equipoDTO);
         List<JugadorDTO> jugadoresList2 = new ArrayList<>();
         String nombre = nomJugBuscar.getText();
@@ -2407,13 +2407,18 @@ public class LigaMXController extends BaseController {
         maximo = Collections.max(JJList);
 
         for (int i = 0; i < 18; i++) {
-            if (Integer.parseInt(tablaGeneral.getValueAt(i, 10).toString()) > Integer.parseInt(tablaGeneral.getValueAt(8, 10).toString()) + 3 * (17 - Integer.parseInt(tablaGeneral.getValueAt(8, 3).toString()))) {
-                tablaGeneral.setValueAt("☑", i, 11); //☒
-
-            } else if (Integer.parseInt(tablaGeneral.getValueAt(7, 10).toString()) > Integer.parseInt(tablaGeneral.getValueAt(i, 10).toString()) + 3 * (17 - Integer.parseInt(tablaGeneral.getValueAt(i, 3).toString()))) {
-                tablaGeneral.setValueAt("☒", i, 11); //
+            if (i<8){
+                if (Integer.parseInt(tablaGeneral.getValueAt(i, 10).toString()) >= Integer.parseInt(tablaGeneral.getValueAt(8, 10).toString()) + 3 * (17 - Integer.parseInt(tablaGeneral.getValueAt(8, 3).toString()))) {
+                    tablaGeneral.setValueAt("☑", i, 11);
+                } else {
+                    tablaGeneral.setValueAt("", i, 11);
+                }
             } else {
-                tablaGeneral.setValueAt("", i, 11); //☑☑
+                 if (Integer.parseInt(tablaGeneral.getValueAt(7, 10).toString()) >= Integer.parseInt(tablaGeneral.getValueAt(i, 10).toString()) + 3 * (17 - Integer.parseInt(tablaGeneral.getValueAt(i, 3).toString()))) {
+                     tablaGeneral.setValueAt("☒", i, 11);
+                 } else {
+                    tablaGeneral.setValueAt("", i, 11);
+                }
             }
         }
         liguilla();
@@ -2676,7 +2681,7 @@ public class LigaMXController extends BaseController {
     private javax.swing.JRadioButton jrEquipo1;
     private javax.swing.JRadioButton jrEquipo2;
     private javax.swing.JTextField jtMinuto;
-    private javax.swing.JList lJugadores;
+    private javax.swing.JList<String> lJugadores;
     private javax.swing.JLabel lblImagen;
     private javax.swing.JLabel lblLocal;
     private javax.swing.JLabel lblVisit;
@@ -2718,7 +2723,7 @@ public class LigaMXController extends BaseController {
                 equipoString = equipo2;
                 column = 3;
             }
-            JugadorDTO jugadorDTO = jugadorService.buscarJugadorPorNombre(lJugadores.getSelectedValue().toString());
+            JugadorDTO jugadorDTO = jugadorService.buscarJugadorPorNombre(lJugadores.getSelectedValue());
             EquipoDTO equipoDTO = equipoService.buscarEquipoporNombre(equipoString);
             if (cAutogol.isSelected()) {
                 autogol = 'S';

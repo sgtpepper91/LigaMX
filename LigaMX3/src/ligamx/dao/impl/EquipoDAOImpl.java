@@ -22,7 +22,7 @@ public class EquipoDAOImpl extends ConexionBD implements EquipoDAO {
             LOGGER.debug("Entró a buscar Equipo por id");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT NOMBRE FROM EQUIPO WHERE IDEQUIPO = ?");
             setSql(sql);
@@ -46,7 +46,7 @@ public class EquipoDAOImpl extends ConexionBD implements EquipoDAO {
             LOGGER.debug("Entró a buscar Equipo por nombre");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDEQUIPO FROM EQUIPO WHERE NOMBRE = ?");
             setSql(sql);
@@ -94,7 +94,7 @@ public class EquipoDAOImpl extends ConexionBD implements EquipoDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a insertar Equipo");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO EQUIPO (NOMBRE) VALUES (?)");
         setSql(sql);

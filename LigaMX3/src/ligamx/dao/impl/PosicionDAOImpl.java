@@ -16,7 +16,7 @@ public class PosicionDAOImpl extends ConexionBD implements PosicionDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a insertar Posición");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO GENERALC17(IDEQUIPO, JJ, JG, JE, JP, GF, GC, DG, PT) ");
         sql.append("VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0)");
@@ -30,7 +30,7 @@ public class PosicionDAOImpl extends ConexionBD implements PosicionDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a actualizar Posición");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("UPDATE GENERALC17 SET JJ = ?, JG = ?, JE = ?, JP = ?, GF = ?, GC = ?, DG = ?, PT = ? ");
         sql.append("WHERE IDEQUIPO = ?");

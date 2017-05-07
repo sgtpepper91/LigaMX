@@ -6,6 +6,7 @@ package ligamx.controller;
  */
 import java.util.Calendar;
 import java.util.Date;
+import javax.swing.DefaultComboBoxModel;
 import ligamx.dto.EquipoDTO;
 import ligamx.dto.PartidoDTO;
 import ligamx.service.EquipoService;
@@ -40,8 +41,8 @@ public class PartidoController extends BaseController {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        cLocal = new javax.swing.JComboBox();
-        cVisitante = new javax.swing.JComboBox();
+        cLocal = new javax.swing.JComboBox<>();
+        cVisitante = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         cJornada = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
@@ -55,23 +56,19 @@ public class PartidoController extends BaseController {
         spMin = new com.toedter.components.JSpinField();
 
         setTitle("LIGA MX-Agregar Partidos");
-        setIconImage(getIconImage());
         setResizable(false);
         setType(java.awt.Window.Type.POPUP);
 
         jPanel1.setBackground(new java.awt.Color(255, 153, 0));
 
-        cLocal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "América", "Atlas", "Cruz Azul", "Guadalajara", "Jaguares", "León", "Monterrey", "Morelia", "Necaxa", "Pachuca", "Puebla", "Querétaro", "Santos", "Tijuana", "Toluca", "UANL", "UNAM", "Veracruz" }));
-        cLocal.setNextFocusableComponent(cVisitante);
+        cLocal.setModel(new DefaultComboBoxModel<>(Constantes.EQUIPOS));
 
-        cVisitante.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "América", "Atlas", "Cruz Azul", "Guadalajara", "Jaguares", "León", "Monterrey", "Morelia", "Necaxa", "Pachuca", "Puebla", "Querétaro", "Santos", "Tijuana", "Toluca", "UANL", "UNAM", "Veracruz" }));
+        cVisitante.setModel(new DefaultComboBoxModel<>(Constantes.EQUIPOS));
         cVisitante.setName(""); // NOI18N
-        cVisitante.setNextFocusableComponent(dcFecha);
 
         jLabel3.setText("Jornada");
 
         cJornada.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17" }));
-        cJornada.setNextFocusableComponent(cLocal);
 
         jLabel1.setText("Local");
 
@@ -90,7 +87,6 @@ public class PartidoController extends BaseController {
 
         dcFecha.setDateFormatString("dd/MM/yyyy");
         dcFecha.setMinSelectableDate(new java.util.Date(-62135744330000L));
-        dcFecha.setNextFocusableComponent(btnAceptar);
 
         jLabel6.setText("Hora");
 
@@ -108,24 +104,24 @@ public class PartidoController extends BaseController {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(7, 7, 7)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
                                     .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(cLocal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(18, 18, 18)
                                         .addComponent(cJornada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabel4))))
+                                        .addComponent(jLabel4))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(cLocal, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cVisitante, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(cVisitante, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -149,7 +145,7 @@ public class PartidoController extends BaseController {
                 .addGap(16, 16, 16)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(cJornada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cJornada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -216,8 +212,8 @@ public class PartidoController extends BaseController {
             cVisitante.removeItem(local);
             cVisitante.removeItem(visitante);
             if (cLocal.getItemCount() == 0) {
-                cLocal.setModel(new javax.swing.DefaultComboBoxModel(Constantes.EQUIPOS));
-                cVisitante.setModel(new javax.swing.DefaultComboBoxModel(Constantes.EQUIPOS));
+                cLocal.setModel(new javax.swing.DefaultComboBoxModel<>(Constantes.EQUIPOS));
+                cVisitante.setModel(new javax.swing.DefaultComboBoxModel<>(Constantes.EQUIPOS));
 
             }
 //            jLabel4.setText(String.valueOf(idpar));
@@ -254,18 +250,16 @@ public class PartidoController extends BaseController {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PartidoController().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new PartidoController().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAceptar;
     private javax.swing.JComboBox cJornada;
-    private javax.swing.JComboBox cLocal;
-    private javax.swing.JComboBox cVisitante;
+    private javax.swing.JComboBox<String> cLocal;
+    private javax.swing.JComboBox<String> cVisitante;
     private com.toedter.calendar.JDateChooser dcFecha;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

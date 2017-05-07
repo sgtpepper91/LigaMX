@@ -1,4 +1,4 @@
-package ligamx.util;
+package ligamx.carga;
 
 /**
  *

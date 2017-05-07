@@ -51,29 +51,29 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                          <Component id="cLocal" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Component id="cJornada" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                           <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                                          <Component id="cLocal" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cVisitante" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cVisitante" min="-2" pref="76" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -108,7 +108,7 @@
                   <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cJornada" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cJornada" alignment="3" max="-2" attributes="0"/>
                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -142,62 +142,26 @@
       <SubComponents>
         <Component class="javax.swing.JComboBox" name="cLocal">
           <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="18">
-                <StringItem index="0" value="Am&#xe9;rica"/>
-                <StringItem index="1" value="Atlas"/>
-                <StringItem index="2" value="Cruz Azul"/>
-                <StringItem index="3" value="Guadalajara"/>
-                <StringItem index="4" value="Jaguares"/>
-                <StringItem index="5" value="Le&#xf3;n"/>
-                <StringItem index="6" value="Monterrey"/>
-                <StringItem index="7" value="Morelia"/>
-                <StringItem index="8" value="Necaxa"/>
-                <StringItem index="9" value="Pachuca"/>
-                <StringItem index="10" value="Puebla"/>
-                <StringItem index="11" value="Quer&#xe9;taro"/>
-                <StringItem index="12" value="Santos"/>
-                <StringItem index="13" value="Tijuana"/>
-                <StringItem index="14" value="Toluca"/>
-                <StringItem index="15" value="UANL"/>
-                <StringItem index="16" value="UNAM"/>
-                <StringItem index="17" value="Veracruz"/>
-              </StringArray>
-            </Property>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="cVisitante"/>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new DefaultComboBoxModel&lt;&gt;(Constantes.EQUIPOS)" type="code"/>
             </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox&lt;&gt;()"/>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JComboBox" name="cVisitante">
           <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="18">
-                <StringItem index="0" value="Am&#xe9;rica"/>
-                <StringItem index="1" value="Atlas"/>
-                <StringItem index="2" value="Cruz Azul"/>
-                <StringItem index="3" value="Guadalajara"/>
-                <StringItem index="4" value="Jaguares"/>
-                <StringItem index="5" value="Le&#xf3;n"/>
-                <StringItem index="6" value="Monterrey"/>
-                <StringItem index="7" value="Morelia"/>
-                <StringItem index="8" value="Necaxa"/>
-                <StringItem index="9" value="Pachuca"/>
-                <StringItem index="10" value="Puebla"/>
-                <StringItem index="11" value="Quer&#xe9;taro"/>
-                <StringItem index="12" value="Santos"/>
-                <StringItem index="13" value="Tijuana"/>
-                <StringItem index="14" value="Toluca"/>
-                <StringItem index="15" value="UANL"/>
-                <StringItem index="16" value="UNAM"/>
-                <StringItem index="17" value="Veracruz"/>
-              </StringArray>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new DefaultComboBoxModel&lt;&gt;(Constantes.EQUIPOS)" type="code"/>
             </Property>
             <Property name="name" type="java.lang.String" value="" noResource="true"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="dcFecha"/>
-            </Property>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox&lt;&gt;()"/>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
@@ -226,9 +190,6 @@
                 <StringItem index="15" value="16"/>
                 <StringItem index="16" value="17"/>
               </StringArray>
-            </Property>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="cLocal"/>
             </Property>
           </Properties>
         </Component>
@@ -265,9 +226,6 @@
             <Property name="dateFormatString" type="java.lang.String" value="dd/MM/yyyy"/>
             <Property name="minSelectableDate" type="java.util.Date" editor="org.netbeans.beaninfo.editors.DateEditor">
               <SerializedValue value="-84,-19,0,5,115,114,0,14,106,97,118,97,46,117,116,105,108,46,68,97,116,101,104,106,-127,1,75,89,116,25,3,0,0,120,112,119,8,-1,-1,-57,124,-27,8,6,-16,120"/>
-            </Property>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="btnAceptar"/>
             </Property>
           </Properties>
         </Component>

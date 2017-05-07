@@ -22,7 +22,7 @@ public class JugadorDAOImpl extends ConexionBD implements JugadorDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a insertar Jugador");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO JUGADOR (NOMBRE, IDEQUIPO, NUMERO) VALUES (?, ?, ?)");
         setSql(sql);
@@ -37,7 +37,7 @@ public class JugadorDAOImpl extends ConexionBD implements JugadorDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a modificar Jugador");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("UPDATE JUGADOR SET NOMBRE = ?, IDEQUIPO = ?, NUMERO = ? WHERE IDJUGADOR = ?");
         setSql(sql);
@@ -53,7 +53,7 @@ public class JugadorDAOImpl extends ConexionBD implements JugadorDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a borrar Jugador");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("DELETE JUGADOR WHERE IDJUGADOR = ?");
         setSql(sql);
@@ -67,7 +67,7 @@ public class JugadorDAOImpl extends ConexionBD implements JugadorDAO {
             LOGGER.debug("Entró a buscar Jugadores");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDJUGADOR, NOMBRE, NUMERO ");
             sql.append("FROM JUGADOR WHERE IDEQUIPO = ?");
@@ -96,7 +96,7 @@ public class JugadorDAOImpl extends ConexionBD implements JugadorDAO {
             LOGGER.debug("Entró a buscar Jugador por id");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT NOMBRE, NUMERO ");
             sql.append("FROM JUGADOR WHERE IDJUGADOR = ?");
@@ -122,7 +122,7 @@ public class JugadorDAOImpl extends ConexionBD implements JugadorDAO {
             LOGGER.debug("Entró a buscar Jugador por nombre");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDJUGADOR, NOMBRE, NUMERO ");
             sql.append("FROM JUGADOR WHERE NOMBRE = ?");
@@ -148,7 +148,7 @@ public class JugadorDAOImpl extends ConexionBD implements JugadorDAO {
             LOGGER.debug("Entró a buscar Jugador por id");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDJUGADOR, NOMBRE, NUMERO ");
             sql.append("FROM JUGADOR WHERE IDJUGADOR = ?");

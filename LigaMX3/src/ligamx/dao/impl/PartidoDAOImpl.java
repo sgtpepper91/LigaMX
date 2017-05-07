@@ -18,7 +18,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a insertar Partido");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO PARTIDOSC17(JORNADA, LOCAL, ");
         sql.append("VISITANTE, FECHA) ");
@@ -36,7 +36,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a actualizar Partido");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("UPDATE PARTIDOSC17 SET ML = ?, MV = ?, FECHA = ? ");
         sql.append("WHERE IDPARTIDO = ?");
@@ -54,7 +54,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             LOGGER.debug("Entró a buscar Partido");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV, FECHA ");
             sql.append("FROM PARTIDOSC17 WHERE LOCAL = ? OR VISITANTE = ? ORDER BY IDPARTIDO");
@@ -87,7 +87,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             LOGGER.debug("Entró a buscar Partido por jornada");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV, FECHA ");
             sql.append("FROM PARTIDOSC17 WHERE JORNADA = ? ORDER BY IDPARTIDO");
@@ -119,7 +119,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             LOGGER.debug("Entró a buscar Partidos por id");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV, FECHA ");
             sql.append("FROM PARTIDOSC17 WHERE IDPARTIDO = ?");
@@ -149,7 +149,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             LOGGER.debug("Entró a buscar Partido por jornada y local");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV, FECHA ");
             sql.append("FROM PARTIDOSC17 WHERE LOCAL = ? AND JORNADA = ?");
@@ -180,7 +180,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             LOGGER.debug("Entró a buscar Partido por equipos");
         }
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV, FECHA ");
             sql.append("FROM PARTIDOSC17 WHERE LOCAL = ? AND VISITANTE = ?");

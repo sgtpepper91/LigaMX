@@ -16,7 +16,7 @@ public class CocienteDAOImpl extends ConexionBD implements CocienteDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a insertar Cociente");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("INSERT INTO COCIENTEC17(IDEQUIPO, JA14, JC15, JA15, JC16, ");
         sql.append("JA16, JC17, TJ, PA14, DGA14, PC15, DGC15, PA15, DGA15, PC16, ");
@@ -32,7 +32,7 @@ public class CocienteDAOImpl extends ConexionBD implements CocienteDAO {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a actualizar Cociente");
         }
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
         sql.append("UPDATE COCIENTEC17 SET JC17 = ?, TJ = ?, PC17 = ?, DGC17 =?, ");
         sql.append("TP = ?, TDG = ?, COCIENTE = ? WHERE IDEQUIPO = ?");

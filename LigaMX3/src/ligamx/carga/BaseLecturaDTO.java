@@ -1,14 +1,13 @@
-
-package ligamx.util;
+package ligamx.carga;
 
 /**
  *
  * @author hector.lopez
  */
-public abstract class BaseLecturaDTO extends BaseArchivoDTO{
-   protected String [] header;
-   protected String [] mapper;
-   protected Integer numLinea;
+public abstract class BaseLecturaDTO extends BaseArchivoDTO {
+
+    protected String[] header;
+    protected String[] mapper;
 
     public String[] getHeader() {
         return header;
@@ -24,10 +23,6 @@ public abstract class BaseLecturaDTO extends BaseArchivoDTO{
 
     public void setMapper(String[] mapper) {
         this.mapper = mapper;
-    }
-
-    public Integer getNumLinea() {
-        return numLinea;
     }
 
     public void setNumLinea(Integer numLinea) {
