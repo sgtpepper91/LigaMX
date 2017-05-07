@@ -1,0 +1,6 @@
+Nombre	Equipo	Número
+Carlos Fierro	Guadalajara	7
+Ernesto	NecaxaNecaxaNecaxaNecaxaNecaxaNecaxaNecaxaNecaxaNecaxa	102
+	NecaxaNecaxaNecaxaNecaxaNecaxaNecaxaNecaxaNecaxaNecaxa	102
+Ernesto		102
+Ernesto	NecaxaNecaxaNecaxaNecaxaNecaxaNecaxaNecaxaNecaxaNecaxa	
