@@ -52,7 +52,7 @@ import ligamx.util.ExcepcionAplicacion;
  * @author Administrator
  */
 public class LigaMXController extends BaseController {
-
+    private PantallaCarga pantallaCarga;
     private final EquipoService equipoService;
     private final PartidoService partidoService;
     private final GolService golService;
@@ -409,9 +409,9 @@ public class LigaMXController extends BaseController {
         setExtendedState(6);
         setFocusCycleRoot(false);
         setLocationByPlatform(true);
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            public void componentResized(java.awt.event.ComponentEvent evt) {
-                formComponentResized(evt);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
             }
         });
 
@@ -527,7 +527,7 @@ public class LigaMXController extends BaseController {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -675,7 +675,7 @@ public class LigaMXController extends BaseController {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+            .addComponent(jScrollPane14, javax.swing.GroupLayout.PREFERRED_SIZE, 23, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -908,7 +908,7 @@ public class LigaMXController extends BaseController {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -2249,10 +2249,6 @@ public class LigaMXController extends BaseController {
         }
     }//GEN-LAST:event_cLocal1ItemStateChanged
 
-    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        System.out.println(this.getSize().toString() + "\t" + jScrollPane5.getSize().toString());
-    }//GEN-LAST:event_formComponentResized
-
     private void jGolWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jGolWindowClosing
         this.setEnabled(true);
         this.toFront();
@@ -2273,6 +2269,10 @@ public class LigaMXController extends BaseController {
             this.agregarGol();
         }
     }//GEN-LAST:event_lJugadoresKeyTyped
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        this.pantallaCarga.setVisible(false);
+    }//GEN-LAST:event_formWindowOpened
 
     public void detalles(PartidoDTO partidoDTO) throws ExcepcionAplicacion {
         if (LOGGER.isDebugEnabled()) {
@@ -2752,4 +2752,8 @@ public class LigaMXController extends BaseController {
         }
     }
 
+    public void setPantallaCarga(PantallaCarga pantallaCarga) {
+        this.pantallaCarga = pantallaCarga;
+    }
+    
 }
