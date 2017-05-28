@@ -11,5 +11,21 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 /Proyecto/nbproject/private/
-/Proyecto/build/
-/Proyecto/dist/
+!/Proyecto/src/lib/jcalendar-1.4.jar
+!/Proyecto/src/lib/ojdbc6.jar
+/NetBeansProjects/Reloj/dist/
+/NetBeansProjects/Factorizacion/dist/
+/NetBeansProjects/nbproject/private/
+/NetBeansProjects/build/
+/NetBeansProjects/dist/
+/Euler/nbproject/private/
+/NetBeansProjects/Euler/nbproject/private/
+/NetBeansProjects/Euler/build/
+/LigaMX3/nbproject/private/
+/LigaMX3/build/
+/LigaMX3/dist/
+/PruebaJasperReports/nbproject/private/
+/PruebaJasperReports/build/
+/PruebaJasperReports/dist/
+/PruebaProgressBar/nbproject/private/
+/PruebaProgressBar/build/

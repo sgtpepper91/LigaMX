@@ -1,13 +1,10 @@
-package ligamx.dto;
-
-import java.io.Serializable;
-import ligamx.util.BaseDTO;
+package ligamx.carga;
 
 /**
  *
  * @author hector.lopez
  */
-public class CocienteDTO extends BaseDTO implements Serializable, Comparable<CocienteDTO> {
+public class CocienteCargaDTO extends BaseCargaDTO {
 
     private Integer ja15;
 
@@ -16,7 +13,7 @@ public class CocienteDTO extends BaseDTO implements Serializable, Comparable<Coc
     private Integer ja16;
 
     private Integer jc17;
-    
+
     private Integer ja17;
 
     private Integer jc18;
@@ -30,11 +27,11 @@ public class CocienteDTO extends BaseDTO implements Serializable, Comparable<Coc
     private Integer pa16;
 
     private Integer pc17;
-    
+
     private Integer pa17;
 
     private Integer pc18;
-    
+
     private Integer tp;
 
     private Integer dga15;
@@ -44,7 +41,7 @@ public class CocienteDTO extends BaseDTO implements Serializable, Comparable<Coc
     private Integer dga16;
 
     private Integer dgc17;
-    
+
     private Integer dga17;
 
     private Integer dgc18;
@@ -52,17 +49,6 @@ public class CocienteDTO extends BaseDTO implements Serializable, Comparable<Coc
     private Integer tdg;
 
     private Double cociente;
-
-    
-
-    @Override
-    public int compareTo(CocienteDTO o) {
-        if (this.getCociente().equals(o.getCociente())) {
-            return o.getTdg().compareTo(this.getTdg());
-        } else {
-            return o.getCociente().compareTo(this.getCociente());
-        }
-    }
 
     public Integer getJa15() {
         return ja15;
@@ -240,4 +226,9 @@ public class CocienteDTO extends BaseDTO implements Serializable, Comparable<Coc
         this.cociente = cociente;
     }
 
+    @Override
+    public String toString() {
+        return "CocienteCargaDTO{" + "ja15=" + ja15 + ", jc16=" + jc16 + ", ja16=" + ja16 + ", jc17=" + jc17 + ", ja17=" + ja17 + ", jc18=" + jc18 + ", tj=" + tj + ", pa15=" + pa15 + ", pc16=" + pc16 + ", pa16=" + pa16 + ", pc17=" + pc17 + ", pa17=" + pa17 + ", pc18=" + pc18 + ", tp=" + tp + ", dga15=" + dga15 + ", dgc16=" + dgc16 + ", dga16=" + dga16 + ", dgc17=" + dgc17 + ", dga17=" + dga17 + ", dgc18=" + dgc18 + ", tdg=" + tdg + ", cociente=" + cociente + '}';
+    }
+    
 }

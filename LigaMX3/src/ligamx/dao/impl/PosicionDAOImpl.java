@@ -11,6 +11,9 @@ import ligamx.util.ExcepcionAplicacion;
 
 public class PosicionDAOImpl extends ConexionBD implements PosicionDAO {
 
+    private static final String TABLA_GENERAL = "GENERALA17";
+    private static final String TABLA_EQUIPO = "EQUIPOC18";
+
     @Override
     public boolean insertarPosicion(EquipoDTO equipo) throws ExcepcionAplicacion {
         if (LOGGER.isDebugEnabled()) {
@@ -18,7 +21,7 @@ public class PosicionDAOImpl extends ConexionBD implements PosicionDAO {
         }
         Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO GENERALC17(IDEQUIPO, JJ, JG, JE, JP, GF, GC, DG, PT) ");
+        sql.append("INSERT INTO " + TABLA_GENERAL + "(IDEQUIPO, JJ, JG, JE, JP, GF, GC, DG, PT) ");
         sql.append("VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0)");
         setSql(sql);
         params.put(1, equipo.getIdEquipo());
@@ -32,7 +35,7 @@ public class PosicionDAOImpl extends ConexionBD implements PosicionDAO {
         }
         Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("UPDATE GENERALC17 SET JJ = ?, JG = ?, JE = ?, JP = ?, GF = ?, GC = ?, DG = ?, PT = ? ");
+        sql.append("UPDATE " + TABLA_GENERAL + " SET JJ = ?, JG = ?, JE = ?, JP = ?, GF = ?, GC = ?, DG = ?, PT = ? ");
         sql.append("WHERE IDEQUIPO = ?");
         setSql(sql);
         params.put(1, equipo.getPosicion().getJj());
@@ -48,7 +51,7 @@ public class PosicionDAOImpl extends ConexionBD implements PosicionDAO {
     }
 
     @Override
-    public Map<String,PosicionDTO> obtenerPosicion() throws ExcepcionAplicacion {
+    public Map<String, PosicionDTO> obtenerPosicion() throws ExcepcionAplicacion {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a obtener Posición");
         }
@@ -56,11 +59,11 @@ public class PosicionDAOImpl extends ConexionBD implements PosicionDAO {
             Map params = new HashMap();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT E.NOMBRE, G.JJ, G.JG, G.JE, G.JP, G.GF, G.GC, G.DG, G.PT ");
-            sql.append("FROM GENERALC17 G INNER JOIN EQUIPO E ");
+            sql.append("FROM " + TABLA_GENERAL + " G INNER JOIN " + TABLA_EQUIPO + " E ");
             sql.append("ON G.IDEQUIPO = E.IDEQUIPO");
             setSql(sql);
             ejecutarQuery(params);
-            Map<String,PosicionDTO> posicionMap = new HashMap<>();
+            Map<String, PosicionDTO> posicionMap = new HashMap<>();
             while (getRset().next()) {
                 PosicionDTO posicion = new PosicionDTO();
                 posicion.setJj(getRset().getInt(2));
