@@ -115,6 +115,9 @@ public class PantallaCarga extends BaseController {
     private javax.swing.JPanel panPantallaCarga;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * 
+     */
     private void iniciar() {
         task = new LongTask();
         task.setPantallaCarga(this);
