@@ -2,9 +2,11 @@ package ligamx.controller;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
@@ -22,6 +24,9 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import ligamx.carga.JugadorReaderServiceImpl;
+import ligamx.carga.ReaderService;
+import ligamx.carga.SeleccionArchivoCarga;
 import ligamx.dto.CocienteDTO;
 import ligamx.dto.EquipoDTO;
 import ligamx.dto.GolDTO;
@@ -46,20 +51,23 @@ import ligamx.util.ButtonEditor;
 import ligamx.util.ButtonRenderer;
 import ligamx.util.Constantes;
 import ligamx.util.ExcepcionAplicacion;
+import ligamx.util.LongTask;
 
 /**
  *
  * @author Administrator
  */
 public class LigaMXController extends BaseController {
-    private PantallaCarga pantallaCarga;
-    private final EquipoService equipoService;
-    private final PartidoService partidoService;
-    private final GolService golService;
-    private final JugadorService jugadorService;
-    private final CocienteService cocienteService;
-    private final PosicionService posicionService;
-    private final JugadorController jugadorController;
+
+    private static LongTask task;
+    private EquipoService equipoService;
+    private PartidoService partidoService;
+    private GolService golService;
+    private JugadorService jugadorService;
+    private CocienteService cocienteService;
+    private PosicionService posicionService;
+    private JugadorController jugadorController;
+    private ReaderService reader;
     private int maximo = 0;
     private boolean cambio = false;
     private String equipo1, equipo2;
@@ -67,42 +75,12 @@ public class LigaMXController extends BaseController {
 
     /**
      * Creates new form LIGAMX
+     * @param task
      */
-    public LigaMXController() {
+    public LigaMXController(LongTask task) {
         initComponents();
         setIcono();
-        equipoService = new EquipoServiceImpl();
-        partidoService = new PartidoServiceImpl();
-        golService = new GolServiceImpl();
-        jugadorService = new JugadorServiceImpl();
-        cocienteService = new CocienteServiceImpl();
-        posicionService = new PosicionServiceImpl();
-        jugadorController = new JugadorController();
-        try {
-            ActualizarGeneral();
-            cJornada1.setSelectedIndex(maximo - 1);
-            BuscarActualiza();
-            BuscarEquipo();
-            tablaGoleadores();
-            /*Cuartos();
-            CalcularCuartos();
-            Semi();
-            CalcularSemi();
-            
-            Final();
-            CalcularFinal();*/
-
- /*tablaCuartos.getModel().addTableModelListener(new TableModelListener(){
-            @Override
-            public void tableChanged(TableModelEvent e){
-            System.out.println("cuartos 1");
-            CalcularCuartos();
-            System.out.println("cuartos 2");
-            }
-            });*/
-        } catch (ExcepcionAplicacion ex) {
-            lanzarExcepcion(ex);
-        }
+        LigaMXController.task = task;
     }
 
     public final void BuscarEquipo() throws ExcepcionAplicacion {
@@ -120,6 +98,7 @@ public class LigaMXController extends BaseController {
                 tablaEquipo.setValueAt(null, f, columna);
             }
         }
+        task.setCurrent(62);
         EquipoDTO equipoDTO = equipoService.buscarEquipoporNombre(equipoString);
         List<PartidoDTO> partidoDTOs = partidoService.buscarPartidosporEquipo(equipoDTO);
         for (PartidoDTO partidoDTO : partidoDTOs) {
@@ -973,7 +952,7 @@ public class LigaMXController extends BaseController {
                 { new Integer(18), null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "POS", "", "EQUIPO", "PA13", "PC14", "PA14", "PC15", "PA15", "PC16", "TPTS", "", "JA13", "JC14", "JA14", "JC15", "JA15", "JC16", "TJ", "COCIENTE", ""
+                "POS", "", "EQUIPO", "PA15", "PC16", "PA16", "PC17", "PA17", "PC18", "TPTS", "", "JA15", "JC16", "JA16", "JC17", "JA17", "JC18", "TJ", "COCIENTE", ""
             }
         ) {
             Class[] types = new Class [] {
@@ -1603,7 +1582,7 @@ public class LigaMXController extends BaseController {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BuscarActualiza() throws ExcepcionAplicacion {
-        if (LOGGER.isDebugEnabled()) {
+        if (LOGGER.isDebugEnabled()) { //25
             LOGGER.debug("Entró a buscar actualiza");
         }
         cambio = false;
@@ -1614,6 +1593,7 @@ public class LigaMXController extends BaseController {
                 tablaJornada1.setValueAt(null, f, columna);
             }
         }
+        task.setCurrent(37);
         List<PartidoDTO> partidoDTOs = partidoService.buscarPartidosporJornada(jornada);
         for (PartidoDTO partidoDTO : partidoDTOs) {
             EquipoDTO localEquipoDTO = equipoService.buscarEquipoporId(partidoDTO.getIdLocal());
@@ -1747,25 +1727,31 @@ public class LigaMXController extends BaseController {
     }//GEN-LAST:event_jmGraficaActionPerformed
 
     private void ACuartosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ACuartosActionPerformed
-//        String sql, local, visitante, str = "";
-//        int idpart = 154;
-//        for (int i = 0; i < 8; i += 2) {
-//            local = tablaCuartos.getValueAt(i, 1).toString();
-//            visitante = tablaCuartos.getValueAt(i + 1, 1).toString();
-//            try {
-//                sql = "Insert into C16 values (" + (idpart + 4) + ",18,'" + local + "',0,'" + visitante + "',0)";
-//                stmn.executeUpdate(sql);
-//                sql = "Insert into C16 values (" + (idpart) + ",18,'" + visitante + "',0,'" + local + "',0)";
-//                stmn.executeUpdate(sql);
-//                str += "" + local + "-" + visitante + "\n";
-//
-//            } catch (Exception e) {
-//                JOptionPane.showMessageDialog(null, "Error en tabla C16 " + e);
-//            }
-//            idpart++;
-//        }
-//        JOptionPane.showMessageDialog(null, "Partidos agregados \n" + str);
+        StringBuilder str = new StringBuilder();
+        try {
+            for (int i = 0; i < 8; i += 2) {
+                String local = tablaCuartos.getValueAt(i, 1).toString();
+                String visitante = tablaCuartos.getValueAt(i + 1, 1).toString();
+                EquipoDTO eqLocal = equipoService.buscarEquipoporNombre(local);
+                EquipoDTO eqVisitante = equipoService.buscarEquipoporNombre(visitante);
+                PartidoDTO partidoIda = new PartidoDTO();
+                partidoIda.setIdLocal(eqVisitante.getIdEquipo());
+                partidoIda.setIdVisitante(eqLocal.getIdEquipo());
+                partidoIda.setJornada(18);
+                partidoService.insertarPartido(partidoIda);
+                PartidoDTO partidoVuelta = new PartidoDTO();
+                partidoVuelta.setIdLocal(eqLocal.getIdEquipo());
+                partidoVuelta.setIdVisitante(eqVisitante.getIdEquipo());
+                partidoIda.setJornada(18);
+                partidoService.insertarPartido(partidoVuelta);
+                str.append(local).append("-").append(visitante).append("\n");
+                JOptionPane.showMessageDialog(null, "Partidos agregados \n" + str);
+            }
+        } catch (ExcepcionAplicacion ex) {
+            lanzarExcepcion(ex);
+        }
     }//GEN-LAST:event_ACuartosActionPerformed
+
     public void Cuartos() {
 //        try {
 //            conectarBase();
@@ -2073,8 +2059,15 @@ public class LigaMXController extends BaseController {
     }//GEN-LAST:event_aFinalActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-//        Transferencia trans = new Transferencia();
-//        trans.setVisible(true);
+        try {
+            SeleccionArchivoCarga seleccionArchivoCarga = new SeleccionArchivoCarga();
+            JOptionPane.showMessageDialog(null, seleccionArchivoCarga, "Seleccione el archivo", JOptionPane.PLAIN_MESSAGE);
+            File file = seleccionArchivoCarga.getArchivo();
+            reader = new JugadorReaderServiceImpl();
+            reader.leerArchivo(file);
+        } catch (HeadlessException | ExcepcionAplicacion ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jCheckBox10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox10ActionPerformed
@@ -2255,23 +2248,23 @@ public class LigaMXController extends BaseController {
     }//GEN-LAST:event_jGolWindowClosing
 
     private void jPanel9KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPanel9KeyTyped
-        
+
     }//GEN-LAST:event_jPanel9KeyTyped
 
     private void jGolKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jGolKeyTyped
-        if(evt.getKeyChar() == '\n') {
+        if (evt.getKeyChar() == '\n') {
             this.agregarGol();
         }
     }//GEN-LAST:event_jGolKeyTyped
 
     private void lJugadoresKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lJugadoresKeyTyped
-        if(evt.getKeyChar() == '\n') {
+        if (evt.getKeyChar() == '\n') {
             this.agregarGol();
         }
     }//GEN-LAST:event_lJugadoresKeyTyped
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.pantallaCarga.setVisible(false);
+        task.getPantallaCarga().setVisible(false);
     }//GEN-LAST:event_formWindowOpened
 
     public void detalles(PartidoDTO partidoDTO) throws ExcepcionAplicacion {
@@ -2395,6 +2388,7 @@ public class LigaMXController extends BaseController {
             tablaGeneral.setValueAt(posicionDTO.getPts(), fila, 10);
             fila++;
         }
+        task.setCurrent(5);
         List<Integer> JJList = new ArrayList<>();
         for (int i = 0; i < tablaGeneral.getRowCount(); i++) {
             String nombre = (String) tablaGeneral.getValueAt(i, 2);
@@ -2404,24 +2398,24 @@ public class LigaMXController extends BaseController {
             tablaGeneral.setValueAt(icon, i, 1);
             JJList.add((Integer) tablaGeneral.getValueAt(i, 3));
         }
-        maximo = Collections.max(JJList);
-
+        maximo = Collections.max(JJList) > 0 ? Collections.max(JJList) : 1; 
+        task.setCurrent(10);
         for (int i = 0; i < 18; i++) {
-            if (i<8){
+            if (i < 8) {
                 if (Integer.parseInt(tablaGeneral.getValueAt(i, 10).toString()) >= Integer.parseInt(tablaGeneral.getValueAt(8, 10).toString()) + 3 * (17 - Integer.parseInt(tablaGeneral.getValueAt(8, 3).toString()))) {
                     tablaGeneral.setValueAt("☑", i, 11);
                 } else {
                     tablaGeneral.setValueAt("", i, 11);
                 }
+            } else if (Integer.parseInt(tablaGeneral.getValueAt(7, 10).toString()) >= Integer.parseInt(tablaGeneral.getValueAt(i, 10).toString()) + 3 * (17 - Integer.parseInt(tablaGeneral.getValueAt(i, 3).toString()))) {
+                tablaGeneral.setValueAt("☒", i, 11);
             } else {
-                 if (Integer.parseInt(tablaGeneral.getValueAt(7, 10).toString()) >= Integer.parseInt(tablaGeneral.getValueAt(i, 10).toString()) + 3 * (17 - Integer.parseInt(tablaGeneral.getValueAt(i, 3).toString()))) {
-                     tablaGeneral.setValueAt("☒", i, 11);
-                 } else {
-                    tablaGeneral.setValueAt("", i, 11);
-                }
+                tablaGeneral.setValueAt("", i, 11);
             }
         }
+        task.setCurrent(15);
         liguilla();
+        task.setCurrent(20);
         Cociente();
 //
 //        grafica.llenarTabla();
@@ -2464,20 +2458,20 @@ public class LigaMXController extends BaseController {
             CocienteDTO cocienteDTO = entry.getValue();
             tablaCociente.setValueAt(fila + 1, fila, 0);
             tablaCociente.setValueAt(entry.getKey(), fila, 2);
-            tablaCociente.setValueAt(cocienteDTO.getPa14(), fila, 3);
-            tablaCociente.setValueAt(cocienteDTO.getPc15(), fila, 4);
-            tablaCociente.setValueAt(cocienteDTO.getJa15(), fila, 5);
-            tablaCociente.setValueAt(cocienteDTO.getJc16(), fila, 6);
-            tablaCociente.setValueAt(cocienteDTO.getJa16(), fila, 7);
-            tablaCociente.setValueAt(cocienteDTO.getJc17(), fila, 8);
+            tablaCociente.setValueAt(cocienteDTO.getJa15(), fila, 3);
+            tablaCociente.setValueAt(cocienteDTO.getJc16(), fila, 4);
+            tablaCociente.setValueAt(cocienteDTO.getJa16(), fila, 5);
+            tablaCociente.setValueAt(cocienteDTO.getJc17(), fila, 6);
+            tablaCociente.setValueAt(cocienteDTO.getJa17(), fila, 7);
+            tablaCociente.setValueAt(cocienteDTO.getJc18(), fila, 8);
             tablaCociente.setValueAt(cocienteDTO.getTp(), fila, 9);
             tablaCociente.setValueAt(null, fila, 10);
-            tablaCociente.setValueAt(cocienteDTO.getJa14(), fila, 11);
-            tablaCociente.setValueAt(cocienteDTO.getJc15(), fila, 12);
-            tablaCociente.setValueAt(cocienteDTO.getJa15(), fila, 13);
-            tablaCociente.setValueAt(cocienteDTO.getJc16(), fila, 14);
-            tablaCociente.setValueAt(cocienteDTO.getJa16(), fila, 15);
-            tablaCociente.setValueAt(cocienteDTO.getJc17(), fila, 16);
+            tablaCociente.setValueAt(cocienteDTO.getJa15(), fila, 11);
+            tablaCociente.setValueAt(cocienteDTO.getJc16(), fila, 12);
+            tablaCociente.setValueAt(cocienteDTO.getJa16(), fila, 13);
+            tablaCociente.setValueAt(cocienteDTO.getJc17(), fila, 14);
+            tablaCociente.setValueAt(cocienteDTO.getJa17(), fila, 15);
+            tablaCociente.setValueAt(cocienteDTO.getJc18(), fila, 16);
             tablaCociente.setValueAt(cocienteDTO.getTj(), fila, 17);
             tablaCociente.setValueAt(df.format(cocienteDTO.getCociente()), fila, 18);
             fila++;
@@ -2487,7 +2481,7 @@ public class LigaMXController extends BaseController {
         int tp = Integer.parseInt(tablaCociente.getValueAt(17, 9).toString()) + 3 * partidosPendientes;
         double tcoc = (tp + 0.0) / tj;
         for (int i = 0; i < tablaCociente.getRowCount(); i++) {
-            
+
             String nombre = (String) tablaCociente.getValueAt(i, 2);
             String url = "ligamx/resources/images/" + nombre + ".png";
             ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource(url)));
@@ -2609,7 +2603,7 @@ public class LigaMXController extends BaseController {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new LigaMXController().setVisible(true);
+            new LigaMXController(task).setVisible(true);
         });
     }
 
@@ -2752,8 +2746,40 @@ public class LigaMXController extends BaseController {
         }
     }
 
-    public void setPantallaCarga(PantallaCarga pantallaCarga) {
-        this.pantallaCarga = pantallaCarga;
+    public void iniciar() throws Exception{
+        task.setCurrent(0);
+        equipoService = new EquipoServiceImpl();
+        partidoService = new PartidoServiceImpl();
+        golService = new GolServiceImpl();
+        jugadorService = new JugadorServiceImpl();
+        cocienteService = new CocienteServiceImpl();
+        posicionService = new PosicionServiceImpl();
+        jugadorController = new JugadorController();
+            ActualizarGeneral();
+            cJornada1.setSelectedIndex(maximo - 1);
+            task.setCurrent(25);
+            BuscarActualiza();
+            task.setCurrent(50);
+            BuscarEquipo();
+            task.setCurrent(75);
+            tablaGoleadores();
+            task.setCurrent(100);
+            /*Cuartos();
+            CalcularCuartos();
+            Semi();
+            CalcularSemi();
+            
+            Final();
+            CalcularFinal();*/
+
+ /*tablaCuartos.getModel().addTableModelListener(new TableModelListener(){
+            @Override
+            public void tableChanged(TableModelEvent e){
+            System.out.println("cuartos 1");
+            CalcularCuartos();
+            System.out.println("cuartos 2");
+            }
+            });*/
     }
-    
+
 }
