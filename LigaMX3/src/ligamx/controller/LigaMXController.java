@@ -19,10 +19,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableCellRenderer;
 import ligamx.carga.JugadorReaderServiceImpl;
 import ligamx.carga.ReaderService;
@@ -51,7 +53,9 @@ import ligamx.util.ButtonEditor;
 import ligamx.util.ButtonRenderer;
 import ligamx.util.Constantes;
 import ligamx.util.ExcepcionAplicacion;
-import ligamx.util.LongTask;
+import ligamx.util.LongTaskCargarPantalla;
+import ligamx.util.LongTaskGrafica;
+import ligamx.util.TimeListener;
 
 /**
  *
@@ -59,7 +63,7 @@ import ligamx.util.LongTask;
  */
 public class LigaMXController extends BaseController {
 
-    private static LongTask task;
+    private static LongTaskCargarPantalla task;
     private EquipoService equipoService;
     private PartidoService partidoService;
     private GolService golService;
@@ -68,8 +72,9 @@ public class LigaMXController extends BaseController {
     private PosicionService posicionService;
     private JugadorController jugadorController;
     private ReaderService reader;
+    private Timer timer;
+    private LongTaskGrafica taskGrafica;    
     private int maximo = 0;
-    private boolean cambio = false;
     private String equipo1, equipo2;
     private int idpartido, row;
 
@@ -77,7 +82,7 @@ public class LigaMXController extends BaseController {
      * Creates new form LIGAMX
      * @param task
      */
-    public LigaMXController(LongTask task) {
+    public LigaMXController(LongTaskCargarPantalla task) {
         initComponents();
         setIcono();
         LigaMXController.task = task;
@@ -506,11 +511,11 @@ public class LigaMXController extends BaseController {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 733, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
         );
 
         panPrincipal.addTab("Tabla General", jPanel1);
@@ -1585,7 +1590,6 @@ public class LigaMXController extends BaseController {
         if (LOGGER.isDebugEnabled()) { //25
             LOGGER.debug("Entró a buscar actualiza");
         }
-        cambio = false;
         Integer jornada = Integer.parseInt(cJornada1.getSelectedItem().toString());//Integer.parseInt(cJornada.getSelectedItem().toString());
         int fila = 0;
         for (int f = 0; f < tablaJornada1.getRowCount(); f++) {
@@ -1614,7 +1618,6 @@ public class LigaMXController extends BaseController {
             tablaJornada1.setValueAt(iconv, fila, 5);
             fila++;
         }
-        cambio = true;
     }
 
     public void ActualizarTabla() throws ExcepcionAplicacion {
@@ -1723,7 +1726,26 @@ public class LigaMXController extends BaseController {
     }//GEN-LAST:event_nomJugBuscarKeyPressed
 
     private void jmGraficaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmGraficaActionPerformed
-//        grafica.setVisible(true);
+        taskGrafica = new LongTaskGrafica();
+        taskGrafica.setLigaMX(this);
+        ProgressBar progressBar = new ProgressBar();
+        final JOptionPane optionPane = new JOptionPane(progressBar, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+        final JDialog dialog = new JDialog();
+        dialog.setTitle("Cargando");
+        dialog.setModal(true);
+        dialog.setContentPane(optionPane);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.setIconImage(this.getIconImage());
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setResizable(false);
+        taskGrafica.setDialog(dialog);    
+        TimeListener<LongTaskGrafica> timeListener = new TimeListener(progressBar.getProgressBar(), taskGrafica, dialog);
+        timer = new Timer(50, timeListener);
+        timeListener.setTimer(timer);
+        taskGrafica.go();
+        timer.start();
+        dialog.setVisible(true);
     }//GEN-LAST:event_jmGraficaActionPerformed
 
     private void ACuartosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ACuartosActionPerformed

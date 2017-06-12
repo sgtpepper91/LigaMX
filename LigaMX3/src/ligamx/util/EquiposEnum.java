@@ -1,5 +1,8 @@
 package ligamx.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author hecto
@@ -40,5 +43,13 @@ public enum EquiposEnum {
         return nombre;
     }
     
-    
+    public static String[] getArrayEquipos() {
+        EquiposEnum[] equiposEnums = EquiposEnum.values();
+        List<String> equiposList = new ArrayList<>();
+        for (EquiposEnum equipoEnum : equiposEnums) {
+            String equipo = equipoEnum.getNombre();
+            equiposList.add(equipo);
+        }
+        return (String[]) equiposList.toArray(new String[0]);
+    }
 }

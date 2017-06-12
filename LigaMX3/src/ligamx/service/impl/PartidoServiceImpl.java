@@ -52,4 +52,9 @@ public class PartidoServiceImpl extends BaseGeneral implements PartidoService {
         return partidoDAO.buscarPartidoporEquipos(id1, id2);
     }
 
+    @Override
+    public List<PartidoDTO> buscarPartidosGrafica(Integer jornada, EquipoDTO equipo) throws ExcepcionAplicacion {
+        return partidoDAO.buscarPartidosGrafica(jornada, equipo);
+    }
+
 }

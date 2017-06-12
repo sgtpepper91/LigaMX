@@ -2,7 +2,7 @@ package ligamx.controller;
 
 import javax.swing.Timer;
 import ligamx.util.BaseController;
-import ligamx.util.LongTask;
+import ligamx.util.LongTaskCargarPantalla;
 import ligamx.util.TimeListener;
 
 /**
@@ -12,7 +12,7 @@ import ligamx.util.TimeListener;
 public class PantallaCarga extends BaseController {
 
     private Timer timer;
-    private LongTask task;
+    private LongTaskCargarPantalla task;
 
     /**
      * Creates new form PantallaCarga
@@ -116,9 +116,11 @@ public class PantallaCarga extends BaseController {
     // End of variables declaration//GEN-END:variables
 
     private void iniciar() {
-        task = new LongTask();
+        task = new LongTaskCargarPantalla();
         task.setPantallaCarga(this);
-        timer = new Timer(50, new TimeListener(jProgressBar1, task, timer));
+        TimeListener<LongTaskCargarPantalla> timeListener = new TimeListener(jProgressBar1, task);
+        timer = new Timer(50, timeListener);
+        timeListener.setTimer(timer);
         task.go();
         timer.start();
     }

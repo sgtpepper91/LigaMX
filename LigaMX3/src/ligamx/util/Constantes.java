@@ -19,5 +19,5 @@ public class Constantes {
     public static final String CREANDO_PREPARED_STMN = "Creando Prepared Statement: ";
     public static final String CREANDO_CONEXION = "Creando conexión";
     public static final String CERRANDO_CONEXION = "Cerrando conexión";
-    public static final String[] EQUIPOS = new String[]{"América", "Atlas", "Cruz Azul", "Guadalajara", "Jaguares", "León", "Monterrey", "Morelia", "Necaxa", "Pachuca", "Puebla", "Querétaro", "Santos", "Tijuana", "Toluca", "UANL", "UNAM", "Veracruz"};
+    public static final String[] EQUIPOS = EquiposEnum.getArrayEquipos();
 }

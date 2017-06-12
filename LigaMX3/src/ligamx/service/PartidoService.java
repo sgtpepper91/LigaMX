@@ -59,9 +59,18 @@ public interface PartidoService {
     /**
      * 
      * @param id1
-     * @param id2
+     * @param id2     * 
      * @return
      * @throws ExcepcionAplicacion 
      */
     PartidoDTO buscarPartidoporEquipos(Integer id1, Integer id2) throws ExcepcionAplicacion;
+    
+    /**
+     * 
+     * @param jornada
+     * @param equipo
+     * @return
+     * @throws ExcepcionAplicacion 
+     */
+    List<PartidoDTO> buscarPartidosGrafica(Integer jornada, EquipoDTO equipo) throws ExcepcionAplicacion;
 }

@@ -206,4 +206,38 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             throw lanzarExcepcion(ex);
         }
     }
+
+    @Override
+    public List<PartidoDTO> buscarPartidosGrafica(Integer jornada, EquipoDTO equipo) throws ExcepcionAplicacion {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Entró a buscar Partidos por id");
+        }
+        try {
+            Map<Integer, Object> params = new HashMap<>();
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV "); //and 
+            sql.append("FROM " + TABLA_PARTIDOS + " WHERE JORNADA <= ? ");
+            sql.append("AND (LOCAL= ? or VISITANTE = ?)");
+            setSql(sql);
+            params.put(1, jornada);
+            params.put(2, equipo.getIdEquipo());
+            params.put(3, equipo.getIdEquipo());
+            ejecutarQuery(params);
+            List<PartidoDTO> partidoList = new ArrayList<>();
+            while (getRset().next()) {
+                PartidoDTO partido = new PartidoDTO();
+                partido.setIdPartido(getRset().getInt(1));
+                partido.setJornada(getRset().getInt(2));
+                partido.setIdLocal(getRset().getInt(3));
+                partido.setMl(null == getRset().getObject(4) ? null : getRset().getInt(4));
+                partido.setIdVisitante(getRset().getInt(5));
+                partido.setMv(null == getRset().getObject(6) ? null : getRset().getInt(6));
+                partidoList.add(partido);
+            }
+            cerrarConexion();
+            return partidoList;
+        } catch (SQLException ex) {
+            throw lanzarExcepcion(ex);
+        }
+    }
 }

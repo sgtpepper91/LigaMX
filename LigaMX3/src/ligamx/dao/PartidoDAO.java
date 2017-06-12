@@ -64,4 +64,13 @@ public interface PartidoDAO {
      * @throws ExcepcionAplicacion 
      */
     PartidoDTO buscarPartidoporEquipos(Integer id1, Integer id2) throws ExcepcionAplicacion;
+    
+    /**
+     * 
+     * @param jornada
+     * @param equipo
+     * @return
+     * @throws ExcepcionAplicacion 
+     */
+    List<PartidoDTO> buscarPartidosGrafica(Integer jornada, EquipoDTO equipo) throws ExcepcionAplicacion;
 }
