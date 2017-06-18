@@ -3,6 +3,7 @@ package ligamx.carga;
 import java.io.File;
 import java.util.List;
 import ligamx.util.ExcepcionAplicacion;
+import ligamx.util.LongTaskCarga;
 
 /**
  *
@@ -15,9 +16,10 @@ public interface ReaderService <T extends BaseLecturaDTO, U extends BaseCargaDTO
     /**
      *
      * @param file
+     * @param task
      * @throws ExcepcionAplicacion
      */
-    void leerArchivo(File file) throws ExcepcionAplicacion;
+    void leerArchivo(File file, LongTaskCarga task) throws ExcepcionAplicacion;
 
     /**
      *

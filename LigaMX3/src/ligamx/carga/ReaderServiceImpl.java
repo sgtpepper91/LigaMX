@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import javax.swing.JOptionPane;
 import ligamx.util.ExcepcionAplicacion;
+import ligamx.util.LongTaskCarga;
 
 /**
  *
@@ -28,10 +29,11 @@ public abstract class ReaderServiceImpl<T extends BaseLecturaDTO, U extends Base
     /**
      *
      * @param file
+     * @param task
      * @throws ExcepcionAplicacion
      */
     @Override
-    public void leerArchivo(File file) throws ExcepcionAplicacion {
+    public void leerArchivo(File file, LongTaskCarga task) throws ExcepcionAplicacion {
         if (!file.canRead()) {
             throw new ExcepcionAplicacion("El arhivo no se puede leer");
         }
@@ -64,6 +66,7 @@ public abstract class ReaderServiceImpl<T extends BaseLecturaDTO, U extends Base
             List<U> uList = this.convertir(source);
             this.validarRegistros(uList);
             this.escribir(uList);
+            task.setCurrent(1);
             this.mostrarMensajeFinal(source, uList);
         } catch (IOException | IllegalAccessException | NoSuchMethodException | SecurityException | IllegalArgumentException | InvocationTargetException ex) {
             LOGGER.error(ex);

@@ -9,6 +9,7 @@ import javax.swing.Timer;
 /**
  *
  * @author hector.lopez
+ * @param <T>
  */
 public class TimeListener<T extends LongTaskImpl> implements ActionListener {
 
@@ -25,7 +26,7 @@ public class TimeListener<T extends LongTaskImpl> implements ActionListener {
     public TimeListener() {
     }
 
-    public TimeListener(JProgressBar progressBar, LongTaskGrafica task, JDialog dialog) {
+    public TimeListener(JProgressBar progressBar, T task, JDialog dialog) {
         this.progressBar = progressBar;
         this.task = task;
         this.dialog = dialog;

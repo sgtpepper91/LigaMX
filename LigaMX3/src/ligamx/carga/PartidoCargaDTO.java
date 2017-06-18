@@ -6,7 +6,7 @@ import java.util.Date;
  *
  * @author hector.lopez
  */
-public class PartidaCargaDTO extends BaseCargaDTO {
+public class PartidoCargaDTO extends BaseCargaDTO {
 
     private Integer jornada;
     private String local;

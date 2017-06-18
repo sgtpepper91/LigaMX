@@ -74,7 +74,7 @@ public class ButtonEditor extends DefaultCellEditor {
                 EquipoDTO equipoDTO1 = equipoService.buscarEquipoporNombre(equipo1);
                 EquipoDTO equipoDTO2 = equipoService.buscarEquipoporNombre(equipo2);
                 PartidoDTO partidoDTO = partidoService.buscarPartidoporEquipos(equipoDTO1.getIdEquipo(), equipoDTO2.getIdEquipo());
-                if (column == 7) {
+                if (column == 8) {
                     Object ml = table.getValueAt(row, 2);
                     
                     if (ml == null) {

@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
 import java.io.File;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
@@ -27,7 +28,9 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableCellRenderer;
 import ligamx.carga.JugadorReaderServiceImpl;
+import ligamx.carga.PartidoReaderServiceImpl;
 import ligamx.carga.ReaderService;
+import ligamx.carga.ReaderServiceImpl;
 import ligamx.carga.SeleccionArchivoCarga;
 import ligamx.dto.CocienteDTO;
 import ligamx.dto.EquipoDTO;
@@ -53,6 +56,7 @@ import ligamx.util.ButtonEditor;
 import ligamx.util.ButtonRenderer;
 import ligamx.util.Constantes;
 import ligamx.util.ExcepcionAplicacion;
+import ligamx.util.LongTaskCarga;
 import ligamx.util.LongTaskCargarPantalla;
 import ligamx.util.LongTaskGrafica;
 import ligamx.util.TimeListener;
@@ -73,13 +77,15 @@ public class LigaMXController extends BaseController {
     private JugadorController jugadorController;
     private ReaderService reader;
     private Timer timer;
-    private LongTaskGrafica taskGrafica;    
+    private LongTaskGrafica taskGrafica;
+    private LongTaskCarga taskCarga;
     private int maximo = 0;
     private String equipo1, equipo2;
     private int idpartido, row;
 
     /**
      * Creates new form LIGAMX
+     *
      * @param task
      */
     public LigaMXController(LongTaskCargarPantalla task) {
@@ -142,6 +148,7 @@ public class LigaMXController extends BaseController {
         jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         nomJugBuscar = new javax.swing.JTextField();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         jScrollPane5 = new javax.swing.JScrollPane();
         panGlobal = new javax.swing.JPanel();
         panPrincipal = new javax.swing.JTabbedPane();
@@ -208,7 +215,9 @@ public class LigaMXController extends BaseController {
         jLayeredPane1 = new javax.swing.JLayeredPane();
         menuBar = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
+        mnAgregarPartido = new javax.swing.JMenu();
         menuAgrega = new javax.swing.JMenuItem();
+        mnPartidoMasiva = new javax.swing.JMenuItem();
         jmGrafica = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         ACuartos = new javax.swing.JMenuItem();
@@ -578,7 +587,6 @@ public class LigaMXController extends BaseController {
         }
 
         buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setSelected(true);
         jRadioButton1.setText("Local");
 
         buttonGroup1.add(jRadioButton2);
@@ -775,18 +783,18 @@ public class LigaMXController extends BaseController {
         tablaJornada1.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         tablaJornada1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, "+", "+"},
-                {null, null, null, null, null, null, "+", "+"},
-                {null, null, null, null, null, null, "+", "+"},
-                {null, null, null, null, null, null, "+", "+"},
-                {null, null, null, null, null, null, "+", "+"},
-                {null, null, null, null, null, null, "+", "+"},
-                {null, null, null, null, null, null, "+", "+"},
-                {null, null, null, null, null, null, "+", "+"},
-                {null, null, null, null, null, null, "+", "+"}
+                {null, null, null, null, null, null, null, "+", "+"},
+                {null, null, null, null, null, null, null, "+", "+"},
+                {null, null, null, null, null, null, null, "+", "+"},
+                {null, null, null, null, null, null, null, "+", "+"},
+                {null, null, null, null, null, null, null, "+", "+"},
+                {null, null, null, null, null, null, null, "+", "+"},
+                {null, null, null, null, null, null, null, "+", "+"},
+                {null, null, null, null, null, null, null, "+", "+"},
+                {null, null, null, null, null, null, null, "+", "+"}
             },
             new String [] {
-                "", "Local", "GL", "GV", "Visitante", "", "Detalles", "Actualizar"
+                "", "Local", "GL", "GV", "Visitante", "", "Fecha", "Detalles", "Actualizar"
             }
         ) {
             Class[] types = new Class [] {
@@ -802,13 +810,15 @@ public class LigaMXController extends BaseController {
 
                 , javax.swing.ImageIcon.class
 
+                , java.lang.String.class
+
                 , java.lang.Object.class
 
                 , java.lang.Object.class
 
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true, true
+                false, false, false, false, false, false, false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -820,7 +830,7 @@ public class LigaMXController extends BaseController {
             }
         });
         tablaJornada1.setColumnSelectionAllowed(true);
-        tablaJornada1.setPreferredSize(new java.awt.Dimension(684, 144));
+        tablaJornada1.setPreferredSize(new java.awt.Dimension(474, 144));
         tablaJornada1.getTableHeader().setReorderingAllowed(false);
         jScrollPane11.setViewportView(tablaJornada1);
         tablaJornada1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -831,17 +841,29 @@ public class LigaMXController extends BaseController {
         tablaJornada1.getColumnModel().getColumn(0).setResizable(false);
         tablaJornada1.getColumnModel().getColumn(0).setPreferredWidth(17);
         tablaJornada1.getColumnModel().getColumn(1).setResizable(false);
-        tablaJornada1.getColumnModel().getColumn(1).setPreferredWidth(200);
+        tablaJornada1.getColumnModel().getColumn(1).setPreferredWidth(80);
         tablaJornada1.getColumnModel().getColumn(2).setResizable(false);
+        tablaJornada1.getColumnModel().getColumn(2).setPreferredWidth(30);
         tablaJornada1.getColumnModel().getColumn(3).setResizable(false);
+        tablaJornada1.getColumnModel().getColumn(3).setPreferredWidth(30);
         tablaJornada1.getColumnModel().getColumn(4).setResizable(false);
-        tablaJornada1.getColumnModel().getColumn(4).setPreferredWidth(200);
+        tablaJornada1.getColumnModel().getColumn(4).setPreferredWidth(80);
         tablaJornada1.getColumnModel().getColumn(5).setResizable(false);
         tablaJornada1.getColumnModel().getColumn(5).setPreferredWidth(17);
         tablaJornada1.getColumnModel().getColumn(6).setResizable(false);
         tablaJornada1.getColumnModel().getColumn(6).setPreferredWidth(100);
         tablaJornada1.getColumnModel().getColumn(7).setResizable(false);
-        tablaJornada1.getColumnModel().getColumn(7).setPreferredWidth(110);
+        tablaJornada1.getColumnModel().getColumn(7).setPreferredWidth(60);
+        tablaJornada1.getColumnModel().getColumn(8).setResizable(false);
+        tablaJornada1.getColumnModel().getColumn(8).setPreferredWidth(60);
+
+        centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        tablaJornada1.setDefaultRenderer(Integer.class, centerRenderer);
+        tablaJornada1.setDefaultRenderer(String.class, centerRenderer);
+
+        renderer = (DefaultTableCellRenderer) tablaJornada1.getTableHeader().getDefaultRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.CENTER);
 
         jPanel8.setPreferredSize(new java.awt.Dimension(746, 346));
 
@@ -897,25 +919,27 @@ public class LigaMXController extends BaseController {
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0))
         );
 
         javax.swing.GroupLayout panMarcadorLayout = new javax.swing.GroupLayout(panMarcador);
         panMarcador.setLayout(panMarcadorLayout);
         panMarcadorLayout.setHorizontalGroup(
             panMarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane11)
             .addGroup(panMarcadorLayout.createSequentialGroup()
-                .addGroup(panMarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panMarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panMarcadorLayout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addGap(18, 18, 18)
                         .addComponent(cJornada1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
-                    .addComponent(jScrollPane11))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panMarcadorLayout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
         panMarcadorLayout.setVerticalGroup(
             panMarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -923,11 +947,10 @@ public class LigaMXController extends BaseController {
                 .addGroup(panMarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(cJornada1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         panSecundario.setPreferredSize(new java.awt.Dimension(920, 288));
@@ -1467,8 +1490,8 @@ public class LigaMXController extends BaseController {
                 .addGroup(panGlobalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(panPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 738, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(panGlobalLayout.createSequentialGroup()
-                        .addGap(96, 96, 96)
-                        .addComponent(panMarcador, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(92, 92, 92)
+                        .addComponent(panMarcador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(panSecundario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1493,6 +1516,8 @@ public class LigaMXController extends BaseController {
 
         jMenu2.setText("Archivo");
 
+        mnAgregarPartido.setText("Agregar Partido");
+
         menuAgrega.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         menuAgrega.setText("Agregar Partido");
         menuAgrega.addActionListener(new java.awt.event.ActionListener() {
@@ -1500,7 +1525,17 @@ public class LigaMXController extends BaseController {
                 menuAgregaActionPerformed(evt);
             }
         });
-        jMenu2.add(menuAgrega);
+        mnAgregarPartido.add(menuAgrega);
+
+        mnPartidoMasiva.setText("Carga Masiva");
+        mnPartidoMasiva.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnPartidoMasivaActionPerformed(evt);
+            }
+        });
+        mnAgregarPartido.add(mnPartidoMasiva);
+
+        jMenu2.add(mnAgregarPartido);
 
         jmGrafica.setText("Gráfica");
         jmGrafica.addActionListener(new java.awt.event.ActionListener() {
@@ -1574,11 +1609,14 @@ public class LigaMXController extends BaseController {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 1666, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 1583, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -1587,6 +1625,7 @@ public class LigaMXController extends BaseController {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BuscarActualiza() throws ExcepcionAplicacion {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy HH:mm");
         if (LOGGER.isDebugEnabled()) { //25
             LOGGER.debug("Entró a buscar actualiza");
         }
@@ -1616,6 +1655,7 @@ public class LigaMXController extends BaseController {
             iconv.setImage(iconv.getImage().getScaledInstance(17, 17, Image.SCALE_DEFAULT));
             tablaJornada1.setValueAt(iconl, fila, 0);
             tablaJornada1.setValueAt(iconv, fila, 5);
+            tablaJornada1.setValueAt(sdf.format(partidoDTO.getFecha()), fila, 6);
             fila++;
         }
     }
@@ -1670,14 +1710,6 @@ public class LigaMXController extends BaseController {
                 + "     -Selección automática de equipos en las tablas", "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
-    private void cJornada1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cJornada1ActionPerformed
-        try {
-            BuscarActualiza();
-        } catch (ExcepcionAplicacion ex) {
-            lanzarExcepcion(ex);
-        }
-    }//GEN-LAST:event_cJornada1ActionPerformed
-
     private void jrEquipo1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jrEquipo1StateChanged
         try {
             llenarJugadores();
@@ -1729,17 +1761,8 @@ public class LigaMXController extends BaseController {
         taskGrafica = new LongTaskGrafica();
         taskGrafica.setLigaMX(this);
         ProgressBar progressBar = new ProgressBar();
-        final JOptionPane optionPane = new JOptionPane(progressBar, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
-        final JDialog dialog = new JDialog();
-        dialog.setTitle("Cargando");
-        dialog.setModal(true);
-        dialog.setContentPane(optionPane);
-        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        dialog.setIconImage(this.getIconImage());
-        dialog.pack();
-        dialog.setLocationRelativeTo(this);
-        dialog.setResizable(false);
-        taskGrafica.setDialog(dialog);    
+        final JDialog dialog = this.crearDialog(progressBar);
+        taskGrafica.setDialog(dialog);
         TimeListener<LongTaskGrafica> timeListener = new TimeListener(progressBar.getProgressBar(), taskGrafica, dialog);
         timer = new Timer(50, timeListener);
         timeListener.setTimer(timer);
@@ -2081,15 +2104,7 @@ public class LigaMXController extends BaseController {
     }//GEN-LAST:event_aFinalActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        try {
-            SeleccionArchivoCarga seleccionArchivoCarga = new SeleccionArchivoCarga();
-            JOptionPane.showMessageDialog(null, seleccionArchivoCarga, "Seleccione el archivo", JOptionPane.PLAIN_MESSAGE);
-            File file = seleccionArchivoCarga.getArchivo();
-            reader = new JugadorReaderServiceImpl();
-            reader.leerArchivo(file);
-        } catch (HeadlessException | ExcepcionAplicacion ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        this.iniciarCarga(new JugadorReaderServiceImpl());
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jCheckBox10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox10ActionPerformed
@@ -2289,6 +2304,18 @@ public class LigaMXController extends BaseController {
         task.getPantallaCarga().setVisible(false);
     }//GEN-LAST:event_formWindowOpened
 
+    private void mnPartidoMasivaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnPartidoMasivaActionPerformed
+        this.iniciarCarga(new PartidoReaderServiceImpl());
+    }//GEN-LAST:event_mnPartidoMasivaActionPerformed
+
+    private void cJornada1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cJornada1ActionPerformed
+        try {
+            BuscarActualiza();
+        } catch (ExcepcionAplicacion ex) {
+            lanzarExcepcion(ex);
+        }
+    }//GEN-LAST:event_cJornada1ActionPerformed
+
     public void detalles(PartidoDTO partidoDTO) throws ExcepcionAplicacion {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a detalles");
@@ -2420,7 +2447,7 @@ public class LigaMXController extends BaseController {
             tablaGeneral.setValueAt(icon, i, 1);
             JJList.add((Integer) tablaGeneral.getValueAt(i, 3));
         }
-        maximo = Collections.max(JJList) > 0 ? Collections.max(JJList) : 1; 
+        maximo = Collections.max(JJList) > 0 ? Collections.max(JJList) : 1;
         task.setCurrent(10);
         for (int i = 0; i < 18; i++) {
             if (i < 8) {
@@ -2643,7 +2670,7 @@ public class LigaMXController extends BaseController {
     private javax.swing.JButton btnCalcularSemi;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cAutogol;
-    public javax.swing.JComboBox cJornada1;
+    private javax.swing.JComboBox cJornada1;
     private javax.swing.JComboBox cLocal1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -2678,6 +2705,7 @@ public class LigaMXController extends BaseController {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -2704,6 +2732,8 @@ public class LigaMXController extends BaseController {
     private javax.swing.JMenuItem menuAgrega;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem menuSalir;
+    private javax.swing.JMenu mnAgregarPartido;
+    private javax.swing.JMenuItem mnPartidoMasiva;
     private javax.swing.JTextField nomJugBuscar;
     private javax.swing.JScrollPane panDescenso;
     private javax.swing.JPanel panGlobal;
@@ -2720,7 +2750,7 @@ public class LigaMXController extends BaseController {
     public javax.swing.JTable tablaFinal;
     public javax.swing.JTable tablaGeneral;
     private javax.swing.JTable tablaGeneral1;
-    public javax.swing.JTable tablaJornada1;
+    private javax.swing.JTable tablaJornada1;
     private javax.swing.JTable tablaPosCuartos;
     private javax.swing.JTable tablaPosSemi;
     public javax.swing.JTable tablaSemi;
@@ -2768,7 +2798,7 @@ public class LigaMXController extends BaseController {
         }
     }
 
-    public void iniciar() throws Exception{
+    public void iniciar() throws Exception {
         task.setCurrent(0);
         equipoService = new EquipoServiceImpl();
         partidoService = new PartidoServiceImpl();
@@ -2777,16 +2807,16 @@ public class LigaMXController extends BaseController {
         cocienteService = new CocienteServiceImpl();
         posicionService = new PosicionServiceImpl();
         jugadorController = new JugadorController();
-            ActualizarGeneral();
-            cJornada1.setSelectedIndex(maximo - 1);
-            task.setCurrent(25);
-            BuscarActualiza();
-            task.setCurrent(50);
-            BuscarEquipo();
-            task.setCurrent(75);
-            tablaGoleadores();
-            task.setCurrent(100);
-            /*Cuartos();
+        ActualizarGeneral();
+        cJornada1.setSelectedIndex(maximo - 1);
+        task.setCurrent(25);
+        BuscarActualiza();
+        task.setCurrent(50);
+        BuscarEquipo();
+        task.setCurrent(75);
+        tablaGoleadores();
+        task.setCurrent(100);
+        /*Cuartos();
             CalcularCuartos();
             Semi();
             CalcularSemi();
@@ -2802,6 +2832,38 @@ public class LigaMXController extends BaseController {
             System.out.println("cuartos 2");
             }
             });*/
+    }
+
+    private JDialog crearDialog(ProgressBar progressBar) {
+        JDialog dialog = new JDialog();
+        final JOptionPane optionPane = new JOptionPane(progressBar, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+        dialog.setTitle("Cargando");
+        dialog.setModal(true);
+        dialog.setContentPane(optionPane);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.setIconImage(this.getIconImage());
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setResizable(false);
+        return dialog;
+    }
+
+    private void iniciarCarga(ReaderServiceImpl reader) {
+        SeleccionArchivoCarga seleccionArchivoCarga = new SeleccionArchivoCarga();
+        JOptionPane.showMessageDialog(null, seleccionArchivoCarga, "Seleccione el archivo", JOptionPane.PLAIN_MESSAGE);
+        File file = seleccionArchivoCarga.getArchivo();
+        taskCarga = new LongTaskCarga(file, reader);
+        ProgressBar progressBar = new ProgressBar();
+        progressBar.getProgressBar().setIndeterminate(true);
+        progressBar.getProgressBar().setStringPainted(false);
+        final JDialog dialog = this.crearDialog(progressBar);
+        taskCarga.setDialog(dialog);
+        TimeListener<LongTaskCarga> timeListener = new TimeListener(progressBar.getProgressBar(), taskCarga, dialog);
+        timer = new Timer(100, timeListener);
+        timeListener.setTimer(timer);
+        taskCarga.go();
+        timer.start();
+        dialog.setVisible(true);
     }
 
 }

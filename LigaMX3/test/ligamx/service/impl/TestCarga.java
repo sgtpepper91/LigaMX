@@ -40,12 +40,12 @@ public class TestCarga {
 
     @Test
     public void carga() {
-        try {
-            File file = new File("jugadores.txt");
-            reader = new JugadorReaderServiceImpl();
-            reader.leerArchivo(file);
-        } catch (ExcepcionAplicacion ex) {
-            System.out.println("Error: " + ex.getMessage());
-        }
+//        try {
+//            File file = new File("jugadores.txt");
+//            reader = new JugadorReaderServiceImpl();
+////            reader.leerArchivo(file);
+//        } catch (ExcepcionAplicacion ex) {
+//            System.out.println("Error: " + ex.getMessage());
+//        }
     }
 }
