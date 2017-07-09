@@ -1201,7 +1201,7 @@ public class Inventario extends javax.swing.JFrame {
             }
 
             Cliente cliente = new Cliente();
-            DefaultListModel listModel = cliente.getListaClientes();
+            DefaultListModel<String> listModel = cliente.getListaClientes();
             listaClientes.setModel(listModel);
             buscarCliente.setVisible(true);
         } catch (Excepcion ex) {

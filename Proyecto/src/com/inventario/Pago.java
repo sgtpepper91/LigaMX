@@ -1,6 +1,5 @@
 package com.inventario;
 
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,7 +54,7 @@ public class Pago extends ConexionBD {
      */
     boolean InsertarPago() throws Excepcion {
         String fechaAMD = formatoAñoMesDia.format(fecha);
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("INSERT INTO PAGOS (NUMCLIENTE, PAGO, FECHA) VALUES (?,?,?)");
         params.put(1, cliente.getNumCliente());
         params.put(2, pago);

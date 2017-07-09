@@ -81,8 +81,8 @@ public class Venta extends ConexionBD {
     public boolean insertarVenta() throws Excepcion {
         try {
             String fechaAMD = formatoAñoMesDia.format(fechaVenta);
-            Map params = new HashMap();
-            Map params2 = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
+            Map<Integer, Object> params2 = new HashMap<>();
             setSql("INSERT INTO VENTAS (FECHAVENTA,NUMCLIENTE,TOTALVENTA) VALUES (?,?,?)");
             params.put(1, java.sql.Date.valueOf(fechaAMD));
             params.put(2, numCliente);
@@ -113,7 +113,7 @@ public class Venta extends ConexionBD {
      */
     public void obtenerVenta(int numVenta) throws Excepcion {
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             setSql("SELECT TOTALVENTA FROM VENTAS WHERE NUMVENTA = ?");
             params.put(1, numVenta);
             ejecutarQuery(params);
@@ -137,7 +137,7 @@ public class Venta extends ConexionBD {
      */
     public boolean actualizarVenta(int total) throws Excepcion {
         totalVenta -= total;
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("UPDATE VENTAS SET TOTALVENTA = ? WHERE NUMVENTA = ?");
         params.put(1, total);
         params.put(2, numVenta);
@@ -151,7 +151,7 @@ public class Venta extends ConexionBD {
      * @throws com.inventario.Excepcion
      */
     public boolean eliminarVenta() throws Excepcion {
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("DELETE VENTAS WHERE NUMVENTA = ?");
         params.put(1, numVenta);
         return ejecutarUpdate(params);

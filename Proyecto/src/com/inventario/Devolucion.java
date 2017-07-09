@@ -1,6 +1,5 @@
 package com.inventario;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,7 +86,7 @@ public class Devolucion extends ConexionBD {
  */
     boolean devolverProducto() throws Excepcion {
         total -= precioProd;
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("UPDATE DETALLEVENTAS SET DETVENTACANTIDAD = ?, DETVENTASUBTOTAL = ? WHERE NUMVENTA = ? AND CLAVEPROD = ?");
         params.put(1, cantidad - 1);
         params.put(2, total);
@@ -102,7 +101,7 @@ public class Devolucion extends ConexionBD {
      * @throws Excepcion 
      */
     boolean borrarDetalle() throws Excepcion {
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("DELETE DETALLEVENTAS WHERE NUMVENTA = ? AND CLAVEPROD = ?");
         params.put(1, numVenta);
         params.put(2, claveProd);

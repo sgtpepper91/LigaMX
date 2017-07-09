@@ -75,7 +75,7 @@ public class Producto extends ConexionBD {
      * @throws com.inventario.Excepcion
      */
     public boolean ActualizarExistencias(int cantidad) throws Excepcion {
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("UPDATE PRODUCTOS SET EXISTENCIAS = ? WHERE CLAVEPROD = ?");
         params.put(1, existencias - cantidad);
         params.put(2, claveProd);
@@ -92,7 +92,7 @@ public class Producto extends ConexionBD {
      */
     public Producto RecuperarProducto(String descripcion) throws Excepcion {
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             setSql("SELECT * FROM PRODUCTOS WHERE DESCRIPCIONPROD = ?");
             params.put(1, descripcion);
             ejecutarQuery(params);
@@ -117,7 +117,7 @@ public class Producto extends ConexionBD {
      * @throws Excepcion
      */
     boolean InsertarProducto() throws Excepcion {
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("INSERT INTO PRODUCTOS (DESCRIPCIONPROD,EXISTENCIAS,COSTOUNITARIO,PRECIOUNITARIO) VALUES (?,?,?,?)");
         params.put(1, descripcionProd);
         params.put(2, existencias);
@@ -133,7 +133,7 @@ public class Producto extends ConexionBD {
      * @throws Excepcion
      */
     boolean actualizar()  throws Excepcion{
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("UPDATE PRODUCTOS SET DESCRIPCIONPROD = ?, EXISTENCIAS = ?, COSTOUNITARIO = ? ,PRECIOUNITARIO = ? WHERE CLAVEPROD = ?");
         params.put(1, descripcionProd);
         params.put(2, existencias);

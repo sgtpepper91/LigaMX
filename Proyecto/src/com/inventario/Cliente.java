@@ -62,7 +62,7 @@ public class Cliente extends ConexionBD {
      * @throws com.inventario.Excepcion
      */
     public boolean ActualizarAcumulado(int total) throws Excepcion {
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("UPDATE CLIENTES SET ACUMULADOCLIENTE = ? WHERE NUMCLIENTE = ?");
         params.put(1, acumuladoCliente + total);
         params.put(2, numCliente);
@@ -77,7 +77,7 @@ public class Cliente extends ConexionBD {
      */
     public void RecuperarCliente(String nombre) throws Excepcion {
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             setSql("SELECT NUMCLIENTE, ACUMULADOCLIENTE FROM CLIENTES WHERE NOMBRECLIENTE = ?");
             params.put(1, nombre);
             ejecutarQuery(params);
@@ -100,11 +100,11 @@ public class Cliente extends ConexionBD {
      */
     public void RecuperarCliente(DefaultTableModel dm) throws Excepcion {
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             setSql("SELECT NOMBRECLIENTE, ACUMULADOCLIENTE FROM CLIENTES ORDER BY NOMBRECLIENTE");
             ejecutarQuery(params);
             while (getRset().next()) {
-                List row = new ArrayList();
+                List<Object> row = new ArrayList<>();
                 nombreCliente = getRset().getString(1);
                 acumuladoCliente = getRset().getInt(2);
                 row.add(nombreCliente);
@@ -123,10 +123,10 @@ public class Cliente extends ConexionBD {
      * @return el modelo para la lista
      * @throws com.inventario.Excepcion
      */
-    public DefaultListModel getListaClientes() throws Excepcion {
-        DefaultListModel listModel = new DefaultListModel();
+    public DefaultListModel<String> getListaClientes() throws Excepcion {
+        DefaultListModel<String> listModel = new DefaultListModel<>();
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             setSql("SELECT NOMBRECLIENTE FROM CLIENTES ORDER BY 1");
             ejecutarQuery(params);
             while (getRset().next()) {
@@ -142,13 +142,12 @@ public class Cliente extends ConexionBD {
     /**
      * Edita el nombre del cliente en la tabla
      *
-     * @param cliente
      * @param cnuevo
      * @return true si fue exitoso, false en caso contrario
      * @throws com.inventario.Excepcion
      */
     public boolean EditarCliente(String cnuevo) throws Excepcion {
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("UPDATE CLIENTES SET NOMBRECLIENTE= ? WHERE NUMCLIENTE= ? ");
         params.put(1, cnuevo);
         params.put(2, numCliente);
@@ -163,7 +162,7 @@ public class Cliente extends ConexionBD {
      */
     public void ObtenerHistorial(DefaultTableModel dm) throws Excepcion {
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             setSql("SELECT D.DETVENTACANTIDAD AS CANTIDAD , P.DESCRIPCIONPROD AS PRODUCTO, D.DETVENTASUBTOTAL AS TOTAL, V.FECHAVENTA AS FECHA "
                     + "FROM CLIENTES C INNER JOIN VENTAS V ON C.NUMCLIENTE=V.NUMCLIENTE "
                     + "INNER JOIN DETALLEVENTAS D ON V.NUMVENTA=D.NUMVENTA "
@@ -181,7 +180,7 @@ public class Cliente extends ConexionBD {
                 String descripcion = getRset().getString(2);
                 float total = getRset().getFloat(3);
                 java.util.Date fecha = getRset().getDate(4);
-                List row = new ArrayList();
+                List<Object> row = new ArrayList<>();
                 row.add(cantidad);
                 row.add(descripcion);
                 row.add(total);
@@ -202,7 +201,7 @@ public class Cliente extends ConexionBD {
      */
     public void ObtenerHistorialDevolucion(DefaultTableModel dm) throws Excepcion {
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             setSql("SELECT D.DETVENTACANTIDAD AS CANTIDAD , P.DESCRIPCIONPROD AS PRODUCTO, D.DETVENTASUBTOTAL AS TOTAL, V.FECHAVENTA AS FECHA, V.NUMVENTA, P.CLAVEPROD "
                     + "FROM CLIENTES C INNER JOIN VENTAS V ON C.NUMCLIENTE=V.NUMCLIENTE "
                     + "INNER JOIN DETALLEVENTAS D ON V.NUMVENTA=D.NUMVENTA "
@@ -217,7 +216,7 @@ public class Cliente extends ConexionBD {
                 java.util.Date fecha = getRset().getDate(4);
                 int numVenta = getRset().getInt(5);
                 int claveProd = getRset().getInt(6);
-                List row = new ArrayList();
+                List<Object> row = new ArrayList<>();
                 row.add(cantidad);
                 row.add(descripcion);
                 row.add(total);
@@ -239,7 +238,7 @@ public class Cliente extends ConexionBD {
      * @throws com.inventario.Excepcion
      */
     boolean InsertarCliente() throws Excepcion{
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("INSERT INTO CLIENTES (NOMBRECLIENTE, ACUMULADOCLIENTE) VALUES (?,?)");
         params.put(1, nombreCliente);
         params.put(2, acumuladoCliente);
@@ -253,7 +252,7 @@ public class Cliente extends ConexionBD {
      * * @throws com.inventario.Excepcion
      */
     boolean BorrarCliente() throws Excepcion {
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("DELETE CLIENTES WHERE NUMCLIENTE = ?");
         params.put(1, numCliente);
         return ejecutarUpdate(params);

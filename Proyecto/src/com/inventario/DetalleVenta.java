@@ -1,6 +1,5 @@
 package com.inventario;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +70,7 @@ public class DetalleVenta extends ConexionBD {
      * @throws com.inventario.Excepcion
      */
     public boolean InsertarDetalleVenta() throws Excepcion {
-        Map params = new HashMap();
+        Map<Integer, Object> params = new HashMap<>();
         setSql("INSERT INTO DETALLEVENTAS (NUMVENTA,CLAVEPROD,DETVENTACANTIDAD,DETVENTAPRECIO,DETVENTASUBTOTAL) VALUES (?,?,?,?,?)");
         params.put(1, numVenta);
         params.put(2, producto.getClaveProd());

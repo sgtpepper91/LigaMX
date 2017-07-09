@@ -126,7 +126,7 @@ public class PantallaCarga extends javax.swing.JFrame {
     private void iniciar() {
         task = new LongTaskCargarPantalla();
         task.setPantallaCarga(this);
-        TimeListener<LongTaskCargarPantalla> timeListener = new TimeListener(jProgressBar1, task);
+        TimeListener<LongTaskCargarPantalla> timeListener = new TimeListener<>(jProgressBar1, task);
         timer = new Timer(50, timeListener);
         timeListener.setTimer(timer);
         task.go();

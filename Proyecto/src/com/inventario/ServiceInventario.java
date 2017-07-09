@@ -33,8 +33,8 @@ public class ServiceInventario extends ConexionBD {
     private final Inventario inventario;
     DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
     DateFormat df2 = new SimpleDateFormat("dd/MM/yyyy");
-    DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
-    JComboBox jcProductos = new JComboBox();
+    DefaultComboBoxModel<String> comboModel = new DefaultComboBoxModel<>();
+    JComboBox<String> jcProductos = new JComboBox<>();
     private Date fechaCorte;
 
     public String getFechaCorte() {
@@ -64,7 +64,7 @@ public class ServiceInventario extends ConexionBD {
             while (getRset().next()) {
                 String nombre = getRset().getString(1);
                 float acumulado = getRset().getFloat(2);
-                List row = new ArrayList();
+                List<Object> row = new ArrayList<>();
                 row.add(nombre);
                 row.add(acumulado);
                 dm.addRow(row.toArray());
@@ -85,8 +85,8 @@ public class ServiceInventario extends ConexionBD {
         String nomCliente = inventario.getTxtClienteVentas().getText();
         float Acumulado = 0.0F;
         try {
-            Map params = new HashMap();
-            Map params2 = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
+            Map<Integer, Object> params2 = new HashMap<>();
             setSql("SELECT NUMCLIENTE,ACUMULADOCLIENTE FROM CLIENTES WHERE NOMBRECLIENTE = ?");
             params.put(1, nomCliente);
             ejecutarQuery(params);
@@ -117,7 +117,7 @@ public class ServiceInventario extends ConexionBD {
                 float total = getRset().getFloat(3);
                 java.util.Date fecha = getRset().getDate(4);
 
-                List row = new ArrayList();
+                List<Object> row = new ArrayList<>();
                 row.add(cantidad);
                 row.add(descripcion);
                 row.add(total);
@@ -136,7 +136,7 @@ public class ServiceInventario extends ConexionBD {
      */
     void llenarInventario() throws Excepcion {
         try {
-            Map params = new HashMap();
+            Map<Integer, Object> params = new HashMap<>();
             setSql("SELECT SUM(ACUMULADOCLIENTE) FROM CLIENTES");
             ejecutarQuery(params);
             while (getRset().next()) {
@@ -164,7 +164,7 @@ public class ServiceInventario extends ConexionBD {
                 int Existencias = getRset().getInt(2);
                 float Costo = getRset().getFloat(3);
                 float Precio = getRset().getFloat(4);
-                List row = new ArrayList();
+                List<Object> row = new ArrayList<>();
                 row.add(Descripcion);
                 row.add(Existencias);
                 row.add(Costo);

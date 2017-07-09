@@ -65,8 +65,8 @@ public final class Inventario
     public static PreparedStatement pstmn;
     private String sql;
     String producto;
-    JComboBox jcProductos = new JComboBox();
-    DefaultComboBoxModel comboModel = new DefaultComboBoxModel();
+    JComboBox<String> jcProductos = new JComboBox<>();
+    DefaultComboBoxModel<String> comboModel = new DefaultComboBoxModel<>();
     NumberFormat dispFormat = NumberFormat.getCurrencyInstance(new Locale("es", "MX"));
     NumberFormat editFormat = NumberFormat.getNumberInstance(new Locale("es", "MX"));
     NumberFormatter dnFormat = new NumberFormatter(this.dispFormat);
@@ -95,7 +95,7 @@ public final class Inventario
         this.jScrollPane2 = new JScrollPane();
         this.txtDescProd = new JTextArea();
         this.lblExistProd = new JLabel();
-        this.jcbExistProd = new JComboBox();
+        this.jcbExistProd = new JComboBox<>();
         this.lblCostoProd = new JLabel();
         this.lblPrecioProd = new JLabel();
         this.btnAceptarProd = new JButton();
@@ -111,7 +111,7 @@ public final class Inventario
         this.BuscarClientes = new JFrame();
         this.panBuscarClientes = new JPanel();
         this.jScrollPane3 = new JScrollPane();
-        this.listaClientes = new JList();
+        this.listaClientes = new JList<>();
         this.btnAceptarBuscarClientes = new JButton();
         this.jScrollPane1 = new JScrollPane();
         this.jPanel1 = new JPanel();
@@ -183,7 +183,7 @@ public final class Inventario
         
         this.jcbExistProd.setEditable(true);
         this.jcbExistProd.setMaximumRowCount(10);
-        this.jcbExistProd.setModel(new DefaultComboBoxModel(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100"}));
+        this.jcbExistProd.setModel(new DefaultComboBoxModel<String>(new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54", "55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81", "82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100"}));
         
         this.lblCostoProd.setText("Costo");
         
@@ -503,7 +503,7 @@ public final class Inventario
         //this.jScrollPane4.setViewportBorder(null);
         String[] cant = {"", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50"};
         TableColumn col0 = this.tbVenta.getColumnModel().getColumn(0);
-        JComboBox jcCantidad = new JComboBox(cant);
+        JComboBox<String> jcCantidad = new JComboBox<>(cant);
         col0.setCellEditor(new DefaultCellEditor(jcCantidad));
         llenarProductos();
         if (this.tbVenta.getColumnModel().getColumnCount() > 0) {
@@ -947,7 +947,7 @@ public final class Inventario
                 int Existencias = rset.getInt(2);
                 float Costo = rset.getFloat(3);
                 float Precio = rset.getFloat(4);
-                Vector row = new Vector();
+                Vector<Object> row = new Vector<>();
                 row.add(Descripcion);
                 row.add(Existencias);
                 row.add(Costo);
@@ -972,7 +972,7 @@ public final class Inventario
             while (rset.next()) {
                 String nombre = rset.getString(1);
                 float acumulado = rset.getFloat(2);
-                Vector row = new Vector();
+                Vector<Object> row = new Vector<>();
                 row.add(nombre);
                 row.add(acumulado);
                 dm.addRow(row);
@@ -1007,7 +1007,7 @@ public final class Inventario
                 float total = rset.getFloat(3);
                 java.util.Date fecha = rset.getDate(4);
                 
-                Vector row = new Vector();
+                Vector<Object> row = new Vector<>();
                 row.add(cantidad);
                 row.add(descripcion);
                 row.add(total);
@@ -1177,7 +1177,7 @@ public final class Inventario
     private JScrollPane jScrollPane6;
     private JScrollPane jScrollPane7;
     private JTabbedPane jTabbedPane1;
-    private JComboBox jcbExistProd;
+    private JComboBox<String> jcbExistProd;
     private JLabel lblCliente;
     private JLabel lblCliente1;
     private JLabel lblCliente2;
@@ -1187,7 +1187,7 @@ public final class Inventario
     private JLabel lblNombreCliente;
     private JLabel lblPrecioProd;
     private JLabel lblSaldoCliente;
-    private JList listaClientes;
+    private JList<String> listaClientes;
     private JMenuItem mEditCliente;
     private JMenuItem mNuevoProd;
     private JMenu menuArchivo;
@@ -1235,7 +1235,7 @@ public final class Inventario
         try {
             conectarBase();
             
-            DefaultListModel listModel = new DefaultListModel();
+            DefaultListModel<String> listModel = new DefaultListModel<>();
             rset = stmn.executeQuery("SELECT NOMBRECLIENTE FROM CLIENTES ORDER BY 1");
             while (rset.next()) {
                 listModel.addElement(rset.getString("NOMBRECLIENTE"));
