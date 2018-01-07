@@ -36,6 +36,7 @@ public class LongTaskCarga extends LongTaskImpl {
                     return true;
                 } catch (HeadlessException | ExcepcionAplicacion ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    current = lengthOfTask;
                     return null;
                 }
             }

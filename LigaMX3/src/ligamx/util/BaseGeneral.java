@@ -8,6 +8,6 @@ import org.apache.logging.log4j.Logger;
  *
  * @author hector.lopez
  */
-public class BaseGeneral {
-protected static final Logger LOGGER = LogManager.getLogger();
+public abstract class BaseGeneral {
+protected  Logger LOGGER = LogManager.getLogger(getClass());
 }

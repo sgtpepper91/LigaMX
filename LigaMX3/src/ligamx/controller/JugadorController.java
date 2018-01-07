@@ -1,5 +1,6 @@
 package ligamx.controller;
 
+import java.util.List;
 import javax.swing.JOptionPane;
 import ligamx.dto.EquipoDTO;
 import ligamx.dto.JugadorDTO;
@@ -137,13 +138,23 @@ public class JugadorController extends BaseController {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             String local = equipo.getSelectedItem().toString();
-            JugadorDTO jugadorDTO = new JugadorDTO();
-            jugadorDTO.setNombre(jtNombre.getText());
+            JugadorDTO jugadorDTO = jugadorService.buscarJugadorPorNombre(jtNombre.getText());
             jugadorDTO.setNumero(Integer.parseInt(jtNumero.getText()));
             EquipoDTO equipoDTO = equipoService.buscarEquipoporNombre(local);
-            jugadorService.insertarJugador(jugadorDTO, equipoDTO.getIdEquipo());
+            List<JugadorDTO> jugadores = jugadorService.buscarJugadores(equipoDTO);
+            if (null != jugadorDTO.getNombre()) {
+                if (!jugadores.contains(jugadorDTO)) {
+                    jugadorService.modificarJugador(jugadorDTO, equipoDTO.getIdEquipo());
+                }
+            } else {
+                jugadorDTO.setNombre(jtNombre.getText());
+                jugadorService.insertarJugador(jugadorDTO, equipoDTO.getIdEquipo());
+            }
+            
             ligaMXController.llenarJugadores();
             this.setVisible(false);
+            this.jtNombre.setText("");
+            this.jtNumero.setText("");
             ligaMXController.getjGol().setEnabled(true);
             ligaMXController.getjGol().toFront();
         } catch (ExcepcionAplicacion ex) {

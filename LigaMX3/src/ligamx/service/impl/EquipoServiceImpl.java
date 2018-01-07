@@ -114,12 +114,12 @@ public class EquipoServiceImpl extends BaseGeneral implements EquipoService {
         equipo.getPosicion().setGc(gc);
         equipo.getPosicion().setDg(gf - gc);
         equipo.getPosicion().setPts(jg * 3 + je);
-        equipo.getCociente().setJc17(jj);
+        equipo.getCociente().setJc18(jj); //JG Torneo actual
         equipo.getCociente().setTj(equipo.getCociente().getJa15() + equipo.getCociente().getJc16()
                 + equipo.getCociente().getJa16() + equipo.getCociente().getJc17()
                 + equipo.getCociente().getJa17() + equipo.getCociente().getJc18());
-        equipo.getCociente().setPc17(equipo.getPosicion().getPts());
-        equipo.getCociente().setDgc17(equipo.getPosicion().getDg());
+        equipo.getCociente().setPc18(equipo.getPosicion().getPts()); //Puntos torneo actual
+        equipo.getCociente().setDgc18(equipo.getPosicion().getDg()); //DG torneo actual
         equipo.getCociente().setTp(equipo.getCociente().getPa15() + equipo.getCociente().getPc16()
                 + equipo.getCociente().getPa16() + equipo.getCociente().getPc17()
                 + equipo.getCociente().getPa17() + equipo.getCociente().getPc18());

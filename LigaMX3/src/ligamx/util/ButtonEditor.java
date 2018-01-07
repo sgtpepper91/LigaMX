@@ -86,9 +86,8 @@ public class ButtonEditor extends DefaultCellEditor {
                             partidoDTO.setMv(0);
                             partidoService.actualizarPartido(partidoDTO);
                             equipoService.actualizarEquipo(partidoDTO.getIdPartido());
-                            ligaMXController.ActualizarTabla();
                             ligaMXController.BuscarEquipo();
-                            ligaMXController.tablaGoleadores();
+                            ligaMXController.ActualizarGeneral();                            
                             ligaMXController.detalles(partidoDTO);
                         }
                     } else {

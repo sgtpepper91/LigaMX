@@ -24,7 +24,7 @@ public class JugadorReaderServiceImpl extends ReaderServiceImpl<JugadorLecturaDT
         List<JugadorCargaDTO> respuesta = new ArrayList<>();
         for (JugadorLecturaDTO elemSource : source) {
             JugadorCargaDTO elemRespuesta = new JugadorCargaDTO();
-            elemRespuesta.setNombre(elemSource.getNombre());
+            elemRespuesta.setNombre(elemSource.getNombre().trim());
             elemRespuesta.setEquipo(elemSource.getEquipo());
             elemRespuesta.setNumero(Integer.parseInt(elemSource.getNumero()));
             elemRespuesta.setNumLinea(elemSource.getNumLinea());
@@ -42,15 +42,17 @@ public class JugadorReaderServiceImpl extends ReaderServiceImpl<JugadorLecturaDT
     @Override
     public void write(List<JugadorCargaDTO> source) throws ExcepcionAplicacion {
         for (JugadorCargaDTO jugadorCargaDTO : source) {
-            JugadorDTO jugadorDTO = jugadorService.buscarJugadorPorNombre(jugadorCargaDTO.getNombre());
+            JugadorDTO jugadorDTO;
+            jugadorDTO = jugadorService.buscarJugadorPorNombre(jugadorCargaDTO.getNombre());
             EquipoDTO equipoDTO = equipoService.buscarEquipoporNombre(jugadorCargaDTO.getEquipo());
-            if (null != jugadorDTO && null != jugadorDTO.getNombre()) {
-                jugadorDTO.setNumero(jugadorCargaDTO.getNumero());
-                jugadorService.modificarJugador(jugadorDTO, equipoDTO.getIdEquipo());
+            List<JugadorDTO> jugadores = jugadorService.buscarJugadores(equipoDTO);
+            jugadorDTO.setNumero(jugadorCargaDTO.getNumero());
+            if (null != jugadorDTO.getNombre()) {
+                if (!jugadores.contains(jugadorDTO)) {
+                    jugadorService.modificarJugador(jugadorDTO, equipoDTO.getIdEquipo());
+                }
             } else {
-                jugadorDTO = new JugadorDTO();
                 jugadorDTO.setNombre(jugadorCargaDTO.getNombre());
-                jugadorDTO.setNumero(jugadorCargaDTO.getNumero());
                 jugadorService.insertarJugador(jugadorDTO, equipoDTO.getIdEquipo());
             }
         }

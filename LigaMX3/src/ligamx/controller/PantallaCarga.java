@@ -116,9 +116,10 @@ public class PantallaCarga extends BaseController {
     // End of variables declaration//GEN-END:variables
 
     private void iniciar() {
+        LOGGER.info("Iniciando aplicación");
         task = new LongTaskCargarPantalla();
         task.setPantallaCarga(this);
-        TimeListener<LongTaskCargarPantalla> timeListener = new TimeListener(jProgressBar1, task);
+        TimeListener<LongTaskCargarPantalla> timeListener = new TimeListener<>(jProgressBar1, task);
         timer = new Timer(50, timeListener);
         timeListener.setTimer(timer);
         task.go();

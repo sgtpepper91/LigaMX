@@ -7,12 +7,11 @@ import ligamx.dao.CocienteDAO;
 import ligamx.dto.CocienteDTO;
 import ligamx.dto.EquipoDTO;
 import ligamx.util.ConexionBD;
+import ligamx.util.Constantes;
 import ligamx.util.ExcepcionAplicacion;
 
 public class CocienteDAOImpl extends ConexionBD implements CocienteDAO {
 
-    private static final String TABLA_COCIENTE = "COCIENTEC18";
-    private static final String TABLA_EQUIPO = "EQUIPOC18";
 
     @Override
     public boolean insertarCociente(EquipoDTO equipo) throws ExcepcionAplicacion {
@@ -21,7 +20,7 @@ public class CocienteDAOImpl extends ConexionBD implements CocienteDAO {
         }
         Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO " + TABLA_COCIENTE + "(IDEQUIPO, JA15, JC16, JA16, JC17, ");
+        sql.append("INSERT INTO " + Constantes.TABLA_COCIENTE + "(IDEQUIPO, JA15, JC16, JA16, JC17, ");
         sql.append("JA17, JC18, TJ, PA15, DGA15, PC16, DGC16, PA16, DGA16, PC17, ");
         sql.append("DGC17, PA17, DGA17, PC18, DGC18, TP, TDG, COCIENTE) ");
         sql.append("VALUES (?, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)");
@@ -37,7 +36,7 @@ public class CocienteDAOImpl extends ConexionBD implements CocienteDAO {
         }
         Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("UPDATE " + TABLA_COCIENTE + " SET JA15 = ?, JC16 = ?, JA16 = ?, JC17 = ?, JA17 = ?, JC18 = ?, TJ = ?,"
+        sql.append("UPDATE " + Constantes.TABLA_COCIENTE + " SET JA15 = ?, JC16 = ?, JA16 = ?, JC17 = ?, JA17 = ?, JC18 = ?, TJ = ?,"
                 + " PA15 = ?, PC16 = ?, PA16 = ?, PC17 = ?, PA17 = ?, PC18 = ?, TP = ?, DGA15 = ?, DGC16 = ?, DGA16 = ?, DGC17 = ?, "
                 + "DGA17 = ?, DGC18 = ?, TDG = ?, COCIENTE = ?  WHERE IDEQUIPO = ?");
         setSql(sql);
@@ -78,7 +77,7 @@ public class CocienteDAOImpl extends ConexionBD implements CocienteDAO {
             sql.append("SELECT E.NOMBRE, C.JA15, C.JC16, C.JA16, C.JC17, C.JA17, C.JC18, ");
             sql.append("C.TJ, C.PA15, C.DGA15, C.PC16, C.DGC16, C.PA16, C.DGA16, C.PC17, ");
             sql.append("C.DGC17, C.PA17, C.DGA17, C.PC18, C.DGC18, C.TP, C.TDG, C.COCIENTE ");
-            sql.append("FROM " + TABLA_COCIENTE + " C INNER JOIN " + TABLA_EQUIPO + " E ");
+            sql.append("FROM " + Constantes.TABLA_COCIENTE + " C INNER JOIN " + Constantes.TABLA_EQUIPO + " E ");
             sql.append("ON C.IDEQUIPO = E.IDEQUIPO");
             setSql(sql);
             ejecutarQuery(params);

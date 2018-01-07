@@ -9,11 +9,10 @@ import ligamx.dao.PartidoDAO;
 import ligamx.dto.EquipoDTO;
 import ligamx.dto.PartidoDTO;
 import ligamx.util.ConexionBD;
+import ligamx.util.Constantes;
 import ligamx.util.ExcepcionAplicacion;
 
 public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
-
-    private static final String TABLA_PARTIDOS = "PARTIDOSA17";
 
     @Override
     public boolean insertarPartido(PartidoDTO partido) throws ExcepcionAplicacion {
@@ -22,7 +21,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
         }
         Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO " + TABLA_PARTIDOS + "(JORNADA, LOCAL, ");
+        sql.append("INSERT INTO " + Constantes.TABLA_PARTIDOS + "(JORNADA, LOCAL, ");
         sql.append("VISITANTE, FECHA) ");
         sql.append("VALUES (?, ?, ?, ?)");
         setSql(sql);
@@ -40,7 +39,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
         }
         Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("UPDATE " + TABLA_PARTIDOS + " SET ML = ?, MV = ?, FECHA = ? ");
+        sql.append("UPDATE " + Constantes.TABLA_PARTIDOS + " SET ML = ?, MV = ?, FECHA = ? ");
         sql.append("WHERE IDPARTIDO = ?");
         setSql(sql);
         params.put(1, partido.getMl());
@@ -59,7 +58,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV, FECHA ");
-            sql.append("FROM " + TABLA_PARTIDOS + " WHERE LOCAL = ? OR VISITANTE = ? ORDER BY IDPARTIDO");
+            sql.append("FROM " + Constantes.TABLA_PARTIDOS + " WHERE LOCAL = ? OR VISITANTE = ? ORDER BY IDPARTIDO");
             setSql(sql);
             params.put(1, equipo.getIdEquipo());
             params.put(2, equipo.getIdEquipo());
@@ -92,7 +91,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV, FECHA ");
-            sql.append("FROM " + TABLA_PARTIDOS + " WHERE JORNADA = ? ORDER BY IDPARTIDO");
+            sql.append("FROM " + Constantes.TABLA_PARTIDOS + " WHERE JORNADA = ? ORDER BY IDPARTIDO");
             setSql(sql);
             params.put(1, jornada);
             ejecutarQuery(params);
@@ -124,7 +123,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV, FECHA ");
-            sql.append("FROM " + TABLA_PARTIDOS + " WHERE IDPARTIDO = ?");
+            sql.append("FROM " + Constantes.TABLA_PARTIDOS + " WHERE IDPARTIDO = ?");
             setSql(sql);
             params.put(1, id);
             ejecutarQuery(params);
@@ -154,7 +153,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV, FECHA ");
-            sql.append("FROM " + TABLA_PARTIDOS + " WHERE LOCAL = ? AND JORNADA = ?");
+            sql.append("FROM " + Constantes.TABLA_PARTIDOS + " WHERE LOCAL = ? AND JORNADA = ?");
             setSql(sql);
             params.put(1, equipo.getIdEquipo());
             params.put(2, jornada);
@@ -185,7 +184,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV, FECHA ");
-            sql.append("FROM " + TABLA_PARTIDOS + " WHERE LOCAL = ? AND VISITANTE = ?");
+            sql.append("FROM " + Constantes.TABLA_PARTIDOS + " WHERE LOCAL = ? AND VISITANTE = ?");
             setSql(sql);
             params.put(1, id1);
             params.put(2, id2);
@@ -216,7 +215,7 @@ public class PartidoDAOImpl extends ConexionBD implements PartidoDAO {
             Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDPARTIDO, JORNADA, LOCAL, ML, VISITANTE, MV "); //and 
-            sql.append("FROM " + TABLA_PARTIDOS + " WHERE JORNADA <= ? ");
+            sql.append("FROM " + Constantes.TABLA_PARTIDOS + " WHERE JORNADA <= ? ");
             sql.append("AND (LOCAL= ? or VISITANTE = ?)");
             setSql(sql);
             params.put(1, jornada);

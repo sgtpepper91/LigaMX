@@ -20,4 +20,9 @@ public class Constantes {
     public static final String CREANDO_CONEXION = "Creando conexión";
     public static final String CERRANDO_CONEXION = "Cerrando conexión";
     public static final String[] EQUIPOS = EquiposEnum.getArrayEquipos();
+    public static final String TABLA_COCIENTE = "COCIENTEC18";
+    public static final String TABLA_EQUIPO = "EQUIPOC18";
+    public static final String TABLA_GOL = "GOLC18";
+    public static final String TABLA_PARTIDOS = "PARTIDOSC18";
+    public static final String TABLA_GENERAL = "GENERALC18";
 }

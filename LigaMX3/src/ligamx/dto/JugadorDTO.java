@@ -1,6 +1,7 @@
 package ligamx.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 import ligamx.util.BaseDTO;
 
 /**
@@ -47,6 +48,32 @@ public class JugadorDTO extends BaseDTO implements Serializable {
 
     public void setGoles(Integer goles) {
         this.goles = goles;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + Objects.hashCode(this.nombre);
+        hash = 29 * hash + Objects.hashCode(this.numero);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final JugadorDTO other = (JugadorDTO) obj;
+        if (!Objects.equals(this.nombre, other.nombre)) {
+            return false;
+        }
+        return Objects.equals(this.numero, other.numero);
     }
 
 }

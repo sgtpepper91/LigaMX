@@ -164,9 +164,9 @@ public class Grafica extends javax.swing.JPanel {
                             } else if (partido.getMl().equals(partido.getMv())) {
                                 je++;
                             }
-                        } else if (partido.getMl().compareTo(partido.getMv()) < 0) {
+                        } else if (null != partido.getMl() && null != partido.getMv() && partido.getMl().compareTo(partido.getMv()) < 0) {
                             jg++;
-                        } else if (partido.getMl().equals(partido.getMv())) {
+                        } else if (null != partido.getMl() && null != partido.getMv() && partido.getMl().equals(partido.getMv())) {
                             je++;
                         }
                     }

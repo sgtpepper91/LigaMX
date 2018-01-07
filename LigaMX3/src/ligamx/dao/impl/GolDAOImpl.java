@@ -11,12 +11,10 @@ import ligamx.dto.GoleadorDTO;
 import ligamx.dto.JugadorDTO;
 import ligamx.dto.PartidoDTO;
 import ligamx.util.ConexionBD;
+import ligamx.util.Constantes;
 import ligamx.util.ExcepcionAplicacion;
 
 public class GolDAOImpl extends ConexionBD implements GolDAO {
-
-    private final static String TABLA_GOL = "GOLA17";
-    private static final String TABLA_EQUIPO = "EQUIPOC18";
 
     @Override
     public boolean insertarGol(GolDTO gol, PartidoDTO partido) throws ExcepcionAplicacion {
@@ -25,7 +23,7 @@ public class GolDAOImpl extends ConexionBD implements GolDAO {
         }
         Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO " + TABLA_GOL + "(IDPARTIDO, IDEQUIPO, IDJUGADOR, MINUTO, AUTOGOL) ");
+        sql.append("INSERT INTO " + Constantes.TABLA_GOL + "(IDPARTIDO, IDEQUIPO, IDJUGADOR, MINUTO, AUTOGOL) ");
         sql.append("VALUES (?, ?, ?, ?, ?)");
         setSql(sql);
         params.put(1, partido.getIdPartido());
@@ -43,7 +41,7 @@ public class GolDAOImpl extends ConexionBD implements GolDAO {
         }
         Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("UPDATE " + TABLA_GOL + " SET IDEQUIPO = ?, IDJUGADOR = ?, MINUTO = ?, AUTOGOL = ? ");
+        sql.append("UPDATE " + Constantes.TABLA_GOL + " SET IDEQUIPO = ?, IDJUGADOR = ?, MINUTO = ?, AUTOGOL = ? ");
         sql.append("WHERE IDGOL = ?");
         setSql(sql);
         params.put(1, gol.getIdEquipo());
@@ -63,7 +61,8 @@ public class GolDAOImpl extends ConexionBD implements GolDAO {
             Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDGOL, IDEQUIPO, IDJUGADOR, MINUTO, AUTOGOL ");
-            sql.append("FROM " + TABLA_GOL + " WHERE IDPARTIDO = ?");
+            sql.append("FROM " + Constantes.TABLA_GOL + " WHERE IDPARTIDO = ? ");
+            sql.append("ORDER BY MINUTO");
             setSql(sql);
             params.put(1, partido.getIdPartido());
             ejecutarQuery(params);
@@ -92,7 +91,7 @@ public class GolDAOImpl extends ConexionBD implements GolDAO {
         try {
             Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT COUNT(*) FROM " + TABLA_GOL + " ");
+            sql.append("SELECT COUNT(*) FROM " + Constantes.TABLA_GOL + " ");
             sql.append("WHERE IDJUGADOR = ? AND AUTOGOL = 'N'");
             setSql(sql);
             params.put(1, jugador.getIdJugador());
@@ -117,9 +116,9 @@ public class GolDAOImpl extends ConexionBD implements GolDAO {
             Map params = new HashMap();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT E.NOMBRE, J.NOMBRE, COUNT(*) AS GOLES ");
-            sql.append("FROM " + TABLA_GOL + " G INNER JOIN JUGADOR J ");
+            sql.append("FROM " + Constantes.TABLA_GOL + " G INNER JOIN JUGADOR J ");
             sql.append("ON J.IDJUGADOR = G.IDJUGADOR ");
-            sql.append("INNER JOIN " + TABLA_EQUIPO + " E ");
+            sql.append("INNER JOIN " + Constantes.TABLA_EQUIPO + " E ");
             sql.append("ON E.IDEQUIPO = G.IDEQUIPO ");
             sql.append("GROUP BY E.NOMBRE, J.NOMBRE ORDER BY 3 DESC");
             setSql(sql);

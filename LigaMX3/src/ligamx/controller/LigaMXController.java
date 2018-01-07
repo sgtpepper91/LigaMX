@@ -2,7 +2,6 @@ package ligamx.controller;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
@@ -133,7 +132,7 @@ public class LigaMXController extends BaseController {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
+        bgEstadisticas = new javax.swing.ButtonGroup();
         jGol = new javax.swing.JFrame();
         jPanel9 = new javax.swing.JPanel();
         jrEquipo1 = new javax.swing.JRadioButton();
@@ -158,8 +157,8 @@ public class LigaMXController extends BaseController {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         tablaGeneral1 = new javax.swing.JTable();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        rbLocal = new javax.swing.JRadioButton();
+        rbVisitante = new javax.swing.JRadioButton();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane14 = new javax.swing.JScrollPane();
         tGoleadores = new javax.swing.JTable();
@@ -247,7 +246,7 @@ public class LigaMXController extends BaseController {
             }
         });
 
-        buttonGroup1.add(jrEquipo1);
+        bgEstadisticas.add(jrEquipo1);
         jrEquipo1.setText("Equipo 1");
         jrEquipo1.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -255,7 +254,7 @@ public class LigaMXController extends BaseController {
             }
         });
 
-        buttonGroup1.add(jrEquipo2);
+        bgEstadisticas.add(jrEquipo2);
         jrEquipo2.setText("Equipo 2");
         jrEquipo2.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -332,9 +331,6 @@ public class LigaMXController extends BaseController {
                                     .addComponent(jrEquipo1)
                                     .addComponent(cAutogol)))
                             .addGroup(jPanel9Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel9Layout.createSequentialGroup()
                                 .addGap(78, 78, 78)
                                 .addComponent(jLabel12)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -344,7 +340,7 @@ public class LigaMXController extends BaseController {
                                 .addComponent(jButton2)
                                 .addGap(26, 26, 26)
                                 .addComponent(jButton1)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 46, Short.MAX_VALUE))
                     .addGroup(jPanel9Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -355,6 +351,7 @@ public class LigaMXController extends BaseController {
                                 .addGap(18, 18, 18)
                                 .addComponent(nomJugBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
+            .addComponent(jScrollPane12, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         jPanel9Layout.setVerticalGroup(
             jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -398,11 +395,14 @@ public class LigaMXController extends BaseController {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("LIGA MX C17");
+        setTitle("LIGA MX A17");
         setExtendedState(6);
         setFocusCycleRoot(false);
         setLocationByPlatform(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
@@ -520,11 +520,11 @@ public class LigaMXController extends BaseController {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 733, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
 
         panPrincipal.addTab("Tabla General", jPanel1);
@@ -586,11 +586,12 @@ public class LigaMXController extends BaseController {
             tablaGeneral1.getColumnModel().getColumn(9).setResizable(false);
         }
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setText("Local");
+        bgEstadisticas.add(rbLocal);
+        rbLocal.setSelected(true);
+        rbLocal.setText("Local");
 
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setText("Visitante");
+        bgEstadisticas.add(rbVisitante);
+        rbVisitante.setText("Visitante");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -600,9 +601,9 @@ public class LigaMXController extends BaseController {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jRadioButton1)
+                        .addComponent(rbLocal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jRadioButton2))
+                        .addComponent(rbVisitante))
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 707, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -610,8 +611,8 @@ public class LigaMXController extends BaseController {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2))
+                    .addComponent(rbLocal)
+                    .addComponent(rbVisitante))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 321, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -667,7 +668,7 @@ public class LigaMXController extends BaseController {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane14, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+            .addComponent(jScrollPane14)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -914,7 +915,7 @@ public class LigaMXController extends BaseController {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 726, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel8Layout.setVerticalGroup(
@@ -938,8 +939,8 @@ public class LigaMXController extends BaseController {
                         .addComponent(cJornada1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panMarcadorLayout.createSequentialGroup()
                         .addGap(32, 32, 32)
-                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(32, Short.MAX_VALUE))
+                        .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panMarcadorLayout.setVerticalGroup(
             panMarcadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -949,13 +950,11 @@ public class LigaMXController extends BaseController {
                     .addComponent(cJornada1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0)
                 .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         panSecundario.setPreferredSize(new java.awt.Dimension(920, 288));
-
-        panDescenso.setBorder(null);
 
         tablaCociente.setFont(new java.awt.Font("Arial Unicode MS", 0, 12)); // NOI18N
         tablaCociente.setModel(new javax.swing.table.DefaultTableModel(
@@ -1330,7 +1329,7 @@ public class LigaMXController extends BaseController {
             PenalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PenalesLayout.createSequentialGroup()
                 .addGroup(PenalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblLocal, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                    .addComponent(lblLocal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(lblVisit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PenalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1360,7 +1359,7 @@ public class LigaMXController extends BaseController {
                         .addComponent(jCheckBox10)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel9)))
-                .addGap(0, 45, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         PenalesLayout.setVerticalGroup(
             PenalesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1390,11 +1389,11 @@ public class LigaMXController extends BaseController {
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout panLiguillaLayout = new javax.swing.GroupLayout(panLiguilla);
@@ -1610,9 +1609,9 @@ public class LigaMXController extends BaseController {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 1583, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1683,7 +1682,7 @@ public class LigaMXController extends BaseController {
         int fila = 0;
         List<GoleadorDTO> goleadorDTOs = golService.buscarGoleadores();
         if (!goleadorDTOs.isEmpty()) {
-            while (fila < 10 && goleadorDTOs.size() >= fila) {
+            while (fila < 10 && goleadorDTOs.size() > fila) {
                 GoleadorDTO goleadorDTO = goleadorDTOs.get(fila);
                 tGoleadores.setValueAt(goleadorDTO.getEquipo(), fila, 0);
                 tGoleadores.setValueAt(goleadorDTO.getNombre(), fila, 1);
@@ -1699,15 +1698,14 @@ public class LigaMXController extends BaseController {
     }//GEN-LAST:event_menuAgregaActionPerformed
 
     private void menuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSalirActionPerformed
+        LOGGER.info("Cerrando aplicación");
         System.exit(0);
     }//GEN-LAST:event_menuSalirActionPerformed
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
-        JOptionPane.showMessageDialog(this, "LIGA MX C17 \n"
-                + "Héctor López V4.2\n"
-                //                + "*V4.0(21-01-17)\n     -C17\n"
-                + "*V4.2(29-04-17)\n     -Correción en tabla cociente \n"
-                + "     -Selección automática de equipos en las tablas", "Acerca de", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "LIGA MX C18 \n"
+                + "Héctor López V4.4\n"
+                + "*V4.4(07-01-18)\n     -C18", "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jrEquipo1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jrEquipo1StateChanged
@@ -1763,7 +1761,7 @@ public class LigaMXController extends BaseController {
         ProgressBar progressBar = new ProgressBar();
         final JDialog dialog = this.crearDialog(progressBar);
         taskGrafica.setDialog(dialog);
-        TimeListener<LongTaskGrafica> timeListener = new TimeListener(progressBar.getProgressBar(), taskGrafica, dialog);
+        TimeListener<LongTaskGrafica> timeListener = new TimeListener<>(progressBar.getProgressBar(), taskGrafica, dialog);
         timer = new Timer(50, timeListener);
         timeListener.setTimer(timer);
         taskGrafica.go();
@@ -2316,6 +2314,10 @@ public class LigaMXController extends BaseController {
         }
     }//GEN-LAST:event_cJornada1ActionPerformed
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        LOGGER.info("Cerrando aplicación");
+    }//GEN-LAST:event_formWindowClosing
+
     public void detalles(PartidoDTO partidoDTO) throws ExcepcionAplicacion {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a detalles");
@@ -2341,7 +2343,7 @@ public class LigaMXController extends BaseController {
                     ag = "(AG)";
                 }
                 JugadorDTO jugadorDTO = jugadorService.buscarJugadorPorId(golDTO.getIdJugador());
-                detalle = jugadorDTO.getNombre() + "(" + golDTO.getMinuto() + ") " + ag;
+                detalle = jugadorDTO.getNombre() + " (" + golDTO.getMinuto() + ") " + ag;
                 if (golDTO.getIdEquipo().equals(partidoDTO.getIdLocal())) {
                     tablaDetalles.setValueAt(detalle, filal, 0);
                     filal++;
@@ -2411,7 +2413,7 @@ public class LigaMXController extends BaseController {
         llenarJugadores();
     }
 
-    private void ActualizarGeneral() throws ExcepcionAplicacion {
+    public void ActualizarGeneral() throws ExcepcionAplicacion {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Entró a actualizar general");
         }
@@ -2507,12 +2509,12 @@ public class LigaMXController extends BaseController {
             CocienteDTO cocienteDTO = entry.getValue();
             tablaCociente.setValueAt(fila + 1, fila, 0);
             tablaCociente.setValueAt(entry.getKey(), fila, 2);
-            tablaCociente.setValueAt(cocienteDTO.getJa15(), fila, 3);
-            tablaCociente.setValueAt(cocienteDTO.getJc16(), fila, 4);
-            tablaCociente.setValueAt(cocienteDTO.getJa16(), fila, 5);
-            tablaCociente.setValueAt(cocienteDTO.getJc17(), fila, 6);
-            tablaCociente.setValueAt(cocienteDTO.getJa17(), fila, 7);
-            tablaCociente.setValueAt(cocienteDTO.getJc18(), fila, 8);
+            tablaCociente.setValueAt(cocienteDTO.getPa15(), fila, 3);
+            tablaCociente.setValueAt(cocienteDTO.getPc16(), fila, 4);
+            tablaCociente.setValueAt(cocienteDTO.getPa16(), fila, 5);
+            tablaCociente.setValueAt(cocienteDTO.getPc17(), fila, 6);
+            tablaCociente.setValueAt(cocienteDTO.getPa17(), fila, 7);
+            tablaCociente.setValueAt(cocienteDTO.getPc18(), fila, 8);
             tablaCociente.setValueAt(cocienteDTO.getTp(), fila, 9);
             tablaCociente.setValueAt(null, fila, 10);
             tablaCociente.setValueAt(cocienteDTO.getJa15(), fila, 11);
@@ -2525,7 +2527,7 @@ public class LigaMXController extends BaseController {
             tablaCociente.setValueAt(df.format(cocienteDTO.getCociente()), fila, 18);
             fila++;
         }
-        int partidosPendientes = 17 - (Integer.parseInt(tablaCociente.getValueAt(17, 16).toString()));
+        int partidosPendientes = 34 - (Integer.parseInt(tablaCociente.getValueAt(17, 15).toString()) + Integer.parseInt(tablaCociente.getValueAt(17, 16).toString()));
         int tj = Integer.parseInt(tablaCociente.getValueAt(17, 17).toString()) + partidosPendientes;
         int tp = Integer.parseInt(tablaCociente.getValueAt(17, 9).toString()) + 3 * partidosPendientes;
         double tcoc = (tp + 0.0) / tj;
@@ -2536,7 +2538,7 @@ public class LigaMXController extends BaseController {
             ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource(url)));
             icon.setImage(icon.getImage().getScaledInstance(17, 17, Image.SCALE_DEFAULT));
             tablaCociente.setValueAt(icon, i, 1);
-            int pPf = 17 - (Integer.parseInt(tablaCociente.getValueAt(i, 16).toString()));
+            int pPf = 34 - (Integer.parseInt(tablaCociente.getValueAt(i, 15).toString()) + Integer.parseInt(tablaCociente.getValueAt(i, 16).toString()));
             int tpf = Integer.parseInt(tablaCociente.getValueAt(i, 9).toString());
             int tjf = Integer.parseInt(tablaCociente.getValueAt(i, 17).toString()) + pPf;
             double cocf = (tpf + 0.0) / tjf;
@@ -2665,12 +2667,12 @@ public class LigaMXController extends BaseController {
     private javax.swing.JPanel Penales;
     private javax.swing.JMenuItem aFinal;
     private javax.swing.JMenuItem aSemi;
+    private javax.swing.ButtonGroup bgEstadisticas;
     private javax.swing.JButton btnCalcularCuartos;
     private javax.swing.JButton btnCalcularFinal;
     private javax.swing.JButton btnCalcularSemi;
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cAutogol;
-    private javax.swing.JComboBox cJornada1;
+    public javax.swing.JComboBox cJornada1;
     private javax.swing.JComboBox cLocal1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -2706,8 +2708,6 @@ public class LigaMXController extends BaseController {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPopupMenu jPopupMenu1;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
@@ -2741,6 +2741,8 @@ public class LigaMXController extends BaseController {
     private javax.swing.JPanel panMarcador;
     private javax.swing.JTabbedPane panPrincipal;
     private javax.swing.JTabbedPane panSecundario;
+    private javax.swing.JRadioButton rbLocal;
+    private javax.swing.JRadioButton rbVisitante;
     private javax.swing.JSlider sMinuto;
     private javax.swing.JTable tGoleadores;
     private javax.swing.JTable tablaCociente;
@@ -2786,9 +2788,13 @@ public class LigaMXController extends BaseController {
             int m = Integer.parseInt(tablaJornada1.getValueAt(row, column).toString());
             tablaJornada1.setValueAt(m + 1, row, column);
             nomJugBuscar.setText("");
-            ActualizarTabla();
+            partidoDTO.setMl(Integer.parseInt(tablaJornada1.getValueAt(row, 2).toString()));
+            partidoDTO.setMv(Integer.parseInt(tablaJornada1.getValueAt(row, 3).toString()));
+            partidoService.actualizarPartido(partidoDTO);
+            equipoService.actualizarEquipo(partidoDTO.getIdPartido());
             BuscarEquipo();
             tablaGoleadores();
+            ActualizarGeneral();
             detalles(partidoDTO);
             jGol.setVisible(false);
             this.setEnabled(true);
@@ -2858,7 +2864,7 @@ public class LigaMXController extends BaseController {
         progressBar.getProgressBar().setStringPainted(false);
         final JDialog dialog = this.crearDialog(progressBar);
         taskCarga.setDialog(dialog);
-        TimeListener<LongTaskCarga> timeListener = new TimeListener(progressBar.getProgressBar(), taskCarga, dialog);
+        TimeListener<LongTaskCarga> timeListener = new TimeListener<>(progressBar.getProgressBar(), taskCarga, dialog);
         timer = new Timer(100, timeListener);
         timeListener.setTimer(timer);
         taskCarga.go();

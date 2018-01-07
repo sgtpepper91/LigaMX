@@ -70,7 +70,7 @@ public class JugadorDAOImpl extends ConexionBD implements JugadorDAO {
             Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT IDJUGADOR, NOMBRE, NUMERO ");
-            sql.append("FROM JUGADOR WHERE IDEQUIPO = ?");
+            sql.append("FROM JUGADOR WHERE IDEQUIPO = ? ");
             sql.append("ORDER BY NOMBRE");
             setSql(sql);
             params.put(1, equipo.getIdEquipo());

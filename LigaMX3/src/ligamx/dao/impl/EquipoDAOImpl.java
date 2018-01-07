@@ -8,6 +8,7 @@ import java.util.Map;
 import ligamx.dao.EquipoDAO;
 import ligamx.dto.EquipoDTO;
 import ligamx.util.ConexionBD;
+import ligamx.util.Constantes;
 import ligamx.util.ExcepcionAplicacion;
 
 /**
@@ -15,8 +16,6 @@ import ligamx.util.ExcepcionAplicacion;
  * @author hector.lopez
  */
 public class EquipoDAOImpl extends ConexionBD implements EquipoDAO {
-
-    private static final String TABLA_EQUIPO = "EQUIPOC18";
 
     @Override
     public EquipoDTO buscarEquipoporId(Integer id) throws ExcepcionAplicacion {
@@ -26,7 +25,7 @@ public class EquipoDAOImpl extends ConexionBD implements EquipoDAO {
         try {
             Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT NOMBRE FROM " + TABLA_EQUIPO + " WHERE IDEQUIPO = ?");
+            sql.append("SELECT NOMBRE FROM " + Constantes.TABLA_EQUIPO + " WHERE IDEQUIPO = ?");
             setSql(sql);
             params.put(1, id);
             ejecutarQuery(params);
@@ -50,7 +49,7 @@ public class EquipoDAOImpl extends ConexionBD implements EquipoDAO {
         try {
             Map<Integer, Object> params = new HashMap<>();
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT IDEQUIPO FROM " + TABLA_EQUIPO + " WHERE NOMBRE = ?");
+            sql.append("SELECT IDEQUIPO FROM " + Constantes.TABLA_EQUIPO + " WHERE NOMBRE = ?");
             setSql(sql);
             params.put(1, nombre);
             ejecutarQuery(params);
@@ -74,7 +73,7 @@ public class EquipoDAOImpl extends ConexionBD implements EquipoDAO {
         try {
             Map params = new HashMap();
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT IDEQUIPO, NOMBRE FROM " + TABLA_EQUIPO + "");
+            sql.append("SELECT IDEQUIPO, NOMBRE FROM " + Constantes.TABLA_EQUIPO + "");
             setSql(sql);
             ejecutarQuery(params);
             List<EquipoDTO> equipoList = new ArrayList<>();
@@ -98,7 +97,7 @@ public class EquipoDAOImpl extends ConexionBD implements EquipoDAO {
         }
         Map<Integer, Object> params = new HashMap<>();
         StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO " + TABLA_EQUIPO + " (NOMBRE) VALUES (?)");
+        sql.append("INSERT INTO " + Constantes.TABLA_EQUIPO + " (NOMBRE) VALUES (?)");
         setSql(sql);
         params.put(1, equipo.getNombre());
         return ejecutarUpdate(params);

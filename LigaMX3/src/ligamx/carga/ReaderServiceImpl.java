@@ -34,7 +34,7 @@ public abstract class ReaderServiceImpl<T extends BaseLecturaDTO, U extends Base
      */
     @Override
     public void leerArchivo(File file, LongTaskCarga task) throws ExcepcionAplicacion {
-        if (!file.canRead()) {
+        if (null== file || !file.canRead()) {
             throw new ExcepcionAplicacion("El arhivo no se puede leer");
         }
         try {
