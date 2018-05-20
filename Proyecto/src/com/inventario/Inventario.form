@@ -877,12 +877,11 @@
                   <Properties>
                     <Property name="autoCreateRowSorter" type="boolean" value="true"/>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="5" rowCount="0">
+                      <Table columnCount="4" rowCount="0">
                         <Column editable="false" title="Producto" type="java.lang.String"/>
                         <Column editable="false" title="Existencias" type="java.lang.Integer"/>
                         <Column editable="false" title="Costo" type="java.lang.Integer"/>
                         <Column editable="false" title="Precio" type="java.lang.Integer"/>
-                        <Column editable="true" title="" type="java.lang.Object"/>
                       </Table>
                     </Property>
                     <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor" preCode="tbInventario.getTableHeader().setReorderingAllowed(false);">
@@ -903,11 +902,6 @@
                           <Renderer/>
                         </Column>
                         <Column maxWidth="-1" minWidth="-1" prefWidth="10" resizable="false">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                           <Title/>
                           <Editor/>
                           <Renderer/>

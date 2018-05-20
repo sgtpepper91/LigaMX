@@ -655,14 +655,14 @@ public class Inventario extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Producto", "Existencias", "Costo", "Precio", ""
+                "Producto", "Existencias", "Costo", "Precio"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Object.class
+                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -1612,7 +1612,7 @@ public class Inventario extends javax.swing.JFrame {
      * @param evt
      */
     private void mAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mAcercaActionPerformed
-        StringBuilder msg = new StringBuilder("Héctor López  V 3.0 (19-05-18)\n");
+        StringBuilder msg = new StringBuilder("Héctor López  V 3.0 (20-05-18)\n");
         msg.append("Se agregan categorías de productos-\n");
         JOptionPane.showMessageDialog(this, msg, "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_mAcercaActionPerformed
@@ -1666,7 +1666,7 @@ public class Inventario extends javax.swing.JFrame {
 
     private void mRespaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mRespaldoActionPerformed
         LOGGER.info(Constantes.RESPALDO);
-        String[] tablas = new String[]{"CLIENTES", "DETALLEVENTAS", "PAGOS", "PRODUCTOS", "VENTAS"};
+        String[] tablas = new String[]{"CLIENTES", "DETALLEVENTAS", "PAGOS", "PRODUCTOS", "VENTAS", "CATEGORIA"};
         try {
             for (String tabla : tablas) {
                 service.respaldarTabla(tabla);
