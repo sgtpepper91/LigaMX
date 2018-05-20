@@ -1,5 +1,6 @@
 package com.inventario;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,15 +13,15 @@ public class DetalleVenta extends ConexionBD {
     private int numVenta;
     private Producto producto;
     private int detVentaCantidad;
-    private int detVentaPrecio;
-    private int detVentaSubtotal;
+    private BigDecimal detVentaPrecio;
+    private BigDecimal detVentaSubtotal;
 
     public DetalleVenta(int numVenta, Producto producto, int detVentaCantidad) {
         this.numVenta = numVenta;
         this.producto = producto;
         this.detVentaCantidad = detVentaCantidad;
         this.detVentaPrecio = producto.getPrecioUnitario();
-        this.detVentaSubtotal = detVentaPrecio * detVentaCantidad;
+        this.detVentaSubtotal = detVentaPrecio.multiply(new BigDecimal(detVentaCantidad));
     }
 
     public int getNumVenta() {
@@ -47,19 +48,19 @@ public class DetalleVenta extends ConexionBD {
         this.detVentaCantidad = detVentaCantidad;
     }
 
-    public int getDetVentaPrecio() {
+    public BigDecimal getDetVentaPrecio() {
         return detVentaPrecio;
     }
 
-    public void setDetVentaPrecio(int detVentaPrecio) {
+    public void setDetVentaPrecio(BigDecimal detVentaPrecio) {
         this.detVentaPrecio = detVentaPrecio;
     }
 
-    public int getDetVentaSubtotal() {
+    public BigDecimal getDetVentaSubtotal() {
         return detVentaSubtotal;
     }
 
-    public void setDetVentaSubtotal(int detVentaSubtotal) {
+    public void setDetVentaSubtotal(BigDecimal detVentaSubtotal) {
         this.detVentaSubtotal = detVentaSubtotal;
     }
 

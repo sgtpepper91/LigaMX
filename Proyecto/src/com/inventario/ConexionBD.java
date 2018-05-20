@@ -1,5 +1,6 @@
 package com.inventario;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -20,15 +21,15 @@ import org.apache.logging.log4j.LogManager;
  */
 public class ConexionBD {
 
-    private Connection conn;
-    private Statement stmn;
-    private ResultSet rset;
-    private PreparedStatement pstmn;
+    protected Connection conn;
+    protected Statement stmn;
+    protected ResultSet rset;
+    protected PreparedStatement pstmn;
     private static String path;
     private static String usuario;
     private static String password;
-    private String sql;
-    protected static final Logger LOGGER = LogManager.getLogger();
+    protected String sql;
+    protected Logger LOGGER = LogManager.getLogger(getClass());
 
     public Connection getConn() {
         return conn;
@@ -109,6 +110,8 @@ public class ConexionBD {
                         getPstmn().setFloat(i, (float) params.get(i));
                     } else if (params.get(i) instanceof Date) {
                         getPstmn().setDate(i, (Date) params.get(i));
+                    } else if (params.get(i) instanceof BigDecimal) {
+                        getPstmn().setBigDecimal(i, (BigDecimal) params.get(i));
                     }
                 }
             }
@@ -195,7 +198,7 @@ public class ConexionBD {
 
     public Excepcion lanzarExcepcion(Exception ex) throws Excepcion {
         cerrarConexion();
-        LOGGER.error(Constantes.CONEXION_ERROR_QUERY.concat(ex.getMessage()));
+        LOGGER.error(Constantes.CONEXION_ERROR_QUERY.concat(ex.getMessage()), ex);
         Excepcion excepcion = new Excepcion(Constantes.CONEXION_ERROR_QUERY.concat(ex.getMessage()));
         return excepcion;
     }

@@ -20,4 +20,6 @@ public class Constantes {
     public static final String PASS_BD = "1234";
     public static final String ABRIENDO_APLICACION = "Abriendo Aplicación";
     public static final String CERRANDO_APLICACION = "Cerrando Aplicación";
+    public static final String RESPALDO = "Creando respaldo";
 }
+

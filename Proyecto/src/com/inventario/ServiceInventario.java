@@ -155,9 +155,18 @@ public class ServiceInventario extends ConexionBD {
             for (int i = rowCount - 1; i >= 0; i--) {
                 dm.removeRow(i);
             }
+            String txtCategoria = null != inventario.getCbCategoriaProducto().getSelectedItem() ? inventario.getCbCategoriaProducto().getSelectedItem().toString() : null;
+            Categoria categoria = new Categoria(txtCategoria);
             float totalInventario = 0;
-            setSql("SELECT DESCRIPCIONPROD, EXISTENCIAS, COSTOUNITARIO, PRECIOUNITARIO FROM PRODUCTOS WHERE DESCRIPCIONPROD != 'Ajuste' ORDER BY DESCRIPCIONPROD");
+            StringBuilder stringBuilder = new StringBuilder();
             params.clear();
+            stringBuilder.append("SELECT DESCRIPCIONPROD, EXISTENCIAS, COSTOUNITARIO, PRECIOUNITARIO FROM PRODUCTOS WHERE DESCRIPCIONPROD != 'Ajuste' ");
+            if (0 != categoria.getId()) {
+                stringBuilder.append("AND CATEGORIA = ? ");
+                params.put(1, categoria.getId());
+            }
+            stringBuilder.append("ORDER BY DESCRIPCIONPROD");
+            this.setSql(stringBuilder.toString());
             ejecutarQuery(params);
             while (getRset().next()) {
                 String Descripcion = getRset().getString(1);
@@ -289,8 +298,11 @@ public class ServiceInventario extends ConexionBD {
     }
 
     public void respaldarTabla(String tabla) throws IOException, Excepcion, SQLException {
-        File file = new File("respaldo\\" + tabla + ".bac");
+        LOGGER.info("Creando respaldo de tabla " + tabla);
+        String ruta = "respaldo\\" + tabla + ".bac";
+        File file = new File(ruta);
         file.getParentFile().mkdirs();
+        LOGGER.info("Creando archivo " + ruta);
         file.createNewFile();
         try (OutputStream out = new FileOutputStream(file)) {
             Map params = new HashMap();
@@ -322,12 +334,33 @@ public class ServiceInventario extends ConexionBD {
             }
             col = row.row.get(row.row.size() - 1);
             datosTabla.append(obtenerValor(col));
+            LOGGER.info("Escribiendo archivo " + ruta);
             out.write(datosTabla.toString().getBytes());
+            LOGGER.info("Cerrando archivo " + ruta);
+            out.close();
         }
-
     }
 
     private Object obtenerValor(Entry<Object, Class> col) {
         return null == col.getValue() ? null : (col.getValue()).cast(col.getKey());
+    }
+
+    void llenarCategorias(JComboBox<String> combo, Boolean producto) throws Excepcion{
+        try{
+            Map<Integer, Object> params = new HashMap<>();
+            this.setSql("SELECT DESCRIPCION FROM CATEGORIA ORDER BY DESCRIPCION");
+            this.ejecutarQuery(params);
+            combo.removeAllItems();
+            if (producto) {
+                combo.addItem("TODAS");
+            }
+            while (getRset().next()) {
+                 String descripcion = getRset().getString(1);
+                 combo.addItem(descripcion);
+            }
+            cerrarConexion();
+        } catch (SQLException ex) {
+            throw lanzarExcepcion(ex);
+        }
     }
 }

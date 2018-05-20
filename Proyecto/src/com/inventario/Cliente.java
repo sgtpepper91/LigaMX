@@ -19,7 +19,6 @@ public class Cliente extends ConexionBD {
     private int numCliente;
     private String nombreCliente;
     private int acumuladoCliente;
-    private final DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
     public Cliente(String nombreCliente, int acumuladoCliente) {
         this.nombreCliente = nombreCliente;
@@ -184,7 +183,8 @@ public class Cliente extends ConexionBD {
                 row.add(cantidad);
                 row.add(descripcion);
                 row.add(total);
-                row.add(df.format(fecha));
+                //row.add(df.format(fecha));
+                row.add(fecha);
                 dm.addRow(row.toArray());
             }
             cerrarConexion();
@@ -220,7 +220,7 @@ public class Cliente extends ConexionBD {
                 row.add(cantidad);
                 row.add(descripcion);
                 row.add(total);
-                row.add(df.format(fecha));
+                row.add(fecha);
                 row.add(numVenta);
                 row.add(claveProd);
                 dm.addRow(row.toArray());
