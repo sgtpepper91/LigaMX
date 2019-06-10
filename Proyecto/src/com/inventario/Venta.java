@@ -88,7 +88,7 @@ public class Venta extends ConexionBD {
             params.put(2, numCliente);
             params.put(3, totalVenta);
             if (ejecutarUpdate(params)) {
-                setSql("SELECT NUMVENTA FROM VENTAS WHERE FECHAVENTA = ? AND NUMCLIENTE = ? ORDER BY NUMVENTA DESC");
+                setSql("SELECT NUMVENTA FROM VENTAS WHERE FECHAVENTA = TO_DATE(?, 'dd-mm-yyyy') AND NUMCLIENTE = ? ORDER BY NUMVENTA DESC");
                 params2.put(1, formatoDiaMesAño.format(fechaVenta));
                 params2.put(2, numCliente);
                 ejecutarQuery(params2);

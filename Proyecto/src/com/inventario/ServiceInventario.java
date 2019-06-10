@@ -143,7 +143,7 @@ public class ServiceInventario extends ConexionBD {
                 inventario.getTxtTotalDeudas().setValue(getRset().getFloat(1));
             }
             cerrarConexion();
-            setSql("SELECT SUM(TOTALVENTA) FROM VENTAS WHERE FECHAVENTA BETWEEN ? AND SYSDATE");
+            setSql("SELECT SUM(TOTALVENTA) FROM VENTAS WHERE FECHAVENTA BETWEEN TO_DATE(?, 'dd-mm-yyyy') AND SYSDATE");
             params.put(1, df.format(fechaCorte));
             ejecutarQuery(params);
             while (getRset().next()) {

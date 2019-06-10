@@ -1475,10 +1475,7 @@ public class Inventario extends javax.swing.JFrame {
             if (descProd.isEmpty()) {
                 builder.append("No se ha insertado descripción\n");
             }
-            if (existProd == 0) {
-                builder.append("No se han añadido productos\n");
-            }
-            if (BigDecimal.ZERO.equals(costoProd)) {
+            if (BigDecimal.ZERO.compareTo(costoProd) < 0) {
                 builder.append("No se ha insertado costo de producto\n");
             }
             if (BigDecimal.ZERO.equals(precioProd)) {
